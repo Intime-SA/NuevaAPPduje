@@ -8,8 +8,10 @@ import { CartContext } from "../../../context/CartContext";
 
 const ItemDetail = () => {
   const { id } = useParams();
+  const { addToCart, getQuantityById } = useContext(CartContext);
+  let quantity = getQuantityById(id);
   const [product, setProduct] = useState(null);
-  const [counter, setCounter] = useState(1);
+  const [counter, setCounter] = useState(quantity || 1);
 
   useEffect(() => {
     let refCollection = collection(db, "products");
@@ -20,8 +22,6 @@ const ItemDetail = () => {
   }, [id]);
 
   // SUMAR
-
-  const { addToCart } = useContext(CartContext);
 
   const addOne = () => {
     if (counter < product.stock) {
@@ -55,19 +55,24 @@ const ItemDetail = () => {
     <div>
       <h1>Entre al detalle</h1>
       {product && (
-        <div>
+        <div
+          style={{
+            border: "solid black 1px",
+            display: "flex",
+            flexDirection: "column",
+          }}
+        >
           <h1>{product.title}</h1>
+          <Button variant="contained" onClick={addOne}>
+            +
+          </Button>
+          <Button>{counter}</Button>
+          <Button variant="contained" onClick={subOne}>
+            -
+          </Button>
+          <Button onClick={add}>Agregar al carrito</Button>
         </div>
       )}
-
-      <Button variant="contained" onClick={addOne}>
-        +
-      </Button>
-      <Button>{counter}</Button>
-      <Button variant="contained" onClick={subOne}>
-        -
-      </Button>
-      <Button onClick={add}>Agregar al carrito</Button>
     </div>
   );
 };

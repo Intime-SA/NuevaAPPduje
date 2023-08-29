@@ -23,9 +23,34 @@ const CartContextComponente = ({ children }) => {
     }
   };
 
+  const getQuantityById = (id) => {
+    let product = cart.find((elemento) => elemento.id === id);
+    return product?.quantity;
+  };
+
+  const clearCart = () => {
+    setCart([]);
+  };
+
+  const deleteById = (id) => {
+    const newArr = cart.filter((elemento) => elemento.id !== id);
+    setCart(newArr);
+  };
+
+  const getTotalPrice = () => {
+    const total = cart.reduce((acc, elemento) => {
+      return acc + elemento.unit_price * elemento.quantity;
+    }, 0);
+    return total;
+  };
+
   let data = {
     cart,
     addToCart,
+    getQuantityById,
+    clearCart,
+    deleteById,
+    getTotalPrice,
   };
 
   return <CartContext.Provider value={data}>{children}</CartContext.Provider>;
