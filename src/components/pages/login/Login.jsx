@@ -12,11 +12,11 @@ import {
   Typography,
 } from "@mui/material";
 import GoogleIcon from "@mui/icons-material/Google";
-
 import { Link, useNavigate } from "react-router-dom";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { useState } from "react";
-import { loginGoogle, onSingIn } from "../../../firebaseConfig";
+import { db, loginGoogle, onSingIn } from "../../../firebaseConfig";
+import { collection, doc, getDoc } from "firebase/firestore";
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -39,10 +39,19 @@ const Login = () => {
     e.preventDefault();
 
     try {
-      const res = await onSingIn(userCredentials);
-      console.log(res);
-      navigate("/");
-    } catch (error) {}
+      let res = await onSingIn(userCredentials);
+
+      if (res?.user) {
+        let userCollection = collection(db, "users");
+        let userRef = doc(userCollection, res.user.uid);
+        console.log(res.user);
+        let userDoc = await getDoc(userRef);
+        console.log(userDoc);
+        navigate("/");
+      }
+    } catch (error) {
+      console.error("Error during sign-in:", error);
+    }
   };
 
   const googleSingIn = async () => {

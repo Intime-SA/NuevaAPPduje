@@ -12,12 +12,12 @@ import { useNavigate } from "react-router-dom";
 import { getFirestore } from "firebase/firestore";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyCYrzHp9JaQ2TYJDsGgfvkN3XG1XdGGpOU",
-  authDomain: "workshop-duje.firebaseapp.com",
-  projectId: "workshop-duje",
-  storageBucket: "workshop-duje.appspot.com",
-  messagingSenderId: "251308545236",
-  appId: "1:251308545236:web:3d7f3a5cbe89e5aea3d741",
+  apiKey: import.meta.env.VITE_API,
+  authDomain: import.meta.env.VITE_AUTHDOMAIN,
+  projectId: import.meta.env.VITE_PROJECTID,
+  storageBucket: import.meta.env.VITE_STORAGEBUCKET,
+  messagingSenderId: import.meta.env.VITE_MESSAGINGSENDERID,
+  appId: import.meta.env.VITE_APPID,
 };
 
 const app = initializeApp(firebaseConfig);
