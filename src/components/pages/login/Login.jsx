@@ -39,15 +39,21 @@ const Login = () => {
     e.preventDefault();
 
     try {
-      const res = await onSingIn(userCredentials);
+      const res = await onSingIn(userCredentials); // Asumo que tienes una función onSignIn para el inicio de sesión
       if (res.user) {
         const userCollection = collection(db, "users");
         const userRef = doc(userCollection, res.user.uid);
+
         console.log(res.user);
-        const userDoc = getDoc(userRef);
-        getDoc(userDoc);
-        console.log(res.user);
-        navigate("/");
+
+        const userDoc = await getDoc(userRef);
+
+        const userData = userDoc.data(); // Obtén los datos del documento
+        console.log(userData); // Haz lo que necesites con los datos del usuario
+
+        navigate("/"); // Asumo que tienes una función navigate para redirigir al usuario
+
+        // No necesitas el 'return getDoc(userDoc);' ya que no parece necesario aquí
       }
     } catch (error) {
       console.error("Error during sign-in:", error);
