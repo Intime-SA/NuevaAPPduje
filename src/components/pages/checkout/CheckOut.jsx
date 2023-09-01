@@ -16,7 +16,7 @@ import {
 } from "firebase/firestore";
 
 function CheckOut() {
-  const { cart, getTotalPrice } = useContext(CartContext);
+  const { cart, getTotalPrice, clearCart } = useContext(CartContext);
   const { user } = useContext(AuthContext);
   initMercadoPago("APP_USR-46e7a261-c953-4d8f-a8df-76016a3ce1cd", {
     locale: "es-AR",
@@ -46,6 +46,7 @@ function CheckOut() {
       });
 
       localStorage.removeItem("order");
+      clearCart();
     }
   }, [paramsValue]);
 
@@ -113,6 +114,7 @@ function CheckOut() {
         <>
           <h4>Pago se realizo con exito</h4>
           <h4>orden de compra: {orderId}</h4>
+          <Link to="/shop">Volver a la tienda</Link>
         </>
       )}
 
