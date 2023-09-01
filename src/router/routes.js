@@ -4,6 +4,7 @@ import ItemDetail from "../components/pages/itemDetail/ItemDetail";
 import Cart from "../components/pages/card/Cart";
 import CheckOut from "../components/pages/checkout/CheckOut";
 import Dashboard from "../components/pages/dashboard/Dashboard";
+import UserOrders from "../components/pages/userOrders/UserOrders";
 
 export const routes = [
   {
@@ -30,5 +31,10 @@ export const routes = [
     id: "checkout",
     path: "/checkout",
     Element: CheckOut,
+  },
+  {
+    id: "userOrders",
+    path: "/user-orders",
+    Element: UserOrders,
   },
 ];
