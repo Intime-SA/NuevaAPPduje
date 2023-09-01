@@ -14,11 +14,13 @@ import {
 import GoogleIcon from "@mui/icons-material/Google";
 import { Link, useNavigate } from "react-router-dom";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { db, loginGoogle, onSingIn } from "../../../firebaseConfig";
 import { collection, doc, getDoc } from "firebase/firestore";
+import { AuthContext } from "../../../context/AuthContext";
 
 const Login = () => {
+  const { handleLogin } = useContext(AuthContext);
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
 
@@ -43,14 +45,14 @@ const Login = () => {
       if (res.user) {
         const userCollection = collection(db, "users");
         const userRef = doc(userCollection, res.user.uid);
-
         console.log(res.user);
-
         const userDoc = await getDoc(userRef);
-
-        const userData = userDoc.data(); // Obtén los datos del documento
-        console.log(userData); // Haz lo que necesites con los datos del usuario
-
+        let finalyUser = {
+          email: res.user.email,
+          rol: userDoc.data().rol,
+        }; // Obtén los datos del documento
+        console.log(finalyUser);
+        handleLogin(finalyUser);
         navigate("/"); // Asumo que tienes una función navigate para redirigir al usuario
 
         // No necesitas el 'return getDoc(userDoc);' ya que no parece necesario aquí

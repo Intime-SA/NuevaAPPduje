@@ -10,19 +10,22 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import MenuIcon from "@mui/icons-material/Menu";
 import Toolbar from "@mui/material/Toolbar";
-
+import DashboardIcon from "@mui/icons-material/Dashboard";
 import { Link, Outlet, useNavigate } from "react-router-dom";
 import "./Navbar.css";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import LogoutIcon from "@mui/icons-material/Logout";
 import { menuItems } from "../../../router/navigation";
 import { logout } from "../../../firebaseConfig";
+import { AuthContext } from "../../../context/AuthContext";
 const drawerWidth = 200;
 
 function Navbar(props) {
+  const { handleLogoutContext, user } = useContext(AuthContext);
   const { window } = props;
   const [mobileOpen, setMobileOpen] = useState(false);
   const navigate = useNavigate();
+  const rolAdmin = import.meta.env.VITE_ADMIN;
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
@@ -30,6 +33,7 @@ function Navbar(props) {
 
   const cerrarSesion = () => {
     logout();
+    handleLogoutContext();
     navigate("/login");
   };
 
@@ -52,6 +56,22 @@ function Navbar(props) {
             </Link>
           );
         })}
+
+        {user.rol === rolAdmin && (
+          <Link to={"/dashboard"}>
+            <ListItem disablePadding>
+              <ListItemButton>
+                <ListItemIcon>
+                  <DashboardIcon sx={{ color: "whitesmoke" }} />
+                </ListItemIcon>
+                <ListItemText
+                  primary={"Administracion"}
+                  sx={{ color: "whitesmoke" }}
+                />
+              </ListItemButton>
+            </ListItem>
+          </Link>
+        )}
 
         <ListItem disablePadding>
           <ListItemButton onClick={cerrarSesion}>
