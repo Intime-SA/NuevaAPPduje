@@ -62,7 +62,7 @@ function CheckOut() {
     });
     try {
       let res = await axios.post(
-        "https://nueva-ap-pduje-vblc.vercel.app/create_preference",
+        "https://backend-fercho.vercel.app/create_preference",
         {
           items: newArray,
           shipment_cost: 10,
