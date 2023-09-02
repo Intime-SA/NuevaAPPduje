@@ -64,6 +64,11 @@ const Login = () => {
 
   const googleSingIn = async () => {
     let res = await loginGoogle();
+    let finalyUser = {
+      email: res.user.email,
+      rol: "user",
+    }; // Obtén los datos del documento
+    handleLogin(finalyUser);
     navigate("/");
     console.log(res);
   };
