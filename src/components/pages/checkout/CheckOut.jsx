@@ -14,6 +14,7 @@ import {
   updateDoc,
   serverTimestamp,
 } from "firebase/firestore";
+import { Link } from "react-router-dom";
 
 function CheckOut() {
   const { cart, getTotalPrice, clearCart } = useContext(CartContext);
