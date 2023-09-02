@@ -38,7 +38,7 @@ function Navbar(props) {
   };
 
   const drawer = (
-    <div>
+    <div style={{ color: "#89ca8f", backgroundColor: "#89ca8f" }}>
       <Toolbar />
 
       <List>
@@ -98,16 +98,22 @@ function Navbar(props) {
         position="fixed"
         sx={{
           width: "100%",
+          backgroundColor: "#89ca8f",
         }}
       >
         <Toolbar
-          sx={{ gap: "20px", display: "flex", justifyContent: "space-between" }}
+          sx={{
+            gap: "20px",
+            display: "flex",
+            justifyContent: "space-between",
+            backgroundColor: "#89ca8f",
+          }}
         >
           <Link to="/" style={{ color: "whitesmoke" }}>
-            Bazar-deco
+            Alimentos Naturales
           </Link>
           <IconButton
-            color="secondary.primary"
+            color="#89ca8f"
             aria-label="open drawer"
             edge="start"
             onClick={handleDrawerToggle}
@@ -116,7 +122,11 @@ function Navbar(props) {
           </IconButton>
         </Toolbar>
       </AppBar>
-      <Box component="nav" aria-label="mailbox folders">
+      <Box
+        component="nav"
+        aria-label="mailbox folders"
+        style={{ backgroundColor: "#89ca8f" }}
+      >
         <Drawer
           container={container}
           variant="temporary"

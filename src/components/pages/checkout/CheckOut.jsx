@@ -61,10 +61,13 @@ function CheckOut() {
       };
     });
     try {
-      let res = await axios.post("http://localhost:8080/create_preference", {
-        items: newArray,
-        shipment_cost: 10,
-      });
+      let res = await axios.post(
+        "https://nueva-ap-pduje.vercel.app/create_preference",
+        {
+          items: newArray,
+          shipment_cost: 10,
+        }
+      );
 
       const { id } = res.data;
       return id;
