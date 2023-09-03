@@ -2,7 +2,17 @@ import React, { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { db } from "../../../firebaseConfig";
 import { getDoc, collection, doc } from "firebase/firestore";
-import { Button } from "@mui/material";
+import {
+  Button,
+  Card,
+  CardActionArea,
+  CardContent,
+  CardMedia,
+  FormControlLabel,
+  FormGroup,
+  Switch,
+  Typography,
+} from "@mui/material";
 import { count } from "console";
 import { CartContext } from "../../../context/CartContext";
 
@@ -14,7 +24,7 @@ const ItemDetail = () => {
   const [counter, setCounter] = useState(quantity || 1);
 
   useEffect(() => {
-    let refCollection = collection(db, "products");
+    let refCollection = collection(db, "productos");
     let refDoc = doc(refCollection, id);
     getDoc(refDoc)
       .then((res) => setProduct({ ...res.data(), id: res.id }))
@@ -52,26 +62,83 @@ const ItemDetail = () => {
   console.log(product);
 
   return (
-    <div>
-      <h1>Entre al detalle</h1>
+    <div style={{ display: "flex", justifyContent: "center" }}>
       {product && (
-        <div
-          style={{
-            border: "solid black 1px",
+        <Card
+          sx={{
+            flexWrap: "nowrap",
+            width: 250,
+            margin: 5,
             display: "flex",
-            flexDirection: "column",
+            justifyContent: "center",
           }}
         >
-          <h1>{product.title}</h1>
-          <Button variant="contained" onClick={addOne}>
-            +
-          </Button>
-          <Button>{counter}</Button>
-          <Button variant="contained" onClick={subOne}>
-            -
-          </Button>
-          <Button onClick={add}>Agregar al carrito</Button>
-        </div>
+          <CardActionArea>
+            <CardMedia
+              component="img"
+              height="250"
+              image={product.img}
+              alt="green iguana"
+            />
+            <CardContent>
+              <Typography gutterBottom variant="h6" component="div">
+                {product.name}
+              </Typography>
+              <div>
+                <Typography
+                  style={{ display: "flex", justifyContent: "space-between" }}
+                  variant="body3"
+                  color="text.secondary"
+                >
+                  <p>Precio Unitario </p> <p>{product.unit_price}</p>
+                </Typography>
+                <Typography
+                  style={{ display: "flex", justifyContent: "space-between" }}
+                  variant="body3"
+                  color="text.secondary"
+                >
+                  <p>Peso</p>
+                  <p>
+                    {product.peso}
+                    {product.medida}
+                  </p>
+                </Typography>
+              </div>
+              <div style={{ marginTop: "1rem" }}>
+                <Typography
+                  style={{ display: "flex", justifyContent: "space-between" }}
+                  variant="body2"
+                  color="text.secondary"
+                >
+                  <h6>Unidades Bulto</h6> <h6>{product.unidades}</h6>
+                </Typography>
+                <Typography
+                  style={{ display: "flex", justifyContent: "space-between" }}
+                  variant="body2"
+                  color="text.secondary"
+                >
+                  <h6>Precio Bulto ${product.precioBulto}</h6>
+                </Typography>
+              </div>
+            </CardContent>
+            <div
+              style={{
+                padding: "20px",
+                display: "flex",
+                justifyContent: "space-around",
+              }}
+            >
+              <Button variant="contained" onClick={addOne}>
+                +
+              </Button>
+              <Button>{counter}</Button>
+              <Button variant="contained" onClick={subOne}>
+                -
+              </Button>
+            </div>
+            <Button onClick={add}>Agregar al carrito</Button>
+          </CardActionArea>
+        </Card>
       )}
     </div>
   );

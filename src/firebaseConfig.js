@@ -9,7 +9,11 @@ import {
   sendPasswordResetEmail,
 } from "firebase/auth";
 
-import { getFirestore } from "firebase/firestore";
+import { collection, getFirestore } from "firebase/firestore";
+import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { v4 } from "uuid";
+import axios from "axios";
+import { useState } from "react";
 
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_APIKEY,
@@ -25,6 +29,11 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 
 export const db = getFirestore(app);
+export const storage = getStorage(app);
+
+export const productsCollection = collection(db, "productos");
+
+// Ejecuta la función de importación de datos
 
 export const onSingIn = async ({ email, password }) => {
   try {
@@ -63,4 +72,11 @@ export const forgotPassword = async (email) => {
   let res = await sendPasswordResetEmail(auth, email);
   console.log(res);
   return res;
+};
+
+export const uploadFile = async (file) => {
+  const storageRef = ref(storage, v4());
+  await uploadBytes(storageRef, file);
+  let url = await getDownloadURL(storageRef);
+  return url;
 };

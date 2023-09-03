@@ -2,12 +2,23 @@ import React, { useEffect, useState } from "react";
 import { db } from "../../../firebaseConfig";
 import { getDocs, collection } from "firebase/firestore";
 import { Link } from "react-router-dom";
+import {
+  Button,
+  Card,
+  CardActionArea,
+  CardContent,
+  CardMedia,
+  FormControlLabel,
+  FormGroup,
+  Switch,
+  Typography,
+} from "@mui/material";
 
 function ItemListContainer() {
   const [products, setProducts] = useState([]);
 
   useEffect(() => {
-    let refCollection = collection(db, "products");
+    let refCollection = collection(db, "productos");
     getDocs(refCollection)
       .then((res) => {
         let newArray = res.docs.map((product) => {
@@ -21,16 +32,74 @@ function ItemListContainer() {
   console.log(products);
 
   return (
-    <div>
-      {products.map((product) => {
-        return (
-          <div key={product.id} style={{ width: "500px" }}>
-            <img src={product.image} alt="asd" />
-            <h1>{product.title}</h1>
-            <Link to={`/itemDetail/${product.id}`}>Ver Detalle</Link>
-          </div>
-        );
-      })}
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        flexDirection: "column",
+        fontSize: "2rem",
+      }}
+    >
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          flexDirection: "column",
+        }}
+      >
+        <div
+          style={{
+            width: "100vw",
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "center",
+            flexWrap: "wrap",
+          }}
+        >
+          {products.map((product) => {
+            return (
+              <div>
+                <Card sx={{ flexWrap: "nowrap", width: 250, margin: 5 }}>
+                  <CardActionArea>
+                    <CardMedia
+                      component="img"
+                      height="250"
+                      image={product.img}
+                      alt="green iguana"
+                    />
+                    <CardContent>
+                      <Typography gutterBottom variant="h6" component="div">
+                        {product.name}
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary">
+                        ${product.unit_price}
+                      </Typography>
+                    </CardContent>
+                    <div
+                      style={{
+                        padding: "20px",
+                        display: "flex",
+                        justifyContent: "space-around",
+                      }}
+                    >
+                      {/* <Button variant="contained" onClick={addOne}>
+                +
+              </Button>
+              <Button>{counter}</Button>
+              <Button variant="contained" onClick={subOne}>
+                -
+              </Button> */}
+                    </div>
+                    {/* <Button onClick={add}>Agregar al carrito</Button> */}
+                    <Link to={`/itemDetail/${product.id}`}>Ver Detalle</Link>
+                  </CardActionArea>
+                </Card>
+              </div>
+            );
+          })}
+        </div>
+      </div>
     </div>
   );
 }
