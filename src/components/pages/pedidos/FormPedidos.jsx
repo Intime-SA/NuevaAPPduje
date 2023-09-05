@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { collection, getDoc, getDocs } from "firebase/firestore";
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import { Autocomplete, Button, TextField } from "@mui/material";
+import { Autocomplete, Button, CssBaseline, TextField } from "@mui/material";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import { db } from "../../../firebaseConfig";
@@ -212,7 +212,6 @@ const FormPedidos = ({ setOpen }) => {
     width: "100vw",
     height: "100vh",
     bgcolor: "background.paper",
-    border: "2px solid #000",
     boxShadow: 24,
     p: 4,
   };
@@ -249,6 +248,7 @@ const FormPedidos = ({ setOpen }) => {
 
   return (
     <div>
+      <CssBaseline />
       <Box sx={style}>
         <form
           style={{
@@ -256,14 +256,22 @@ const FormPedidos = ({ setOpen }) => {
             justifyContent: "space-evenly",
             flexDirection: "column",
             alignItems: "center",
+            margin: "1rem",
           }}
           onSubmit={handleSubmit}
         >
           <h3>Crear Pedido</h3>
-          <div sx={{ display: "flex", width: "95%" }}>
+          <div
+            sx={{
+              display: "flex",
+              width: "95%",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
             <DemoContainer
               size="small"
-              sx={{ display: "flex", alignItems: "center", margin: "0.5rem" }}
+              sx={{ display: "flex", alignItems: "center" }}
               components={["DatePicker"]}
             >
               {/* <div>
@@ -280,7 +288,7 @@ const FormPedidos = ({ setOpen }) => {
                   onChange={handleChange2}
                 />
               </div> */}
-              <div>
+              <div style={{ width: "90%", padding: "1.5rem" }}>
                 Seleccionar Comercio:
                 <Autocomplete
                   disablePortal
@@ -291,20 +299,19 @@ const FormPedidos = ({ setOpen }) => {
                   name="cliente"
                   value={selectedOption}
                   onChange={handleChange}
-                  sx={{ width: 400, margin: "0.5rem" }}
+                  sx={{ width: "90%" }}
                   renderInput={(params) => (
                     <TextField {...params} label="Escribe el Comercio" />
                   )}
                 />
               </div>
             </DemoContainer>
-            <div style={{ width: 400, margin: "0.5rem" }}>
-              Seleccionar Productos
+            <div style={{ width: "80%", margin: "0.5rem" }}>
               <ThemeProvider theme={theme}>
                 <Autocomplete
                   size="small"
                   disablePortal
-                  sx={{ width: "100%" }}
+                  sx={{ width: "100%", marginLeft: "2rem" }}
                   id="productos"
                   options={options2}
                   getOptionLabel={(options) => options.label}
@@ -322,7 +329,7 @@ const FormPedidos = ({ setOpen }) => {
                 />
                 <TextField
                   size="small"
-                  sx={{ width: "20%", margin: "1rem" }}
+                  sx={{ width: "20%", margin: "2rem" }}
                   disablePortal
                   id="cantidad"
                   name="cantidad"
@@ -333,7 +340,7 @@ const FormPedidos = ({ setOpen }) => {
 
                 <TextField
                   size="small"
-                  sx={{ width: "20%", margin: "1rem" }}
+                  sx={{ width: "20%", margin: "2rem", marginLeft: "1rem" }}
                   disablePortal
                   id="cantidad"
                   name="descuento"
@@ -357,7 +364,7 @@ const FormPedidos = ({ setOpen }) => {
               </ThemeProvider>
               <Grid container spacing={1}>
                 <Grid item xs={12} md={12}>
-                  <Box sx={{ height: 250 }}>
+                  <Box sx={{ height: 250, marginLeft: "2rem" }}>
                     <DataGrid rows={rows} columns={correctColumns} />
                   </Box>
                   {/* <table style={{ width: "90%" }} className="table">
@@ -403,7 +410,12 @@ const FormPedidos = ({ setOpen }) => {
             </table> */}
                 </Grid>
               </Grid>
-              <Button type="submit" variant="contained" color="primary">
+              <Button
+                style={{ margin: "2rem" }}
+                type="submit"
+                variant="contained"
+                color="primary"
+              >
                 Agregar
               </Button>
             </div>
