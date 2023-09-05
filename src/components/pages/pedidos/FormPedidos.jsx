@@ -9,7 +9,7 @@ import { db } from "../../../firebaseConfig";
 import { addDoc, deleteDoc, doc } from "firebase/firestore";
 import { DataGrid } from "@mui/x-data-grid";
 import { Grid } from "@mui/material";
-import { useNavigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 
 const FormPedidos = ({ setOpen }) => {
   const [selectedOption, setSelectedOption] = useState();
@@ -236,6 +236,8 @@ const FormPedidos = ({ setOpen }) => {
     },
   ];
 
+  const navigate = useNavigate();
+
   const objeto = selectedOptionsArray.map((elemento, index) => ({
     id: index,
     Producto: elemento.Producto,
@@ -245,6 +247,10 @@ const FormPedidos = ({ setOpen }) => {
   }));
 
   const rows = objeto;
+
+  const volverPedidos = () => {
+    setOpen(false);
+  };
 
   return (
     <div>
@@ -260,21 +266,32 @@ const FormPedidos = ({ setOpen }) => {
           }}
           onSubmit={handleSubmit}
         >
-          <h3>Crear Pedido</h3>
-          <div
-            sx={{
-              display: "flex",
-              width: "95%",
-              justifyContent: "center",
-              alignItems: "center",
-            }}
+          <Grid
+            container
+            rowSpacing={4}
+            // alignItems="center"
+            justifyContent={"center"}
           >
-            <DemoContainer
-              size="small"
-              sx={{ display: "flex", alignItems: "center" }}
-              components={["DatePicker"]}
+            <div
+              sx={{
+                width: "100%",
+                minHeight: "100vh",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                flexDirection: "column",
+
+                // backgroundColor: theme.palette.secondary.main,
+              }}
             >
-              {/* <div>
+              <CssBaseline />
+              <div style={{ width: "90%", marginLeft: "10%" }}>
+                <DemoContainer
+                  size="small"
+                  sx={{ display: "flex", alignItems: "center" }}
+                  components={["DatePicker"]}
+                >
+                  {/* <div>
                 Fecha de Entrega:
                 <DatePicker
                   sx={{
@@ -288,86 +305,97 @@ const FormPedidos = ({ setOpen }) => {
                   onChange={handleChange2}
                 />
               </div> */}
-              <div style={{ width: "90%", padding: "1.5rem" }}>
-                Seleccionar Comercio:
-                <Autocomplete
-                  disablePortal
-                  size="small"
-                  id="cliente"
-                  options={options}
-                  getOptionLabel={(options) => options.toString()}
-                  name="cliente"
-                  value={selectedOption}
-                  onChange={handleChange}
-                  sx={{ width: "90%" }}
-                  renderInput={(params) => (
-                    <TextField {...params} label="Escribe el Comercio" />
-                  )}
-                />
-              </div>
-            </DemoContainer>
-            <div style={{ width: "80%", margin: "0.5rem" }}>
-              <ThemeProvider theme={theme}>
-                <Autocomplete
-                  size="small"
-                  disablePortal
-                  sx={{ width: "100%", marginLeft: "2rem" }}
-                  id="productos"
-                  options={options2}
-                  getOptionLabel={(options) => options.label}
-                  name="productos"
-                  value={selectedOption3}
-                  onChange={handleChange3}
-                  fullWidth
-                  renderInput={(params) => {
-                    quitarComas(params.inputProps.value);
+                </DemoContainer>
+                <ThemeProvider theme={theme}>
+                  <div style={{ width: "80%", margin: "1rem" }}>
+                    Seleccionar Comercio:
+                    <Autocomplete
+                      disablePortal
+                      size="small"
+                      id="cliente"
+                      options={options}
+                      getOptionLabel={(options) => options.toString()}
+                      name="cliente"
+                      value={selectedOption}
+                      onChange={handleChange}
+                      sx={{ width: "100%" }}
+                      renderInput={(params) => (
+                        <TextField {...params} label="Escribe el Comercio" />
+                      )}
+                    />
+                  </div>
+                  <div style={{ width: "80%", margin: "1rem" }}>
+                    <Autocomplete
+                      size="small"
+                      disablePortal
+                      sx={{ width: "100%" }}
+                      id="productos"
+                      options={options2}
+                      getOptionLabel={(options) => options.label}
+                      name="productos"
+                      value={selectedOption3}
+                      onChange={handleChange3}
+                      fullWidth
+                      renderInput={(params) => {
+                        quitarComas(params.inputProps.value);
 
-                    return (
-                      <TextField {...params} label="Escribe el Producto" />
-                    );
+                        return (
+                          <TextField {...params} label="Escribe el Producto" />
+                        );
+                      }}
+                    />
+                  </div>
+                  <div style={{ width: "80%", margin: "1rem" }}>
+                    <TextField
+                      size="small"
+                      sx={{ width: "20%", margin: "2rem" }}
+                      disablePortal
+                      id="cantidad"
+                      name="cantidad"
+                      value={cantidad} // Asignamos el valor del estado aquí
+                      onChange={handleChange4}
+                      label="Cantidad de Unidades"
+                    />
+
+                    <TextField
+                      size="small"
+                      sx={{ width: "20%", margin: "2rem", marginLeft: "1rem" }}
+                      disablePortal
+                      id="cantidad"
+                      name="descuento"
+                      value={descuento} // Asignamos el valor del estado aquí
+                      onChange={handleChange5}
+                      label="Descuento %"
+                    />
+                    <Button onClick={confirmarProducto}>
+                      <span
+                        style={{
+                          fontSize: "2.5rem",
+                          display: "flex",
+                          alignItems: "center",
+                          marginTop: "1rem",
+                        }}
+                        class="material-symbols-outlined"
+                      >
+                        add
+                      </span>
+                    </Button>
+                  </div>
+                </ThemeProvider>
+                <div
+                  style={{
+                    width: "80%",
+                    margin: "1rem",
+                    display: "flex",
+                    justifyContent: "center",
                   }}
-                />
-                <TextField
-                  size="small"
-                  sx={{ width: "20%", margin: "2rem" }}
-                  disablePortal
-                  id="cantidad"
-                  name="cantidad"
-                  value={cantidad} // Asignamos el valor del estado aquí
-                  onChange={handleChange4}
-                  label="Cantidad de Unidades"
-                />
-
-                <TextField
-                  size="small"
-                  sx={{ width: "20%", margin: "2rem", marginLeft: "1rem" }}
-                  disablePortal
-                  id="cantidad"
-                  name="descuento"
-                  value={descuento} // Asignamos el valor del estado aquí
-                  onChange={handleChange5}
-                  label="Descuento %"
-                />
-                <Button onClick={confirmarProducto}>
-                  <span
-                    style={{
-                      fontSize: "2.5rem",
-                      display: "flex",
-                      alignItems: "center",
-                      marginTop: "1rem",
-                    }}
-                    class="material-symbols-outlined"
-                  >
-                    add
-                  </span>
-                </Button>
-              </ThemeProvider>
-              <Grid container spacing={1}>
-                <Grid item xs={12} md={12}>
-                  <Box sx={{ height: 250, marginLeft: "2rem" }}>
-                    <DataGrid rows={rows} columns={correctColumns} />
-                  </Box>
-                  {/* <table style={{ width: "90%" }} className="table">
+                >
+                  <Grid container spacing={1}>
+                    <Grid item xs={12} md={10}>
+                      <Box sx={{ height: 250 }}>
+                        <DataGrid rows={rows} columns={correctColumns} />
+                      </Box>
+                      {/* <table style={{ width: "90%" }} className="table">
               <thead>
                 <tr>
                   <th>Producto</th>
@@ -408,18 +436,28 @@ const FormPedidos = ({ setOpen }) => {
                 ))}
               </tbody>
             </table> */}
-                </Grid>
-              </Grid>
-              <Button
-                style={{ margin: "2rem" }}
-                type="submit"
-                variant="contained"
-                color="primary"
-              >
-                Agregar
-              </Button>
+                    </Grid>
+                  </Grid>
+                </div>
+                <Button
+                  style={{ margin: "2rem" }}
+                  type="submit"
+                  variant="contained"
+                  color="primary"
+                >
+                  Agregar
+                </Button>
+                <Button
+                  style={{ margin: "2rem" }}
+                  variant="contained"
+                  color="primary"
+                  onClick={volverPedidos}
+                >
+                  Volver
+                </Button>
+              </div>
             </div>
-          </div>
+          </Grid>
         </form>
       </Box>
     </div>
