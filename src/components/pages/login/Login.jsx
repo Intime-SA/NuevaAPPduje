@@ -10,6 +10,7 @@ import {
   TextField,
   Tooltip,
   Typography,
+  createTheme,
 } from "@mui/material";
 import GoogleIcon from "@mui/icons-material/Google";
 import { Link, useNavigate } from "react-router-dom";
@@ -73,6 +74,17 @@ const Login = () => {
     console.log(res);
   };
 
+  const theme = createTheme({
+    palette: {
+      primary: {
+        main: "#89ca8f", // Color principal
+      },
+      secondary: {
+        main: "#89ca8f", // Color secundario
+      },
+    },
+  });
+
   return (
     <Box
       sx={{
@@ -85,6 +97,11 @@ const Login = () => {
         // backgroundColor: theme.palette.secondary.main,
       }}
     >
+      <img
+        src="https://scontent.fmdq6-1.fna.fbcdn.net/v/t39.30808-6/277579593_660204662063497_2104655870613909459_n.jpg?_nc_cat=108&ccb=1-7&_nc_sid=a2f6c7&_nc_ohc=FtqfRTcNKlUAX9VeOD0&_nc_ht=scontent.fmdq6-1.fna&oh=00_AfCtz7_HA7k0836LmZNatCc9FKk88cU6ZjraC5y-QyFwEw&oe=64FC6112"
+        alt=""
+        style={{ width: "30%", margin: "5rem" }}
+      />
       <form onSubmit={handleSubmit}>
         <Grid
           container

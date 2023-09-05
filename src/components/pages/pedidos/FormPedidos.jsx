@@ -9,6 +9,7 @@ import { db } from "../../../firebaseConfig";
 import { addDoc, deleteDoc, doc } from "firebase/firestore";
 import { DataGrid } from "@mui/x-data-grid";
 import { Grid } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
 const FormPedidos = ({ setOpen }) => {
   const [selectedOption, setSelectedOption] = useState();
@@ -142,6 +143,7 @@ const FormPedidos = ({ setOpen }) => {
         };
         console.log(newItem);
         setSelectedOptionsArray([...selectedOptionsArray, newItem]);
+        useNavigate("/pedidos");
       } catch (error) {
         console.log(error);
       }
@@ -258,7 +260,7 @@ const FormPedidos = ({ setOpen }) => {
           onSubmit={handleSubmit}
         >
           <h3>Crear Pedido</h3>
-          <div sx={{ display: "flex" }}>
+          <div sx={{ display: "flex", width: "95%" }}>
             <DemoContainer
               size="small"
               sx={{ display: "flex", alignItems: "center", margin: "0.5rem" }}

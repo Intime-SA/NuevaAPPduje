@@ -18,12 +18,13 @@ import { CartContext } from "../../../context/CartContext";
 
 const ItemDetail = () => {
   const { id } = useParams();
-  const { addToCart, getQuantityById } = useContext(CartContext);
+  const { user, addToCart, getQuantityById } = useContext(CartContext);
   let quantity = getQuantityById(id);
   const [product, setProduct] = useState(null);
   const [counter, setCounter] = useState(quantity || 1);
 
   useEffect(() => {
+    let usuario = JSON.parse(localStorage.getItem("userInfo"));
     let refCollection = collection(db, "productos");
     let refDoc = doc(refCollection, id);
     getDoc(refDoc)
@@ -32,6 +33,8 @@ const ItemDetail = () => {
   }, [id]);
 
   // SUMAR
+
+  console.log(user);
 
   const addOne = () => {
     if (counter < product.stock) {
