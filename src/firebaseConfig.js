@@ -32,6 +32,7 @@ export const db = getFirestore(app);
 export const storage = getStorage(app);
 
 export const productsCollection = collection(db, "productos");
+export const clientesCollection = collection(db, "clientes");
 
 // Ejecuta la función de importación de datos
 

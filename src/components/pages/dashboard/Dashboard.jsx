@@ -24,10 +24,47 @@ import { db } from "../../../firebaseConfig";
 import { collection, getDocs } from "firebase/firestore";
 import { useEffect } from "react";
 import ProductList from "./ProductList";
+import ClientList from "./ClientList";
+import VendedoresList from "./VendedoresList";
 
 const Dashboard = (props) => {
   const [products, setProducts] = useState([]);
+  const [clientes, setClientes] = useState([]);
+  const [vendedores, setVendedores] = useState([]);
   const [isChange, setIsChange] = useState(false);
+  const [verProductos, setVerProductos] = useState(false);
+  const [verClientes, setVerClientes] = useState(false);
+  const [verVendedores, setVerVendedores] = useState(false);
+
+  useEffect(() => {
+    let vendedoresCollection = collection(db, "users");
+    getDocs(vendedoresCollection)
+      .then((res) => {
+        const nuevosVendedores = []; // Inicializa un arreglo para los nuevos vendedores
+        res.docs.forEach((elemento) => {
+          if (elemento.data().rol === "vendedor") {
+            nuevosVendedores.push({ ...elemento.data(), id: elemento.id });
+          }
+        });
+        setVendedores(nuevosVendedores); // Actualiza el estado una vez con todos los vendedores
+      })
+      .catch((error) => {
+        console.error("Error al obtener vendedores:", error);
+      });
+  }, []);
+
+  useEffect(() => {
+    let clientesCollection = collection(db, "clientes");
+    getDocs(clientesCollection).then((res) => {
+      const newArray = res.docs.map((cliente) => {
+        return {
+          ...cliente.data(),
+          id: cliente.id,
+        };
+      });
+      setClientes(newArray);
+    });
+  }, []);
 
   useEffect(() => {
     setIsChange(false);
@@ -183,7 +220,73 @@ const Dashboard = (props) => {
         }}
       >
         <Toolbar />
-        <ProductList products={products} setIsChange={setIsChange} />
+        <div
+          style={{
+            width: "40vw",
+            display: "flex",
+            justifyContent: "flex-start",
+          }}
+        >
+          {verProductos ? (
+            <Button
+              style={{ margin: "1rem" }}
+              variant="contained"
+              onClick={() => setVerProductos(!verProductos)}
+            >
+              Cerrar
+            </Button>
+          ) : (
+            <Button
+              style={{ margin: "1rem" }}
+              variant="contained"
+              onClick={() => setVerProductos(!verProductos)}
+            >
+              Productos
+            </Button>
+          )}
+
+          {!verClientes ? (
+            <Button
+              style={{ margin: "1rem" }}
+              variant="contained"
+              onClick={() => setVerClientes(!verClientes)}
+            >
+              Clientes
+            </Button>
+          ) : (
+            <Button
+              style={{ margin: "1rem" }}
+              variant="contained"
+              onClick={() => setVerClientes(!verClientes)}
+            >
+              Cerrar
+            </Button>
+          )}
+
+          {verVendedores ? (
+            <Button
+              style={{ margin: "1rem" }}
+              variant="contained"
+              onClick={() => setVerVendedores(!true)}
+            >
+              Cerrar
+            </Button>
+          ) : (
+            <Button
+              style={{ margin: "1rem" }}
+              variant="contained"
+              onClick={() => setVerVendedores(true)}
+            >
+              Vendedores
+            </Button>
+          )}
+        </div>
+
+        {verClientes && <ClientList clientes={clientes} />}
+        {verProductos && (
+          <ProductList products={products} setIsChange={setIsChange} />
+        )}
+        {verVendedores && <VendedoresList vendedores={vendedores} />}
 
         <Outlet />
       </Box>

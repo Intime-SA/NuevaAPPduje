@@ -2,6 +2,8 @@ import HomeIcon from "@mui/icons-material/Home";
 import StoreIcon from "@mui/icons-material/Store";
 import ShoppingCartCheckoutIcon from "@mui/icons-material/ShoppingCartCheckout";
 import ShopIcon from "@mui/icons-material/Shop";
+import ListAltIcon from "@mui/icons-material/ListAlt";
+
 export const menuItems = [
   {
     id: "home",
@@ -26,5 +28,11 @@ export const menuItems = [
     path: "/user-orders",
     title: "Mis compras",
     Icon: ShopIcon,
+  },
+  {
+    id: "pedidos",
+    path: "/pedidos",
+    title: "Pedidos",
+    Icon: ListAltIcon,
   },
 ];

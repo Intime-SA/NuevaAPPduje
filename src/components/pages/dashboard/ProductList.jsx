@@ -14,7 +14,10 @@ import { addDoc, deleteDoc, doc } from "firebase/firestore";
 import { useState } from "react";
 import Modal from "@mui/material/Modal";
 import ProductForm from "./ProductForm";
-import { productsCollection } from "../../../firebaseConfig";
+import {
+  productsCollection,
+  clientesCollection,
+} from "../../../firebaseConfig";
 import axios from "axios";
 
 const ProductList = ({ products, setIsChange }) => {
@@ -72,23 +75,39 @@ const ProductList = ({ products, setIsChange }) => {
 
   return (
     <div>
-      <Button onClick={() => handleOpen(null)} variant="contained">
-        Agregar Nuevo Producto
-      </Button>
-      <Button onClick={() => importarDatos()} variant="contained">
-        Importar Productos
-      </Button>
+      <div
+        style={{
+          width: "40vw",
+          display: "flex",
+          justifyContent: "flex-start",
+        }}
+      >
+        <Button
+          style={{ margin: "1rem" }}
+          onClick={() => handleOpen(null)}
+          variant="contained"
+        >
+          Agregar Nuevo Producto
+        </Button>
+        <Button
+          style={{ margin: "1rem" }}
+          onClick={() => importarDatos()}
+          variant="contained"
+        >
+          Importar Productos
+        </Button>
+      </div>
       <TableContainer component={Paper}>
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
           <TableHead>
             <TableRow>
               <TableCell>Id</TableCell>
-              <TableCell align="right">Titulo</TableCell>
-              <TableCell align="right">Precio</TableCell>
-              <TableCell align="right">Stock</TableCell>
-              <TableCell align="right">Imagen</TableCell>
-              <TableCell align="right">Categoria</TableCell>
-              <TableCell align="right">Acciones</TableCell>
+              <TableCell align="left">Titulo</TableCell>
+              <TableCell align="left">Precio</TableCell>
+              <TableCell align="left">Stock</TableCell>
+              <TableCell align="left">Imagen</TableCell>
+              <TableCell align="left">Categoria</TableCell>
+              <TableCell align="left">Acciones</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
