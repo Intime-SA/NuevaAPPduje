@@ -263,6 +263,7 @@ const FormPedidos = ({ setOpen }) => {
             flexDirection: "column",
             alignItems: "center",
             margin: "1rem",
+            marginTop: "3rem",
           }}
           onSubmit={handleSubmit}
         >
@@ -325,6 +326,7 @@ const FormPedidos = ({ setOpen }) => {
                     />
                   </div>
                   <div style={{ width: "80%", margin: "1rem" }}>
+                    Seleccionar Producto
                     <Autocomplete
                       size="small"
                       disablePortal
