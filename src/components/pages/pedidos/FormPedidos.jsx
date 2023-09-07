@@ -154,7 +154,8 @@ const FormPedidos = ({ setOpen }) => {
     setOptions2(
       dataProductos.map((propiedad) => ({
         value: propiedad.id,
-        label: propiedad.name, // Supongo que la propiedad name está en el objeto propiedad
+        label: propiedad.name + " " + propiedad.marca,
+        // No es necesario agregar una propiedad "value" aquí
       }))
     );
   }, [dataProductos]);
@@ -272,6 +273,7 @@ const FormPedidos = ({ setOpen }) => {
             rowSpacing={4}
             // alignItems="center"
             justifyContent={"center"}
+            alignItems={"center"}
           >
             <div
               sx={{
@@ -438,25 +440,31 @@ const FormPedidos = ({ setOpen }) => {
                 ))}
               </tbody>
             </table> */}
+                      <div
+                        style={{
+                          display: "flex",
+                          justifyContent: "space-around",
+                          margin: "1rem",
+                        }}
+                      >
+                        <Button
+                          type="submit"
+                          variant="contained"
+                          color="primary"
+                        >
+                          Agregar
+                        </Button>
+                        <Button
+                          variant="contained"
+                          color="primary"
+                          onClick={volverPedidos}
+                        >
+                          Volver
+                        </Button>
+                      </div>
                     </Grid>
                   </Grid>
                 </div>
-                <Button
-                  style={{ margin: "2rem" }}
-                  type="submit"
-                  variant="contained"
-                  color="primary"
-                >
-                  Agregar
-                </Button>
-                <Button
-                  style={{ margin: "2rem" }}
-                  variant="contained"
-                  color="primary"
-                  onClick={volverPedidos}
-                >
-                  Volver
-                </Button>
               </div>
             </div>
           </Grid>

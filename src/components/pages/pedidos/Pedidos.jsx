@@ -27,6 +27,7 @@ const Pedidos = () => {
   const handleOpen = () => setOpen(true);
   const handleOpen2 = () => setOpen2(true);
   const handleClose = () => setOpen(false);
+  const [render, setRender] = useState(false);
 
   const [pedidoLista, setPedidoLista] = useState([]);
 
@@ -39,13 +40,18 @@ const Pedidos = () => {
           pedidos.push({ ...elemento.data(), id: elemento.id });
         });
         setPedidoLista(pedidos); // Actualiza el estado una vez con todos los vendedores
+        setRender(false);
       })
       .catch((error) => {
         console.error("Error al obtener vendedores:", error);
       });
-  }, []);
+  }, [render]);
 
   console.log(pedidoLista);
+
+  const recibirCambioDesdeHijo = (nuevoEstado) => {
+    setRender(nuevoEstado);
+  };
 
   return (
     <div>
@@ -53,7 +59,12 @@ const Pedidos = () => {
       <Button onClick={() => handleOpen2(!open2)}>Ver Pedidos</Button>
 
       <div>
-        {open2 && <ListadoPedidos pedidoLista={pedidoLista} />}
+        {open2 && (
+          <ListadoPedidos
+            enviarCambioAlPadre={recibirCambioDesdeHijo}
+            pedidoLista={pedidoLista}
+          />
+        )}
         <Modal
           open={open}
           onClose={handleClose}
