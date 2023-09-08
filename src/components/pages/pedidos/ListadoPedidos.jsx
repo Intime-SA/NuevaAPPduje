@@ -29,16 +29,27 @@ import {
   getDocs,
   updateDoc,
 } from "firebase/firestore";
+import FormPedidos from "./FormPedidos";
 
-const ListadoPedidos = ({ pedidoLista, enviarCambioAlPadre }) => {
+const ListadoPedidos = ({
+  pedidoLista,
+  enviarCambioAlPadre,
+  setOpen,
+  handleOpen2,
+  render,
+}) => {
   const [estadoId, setEstadoId] = useState();
+  const [estadoId2, setEstadoId2] = useState();
   const [datosClientes, setDatosClientes] = useState([]);
   const [client, setClient] = useState();
   const [loading, setLoading] = useState(true); // Estado para manejar la carga de datos
+  const [edit, setEdit] = useState([]);
+  const [open2, setOpen2] = useState(false);
+  const [atras, setAtras] = useState(false);
 
   useEffect(() => {
-    const fetchData = async () => {
-      const pedidosDocumentRef = doc(db, "pedidos", estadoId);
+    const fetchData = async (id, render) => {
+      const pedidosDocumentRef = doc(db, "pedidos", id);
       const docSnapshot = await getDoc(pedidosDocumentRef);
       if (docSnapshot.exists()) {
         // Ahora puedes acceder a los datos del documento
@@ -48,23 +59,40 @@ const ListadoPedidos = ({ pedidoLista, enviarCambioAlPadre }) => {
         // Si deseas actualizar el estado del documento, puedes hacerlo aquí
         // Por ejemplo, actualiza el estado a "entregado"
 
-        if (data === "pendiente") {
-          await updateDoc(pedidosDocumentRef, { estado: "entregado" });
+        if (atras) {
+          if (data === "entregado") {
+            await updateDoc(pedidosDocumentRef, { estado: "enDistribucion" });
+          } else if (data === "enDistribucion") {
+            await updateDoc(pedidosDocumentRef, { estado: "pendiente" });
+          } else if (data === "pendiente") {
+            await updateDoc(pedidosDocumentRef, { estado: "nuevo" });
+          }
         } else {
-          await updateDoc(pedidosDocumentRef, { estado: "pendiente" });
+          if (data === "pendiente") {
+            await updateDoc(pedidosDocumentRef, { estado: "enDistribucion" });
+          } else if (data === "nuevo") {
+            await updateDoc(pedidosDocumentRef, { estado: "pendiente" });
+          } else if (data === "enDistribucion") {
+            await updateDoc(pedidosDocumentRef, { estado: "entregado" });
+          }
         }
-
-        enviarCambioAlPadre(true);
-      } else {
-        console.log("El documento no existe.");
+        enviarCambioAlPadre(render);
       }
     };
+    fetchData(estadoId2);
+    fetchData(estadoId);
+    setAtras(false);
     setEstadoId(null);
-    fetchData();
-  }, [estadoId]);
+    setEstadoId2(null);
+  }, [estadoId, estadoId2]);
 
   const botonActivo = (id) => {
     setEstadoId(id);
+  };
+
+  const botonNoActivo = (id) => {
+    setAtras(true);
+    setEstadoId2(id);
   };
 
   const borrarPedido = async (id) => {
@@ -89,14 +117,38 @@ const ListadoPedidos = ({ pedidoLista, enviarCambioAlPadre }) => {
     if (estado === "pendiente") {
       return (
         <Alert severity="info">
-          <AlertTitle>Pendiente</AlertTitle>
+          <AlertTitle style={{ marginTop: "10%", fontSize: "75%" }}>
+            Pendiente
+          </AlertTitle>
           {/* <strong>El pedido ya fue preparado</strong> */}
+        </Alert>
+      );
+    } else if (estado === "nuevo") {
+      return (
+        <Alert
+          style={{ marginTop: "10%", fontSize: "75%" }}
+          size="small"
+          variant="filled"
+          severity="info"
+        >
+          Nuevo
         </Alert>
       );
     } else if (estado === "entregado") {
       return (
         <Alert severity="success">
-          <AlertTitle>Entregado</AlertTitle>
+          <AlertTitle style={{ marginTop: "10%", fontSize: "75%" }}>
+            Entregado
+          </AlertTitle>
+          {/* <strong>El pedido fue entregado con exito</strong> */}
+        </Alert>
+      );
+    } else if (estado === "enDistribucion") {
+      return (
+        <Alert severity="success">
+          <AlertTitle style={{ marginTop: "10%", fontSize: "75%" }}>
+            En Distribucion
+          </AlertTitle>
           {/* <strong>El pedido fue entregado con exito</strong> */}
         </Alert>
       );
@@ -133,9 +185,29 @@ const ListadoPedidos = ({ pedidoLista, enviarCambioAlPadre }) => {
     return <p>Cargando datos...</p>;
   }
 
+  const handleOpen = async (id) => {
+    try {
+      const pedidosDocumentRef = doc(db, "pedidos", id);
+      const docSnapshot = await getDoc(pedidosDocumentRef);
+
+      if (docSnapshot.exists()) {
+        console.log(docSnapshot.data());
+        setEdit(docSnapshot.data());
+        handleOpen2(!open2);
+        setOpen(true);
+        setOpen2(true);
+      } else {
+        console.log("El documento no existe.");
+      }
+    } catch (error) {
+      console.error("Error al eliminar el documento:", error);
+    }
+  };
+
   return (
     <div>
       {" "}
+      {open2 && <FormPedidos edit={edit} />}
       <TableContainer component={Paper}>
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
           <TableHead>
@@ -156,81 +228,120 @@ const ListadoPedidos = ({ pedidoLista, enviarCambioAlPadre }) => {
                     if (cliente.name === pedido.cliente[0]) {
                       return (
                         <>
-                          <h4>{pedido.cliente}</h4>
-                          <p>{cliente.direccion}</p>
-                          <p>{cliente.telefono}</p>
-                          <h6 style={{ fontWeight: "900" }}>{cliente.zona}</h6>
+                          <div>
+                            <div>
+                              <div
+                                style={{
+                                  marginTop: "1rem",
+                                  marginBottom: "1rem",
+                                }}
+                              >
+                                {estadoRender(pedido.estado)}
+                              </div>
+                              <div>
+                                <div
+                                  style={{
+                                    display: "flex",
+                                    justifyContent: "flex-start",
+                                  }}
+                                >
+                                  <IconButton
+                                    onClick={() => {
+                                      handleOpen(pedido.id);
+                                    }}
+                                  >
+                                    <EditIcon color="primary" />
+                                  </IconButton>
+                                  <IconButton
+                                    color="primary"
+                                    onClick={() => {
+                                      borrarPedido(pedido.id);
+                                    }}
+                                  >
+                                    <span class="material-symbols-outlined">
+                                      search
+                                    </span>
+                                  </IconButton>
+                                </div>
+                                <div>
+                                  <h4>{pedido.cliente}</h4>
+                                  <p>{cliente.direccion}</p>
+                                  <p>{cliente.telefono}</p>
+                                  <h6 style={{ fontWeight: "700" }}>
+                                    {pedido.fecha}
+                                  </h6>
+                                  <h6 style={{ fontWeight: "900" }}>
+                                    {cliente.zona}
+                                  </h6>
+                                </div>
+                              </div>
+                            </div>
+
+                            <div
+                              style={{
+                                width: "90vw",
+                                display: "flex",
+                                justifyContent: "space-between",
+                                alignItems: "center",
+                              }}
+                            >
+                              <div>
+                                <IconButton
+                                  onClick={() => {
+                                    borrarPedido(pedido.id);
+                                  }}
+                                >
+                                  <DeleteForeverIcon color="primary" />
+                                </IconButton>
+                              </div>
+                              <div
+                                style={{
+                                  display: "flex",
+                                  justifyContent: "center",
+                                  marginRight: "10%",
+                                }}
+                              >
+                                <ToggleButton
+                                  value="check"
+                                  onClick={() => botonNoActivo(pedido.id)}
+                                >
+                                  <span class="material-symbols-outlined">
+                                    arrow_back
+                                  </span>
+                                </ToggleButton>
+                                <ToggleButton
+                                  value="check"
+                                  onClick={() => botonActivo(pedido.id)}
+                                >
+                                  <CheckIcon />
+                                </ToggleButton>
+                                <ToggleButton
+                                  value="check"
+                                  onClick={() => botonActivo(pedido.id)}
+                                >
+                                  <span class="material-symbols-outlined">
+                                    close
+                                  </span>
+                                </ToggleButton>
+
+                                <ToggleButton
+                                  value="check"
+                                  onClick={() => botonActivo(pedido.id)}
+                                >
+                                  <span class="material-symbols-outlined">
+                                    arrow_forward
+                                  </span>
+                                </ToggleButton>
+                              </div>
+                            </div>
+                          </div>
                         </>
                       );
                     }
                   })}
                 </TableCell>
-                <TableCell component="th" scope="row">
-                  <IconButton
-                    onClick={() => {
-                      handleOpen(pedido);
-                    }}
-                  >
-                    <EditIcon color="primary" />
-                  </IconButton>
-                  <IconButton
-                    onClick={() => {
-                      borrarPedido(pedido.id);
-                    }}
-                  >
-                    <DeleteForeverIcon color="primary" />
-                  </IconButton>
-                  <IconButton
-                    color="primary"
-                    onClick={() => {
-                      borrarPedido(pedido.id);
-                    }}
-                  >
-                    <span class="material-symbols-outlined">search</span>
-                  </IconButton>
-                </TableCell>
-                <TableCell component="th" scope="row">
-                  <div
-                    style={{
-                      display: "flex",
-                      flexDirection: "column",
-                      justifyContent: "space-around",
-                      alignItems: "space-around",
-                    }}
-                  >
-                    <div>{estadoRender(pedido.estado)}</div>
-                    <div
-                      style={{
-                        display: "flex",
-                        justifyContent: "space-around",
-                        marginTop: "1rem",
-                      }}
-                    >
-                      <ToggleButton
-                        value="check"
-                        onClick={() => botonActivo(pedido.id)}
-                      >
-                        <span class="material-symbols-outlined">
-                          arrow_back
-                        </span>
-                      </ToggleButton>
-                      <ToggleButton
-                        value="check"
-                        onClick={() => botonActivo(pedido.id)}
-                      >
-                        <CheckIcon />
-                      </ToggleButton>
-                      <ToggleButton
-                        value="check"
-                        onClick={() => botonActivo(pedido.id)}
-                      >
-                        <span class="material-symbols-outlined">
-                          arrow_forward
-                        </span>
-                      </ToggleButton>
-                    </div>
-                  </div>
-                </TableCell>
+                <TableCell component="th" scope="row"></TableCell>
+                <TableCell component="th" scope="row"></TableCell>
               </TableRow>
             ))}
           </TableBody>

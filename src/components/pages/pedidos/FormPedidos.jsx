@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { collection, getDoc, getDocs } from "firebase/firestore";
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
-import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+
 import { Autocomplete, Button, CssBaseline, TextField } from "@mui/material";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import Box from "@mui/material/Box";
@@ -10,10 +10,15 @@ import { addDoc, deleteDoc, doc } from "firebase/firestore";
 import { DataGrid } from "@mui/x-data-grid";
 import { Grid } from "@mui/material";
 import { Navigate, useNavigate } from "react-router-dom";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import dayjs from "dayjs";
+import { Today } from "@mui/icons-material";
 
-const FormPedidos = ({ setOpen }) => {
+const FormPedidos = ({ setOpen, edit, setOpenForm }) => {
   const [selectedOption, setSelectedOption] = useState();
-  const [selectedOption2, setSelectedOption2] = useState();
+  const [selectedOption2, setSelectedOption2] = useState(null);
   const [dataClientes, setDataClientes] = useState([]);
   const [dataProductos, setDataProductos] = useState([]);
   const [options, setOptions] = useState([]);
@@ -24,6 +29,8 @@ const FormPedidos = ({ setOpen }) => {
   const [descuento, setDescuento] = useState(0);
   const [newItem, setNewItem] = useState();
   const [producto, setProducto] = useState();
+
+  const [value, setValue] = useState(dayjs());
 
   const [pedido, setPedido] = useState();
 
@@ -57,15 +64,25 @@ const FormPedidos = ({ setOpen }) => {
   // Función que se pasará como prop al componente hijo
   const onSubmit = (data) => {
     // Formatear la fecha en el formato "yyyy-MM-dd"
-    const fechaIsoObj = new Date(data.fecha);
+    const fechaIsoObj = new Date(selectedOption2);
     const options = { year: "numeric", month: "2-digit", day: "2-digit" };
     const fechaSimpleStr = fechaIsoObj.toLocaleDateString(options);
 
+    const fechaIsoObj2 = new Date(value);
+    const options2 = { year: "numeric", month: "2-digit", day: "2-digit" };
+    const fechaSimpleStr2 = fechaIsoObj2.toLocaleDateString(options2);
+
+    const emailUser = JSON.parse(localStorage.getItem("userInfo")).email;
+
+    console.log(fechaSimpleStr);
+
     let obj = {
       cliente: selectedOption,
-      fecha: fechaSimpleStr,
+      fechaEntrega: fechaSimpleStr,
       productos: selectedOptionsArray,
-      vendedor: "Ramiro",
+      vendedor: emailUser,
+      estado: "nuevo",
+      fecha: fechaSimpleStr2,
     };
     console.log(obj);
     const productsCollection = collection(db, "pedidos");
@@ -169,23 +186,6 @@ const FormPedidos = ({ setOpen }) => {
     }
   };
 
-  const handleChange4 = (event) => {
-    const value = event.target.value;
-    setCantidad(value);
-  };
-  const handleChange5 = (event) => {
-    const value = event.target.value;
-    setDescuento(value);
-  };
-
-  const handleChange2 = (value) => {
-    console.log(value);
-    setSelectedOption2(value);
-  };
-  const handleChange = (event, value) => {
-    setSelectedOption(value);
-  };
-
   const handleSubmit = (event) => {
     event.preventDefault();
 
@@ -198,6 +198,23 @@ const FormPedidos = ({ setOpen }) => {
       onSubmit(data);
       cerrarListadoPedidos();
     }
+  };
+
+  const handleChange4 = (event) => {
+    const value = event.target.value;
+    setCantidad(value);
+  };
+  const handleChange5 = (event) => {
+    const value = event.target.value;
+    setDescuento(value);
+  };
+
+  const handleChange2 = (value) => {
+    setSelectedOption2(value);
+  };
+
+  const handleChange = (event, value) => {
+    setSelectedOption(value);
   };
 
   function quitarComas(objt) {
@@ -251,6 +268,7 @@ const FormPedidos = ({ setOpen }) => {
 
   const volverPedidos = () => {
     setOpen(false);
+    setOpenForm(false);
   };
 
   return (
@@ -294,20 +312,28 @@ const FormPedidos = ({ setOpen }) => {
                   sx={{ display: "flex", alignItems: "center" }}
                   components={["DatePicker"]}
                 >
-                  {/* <div>
-                Fecha de Entrega:
-                <DatePicker
-                  sx={{
-                    display: "flex",
-                    flexDirection: "column",
-                    margin: "0.5rem",
-                  }}
-                  id="fecha"
-                  name="fecha"
-                  value={selectedOption2}
-                  onChange={handleChange2}
-                />
-              </div> */}
+                  <LocalizationProvider dateAdapter={AdapterDayjs}>
+                    <DemoContainer components={["DatePicker"]}>
+                      <DatePicker
+                        label="Selecciona la fecha"
+                        value={selectedOption2}
+                        onChange={handleChange2}
+                      />
+                    </DemoContainer>
+                  </LocalizationProvider>
+                  ;
+                  {/* <DateField
+                    sx={{
+                      display: "flex",
+                      flexDirection: "column",
+                      margin: "0.5rem",
+                      width: "100%",
+                    }}
+                    id="fecha"
+                    name="fecha"
+                    value={selectedOption2}
+                    onChange={handleChange2}
+                  /> */}
                 </DemoContainer>
                 <ThemeProvider theme={theme}>
                   <div style={{ width: "80%", margin: "1rem" }}>
