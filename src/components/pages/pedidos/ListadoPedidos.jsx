@@ -212,9 +212,9 @@ const ListadoPedidos = ({
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
           <TableHead>
             <TableRow>
-              <TableCell align="left">Cliente</TableCell>
-              <TableCell align="left">Acciones</TableCell>
-              <TableCell align="left">Estado</TableCell>
+              <TableCell align="left">Ultimos pedidos</TableCell>
+              {/* <TableCell align="left">Acciones</TableCell>
+              <TableCell align="left">Estado</TableCell> */}
             </TableRow>
           </TableHead>
           <TableBody>

@@ -92,11 +92,33 @@ const Pedidos = () => {
 
   return (
     <div>
-      <Button onClick={() => handleOpen()}>Crear Pedido</Button>
-      <Button onClick={() => handleOpen2(!open2)}>Ver Pedidos</Button>
-      <Button variant="contained" onClick={exportToExcel}>
-        Exportar excel<span class="material-symbols-outlined">download</span>
-      </Button>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          flexDirection: "row-reverse",
+        }}
+      >
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            flexDirection: "row-reverse",
+          }}
+        >
+          <Button onClick={() => handleOpen()}>
+            {" "}
+            <p> Crear Pedido</p>
+          </Button>
+          <Button onClick={() => handleOpen2(!open2)}>Ver Pedidos</Button>
+        </div>
+        <div>
+          <Button variant="contained" onClick={exportToExcel}>
+            Exportar excel
+            <span class="material-symbols-outlined">download</span>
+          </Button>
+        </div>
+      </div>
 
       <div>
         {open2 && (

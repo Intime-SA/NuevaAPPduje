@@ -122,11 +122,7 @@ function Navbar(props) {
           </IconButton>
         </Toolbar>
       </AppBar>
-      <Box
-        component="nav"
-        aria-label="mailbox folders"
-        style={{ backgroundColor: "#89ca8f" }}
-      >
+      <Box component="nav" aria-label="mailbox folders">
         <Drawer
           container={container}
           variant="temporary"
@@ -141,7 +137,7 @@ function Navbar(props) {
             "& .MuiDrawer-paper": {
               boxSizing: "border-box",
               width: drawerWidth,
-              backgroundColor: "#1976d2",
+              backgroundColor: "#89ca8f",
             },
           }}
         >

@@ -50,8 +50,8 @@ const ProductForm = ({
   };
 
   return (
-    <div>
-      <form onSubmit={handleSubmit}>
+    <div style={{ border: "solid 1px black" }}>
+      <form style={{ border: "solid 1px black" }} onSubmit={handleSubmit}>
         <TextField
           name="name"
           variant="outlined"

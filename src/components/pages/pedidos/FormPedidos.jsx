@@ -281,8 +281,7 @@ const FormPedidos = ({ setOpen, edit, setOpenForm }) => {
             justifyContent: "space-evenly",
             flexDirection: "column",
             alignItems: "center",
-            margin: "1rem",
-            marginTop: "3rem",
+            marginTop: "1rem",
           }}
           onSubmit={handleSubmit}
         >
@@ -306,10 +305,19 @@ const FormPedidos = ({ setOpen, edit, setOpenForm }) => {
               }}
             >
               <CssBaseline />
-              <div style={{ width: "90%", marginLeft: "10%" }}>
+              <div
+                style={{
+                  width: "90%",
+                  marginLeft: "10%",
+                  marginRight: "10%",
+                  display: "flex",
+                  justifyContent: "center",
+                  flexDirection: "column",
+                }}
+              >
                 <DemoContainer
                   size="small"
-                  sx={{ display: "flex", alignItems: "center" }}
+                  sx={{ display: "flex", alignItems: "center", margin: "1rem" }}
                   components={["DatePicker"]}
                 >
                   <LocalizationProvider dateAdapter={AdapterDayjs}>

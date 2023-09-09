@@ -138,7 +138,7 @@ const ProductList = ({ products, setIsChange }) => {
     <div>
       <div
         style={{
-          width: "40vw",
+          width: "90vw",
           display: "flex",
           justifyContent: "flex-start",
         }}
@@ -146,23 +146,23 @@ const ProductList = ({ products, setIsChange }) => {
         <Button
           style={{ margin: "1rem" }}
           onClick={() => handleOpen(null)}
-          variant="contained"
+          variant="outlined"
         >
-          Nuevo Producto
+          <p style={{ fontSize: "60%" }}>Nuevo Producto</p>
         </Button>
         <Button
           style={{ margin: "1rem" }}
           onClick={() => importarDatos()}
-          variant="contained"
+          variant="outlined"
         >
-          Importar Productos
+          <p style={{ fontSize: "60%" }}>Importar Productos</p>
         </Button>
         <Button
           style={{ margin: "1rem" }}
           onClick={() => exportToExcel()}
-          variant="contained"
+          variant="outlined"
         >
-          Exportar Productos
+          <p style={{ fontSize: "60%" }}>Exportar Productos</p>
         </Button>
       </div>
       <TableContainer component={Paper}>

@@ -19,13 +19,13 @@ import { logout } from "../../../firebaseConfig";
 import { AuthContext } from "../../../context/AuthContext";
 import { Button } from "@mui/material";
 import ProductForm from "./ProductForm";
-const drawerWidth = 200;
 import { db } from "../../../firebaseConfig";
 import { collection, getDocs } from "firebase/firestore";
 import { useEffect } from "react";
 import ProductList from "./ProductList";
 import ClientList from "./ClientList";
 import VendedoresList from "./VendedoresList";
+const drawerWidth = 200;
 
 const Dashboard = (props) => {
   const [products, setProducts] = useState([]);
@@ -222,14 +222,19 @@ const Dashboard = (props) => {
         <Toolbar />
         <div
           style={{
-            width: "40vw",
+            width: "100vw",
             display: "flex",
+            alignItems: "center",
             justifyContent: "flex-start",
+            flexDirection: "column",
           }}
         >
           {verProductos ? (
             <Button
-              style={{ margin: "1rem" }}
+              style={{
+                margin: "1rem",
+                width: "300px",
+              }}
               variant="contained"
               onClick={() => setVerProductos(!verProductos)}
             >
@@ -237,7 +242,11 @@ const Dashboard = (props) => {
             </Button>
           ) : (
             <Button
-              style={{ margin: "1rem" }}
+              style={{
+                backgroundColor: "#89ca8f",
+                margin: "1rem",
+                width: "300px",
+              }}
               variant="contained"
               onClick={() => setVerProductos(!verProductos)}
             >
@@ -247,7 +256,11 @@ const Dashboard = (props) => {
 
           {!verClientes ? (
             <Button
-              style={{ margin: "1rem" }}
+              style={{
+                backgroundColor: "#89ca8f",
+                margin: "1rem",
+                width: "300px",
+              }}
               variant="contained"
               onClick={() => setVerClientes(!verClientes)}
             >
@@ -255,7 +268,7 @@ const Dashboard = (props) => {
             </Button>
           ) : (
             <Button
-              style={{ margin: "1rem" }}
+              style={{ margin: "1rem", width: "300px" }}
               variant="contained"
               onClick={() => setVerClientes(!verClientes)}
             >
@@ -265,7 +278,7 @@ const Dashboard = (props) => {
 
           {verVendedores ? (
             <Button
-              style={{ margin: "1rem" }}
+              style={{ margin: "1rem", width: "300px" }}
               variant="contained"
               onClick={() => setVerVendedores(!true)}
             >
@@ -273,7 +286,11 @@ const Dashboard = (props) => {
             </Button>
           ) : (
             <Button
-              style={{ margin: "1rem" }}
+              style={{
+                backgroundColor: "#89ca8f",
+                margin: "1rem",
+                width: "300px",
+              }}
               variant="contained"
               onClick={() => setVerVendedores(true)}
             >

@@ -51,19 +51,21 @@ const ClientList = ({ clientes }) => {
 
   return (
     <div>
-      <Button
-        style={{ margin: "1rem" }}
-        onClick={() => importarClientes()}
-        variant="contained"
-      >
-        Importar Clientes
-      </Button>
-      <Button onClick={exportToExcel}>Exportar excel</Button>
+      <div style={{ display: "flex", justifyContent: "space-between" }}>
+        <Button
+          style={{ margin: "1rem" }}
+          onClick={() => importarClientes()}
+          variant="contained"
+        >
+          Importar Clientes
+        </Button>
+        <Button onClick={exportToExcel}>Exportar excel</Button>
+      </div>
       <TableContainer component={Paper}>
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
           <TableHead>
             <TableRow>
-              <TableCell>Id</TableCell>
+              {/* <TableCell>Id</TableCell> */}
               <TableCell align="left">Nombre</TableCell>
               <TableCell align="left">Direccion</TableCell>
               <TableCell align="left">Telefono</TableCell>
@@ -77,9 +79,9 @@ const ClientList = ({ clientes }) => {
                 key={cliente.id}
                 sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
               >
-                <TableCell component="th" scope="row">
+                {/* <TableCell component="th" scope="row">
                   {cliente.id}
-                </TableCell>
+                </TableCell> */}
                 <TableCell component="th" scope="row">
                   {cliente.name}
                 </TableCell>
