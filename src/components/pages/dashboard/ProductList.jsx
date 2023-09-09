@@ -19,6 +19,7 @@ import {
   clientesCollection,
 } from "../../../firebaseConfig";
 import axios from "axios";
+import * as XLSX from "xlsx";
 
 const ProductList = ({ products, setIsChange }) => {
   const [open, setOpen] = useState(false);
@@ -41,6 +42,66 @@ const ProductList = ({ products, setIsChange }) => {
     } catch (error) {
       console.error("Error al importar datos:", error);
     }
+  };
+
+  const exportToExcel = () => {
+    console.log(products);
+    const data = products.map((producto) => {
+      const unitPrice =
+        typeof producto.unit_price === "number"
+          ? producto.unit_price.toFixed(2)
+          : producto.unit_price;
+      const filaPedido = [
+        producto.categoria,
+        producto.id,
+        producto.img,
+        producto.marca,
+        producto.medida,
+        producto.name,
+        producto.nuevo,
+        producto.oferta,
+        producto.peso,
+        producto.precioBulto,
+        producto.stock,
+        producto.unidades,
+        unitPrice,
+      ];
+      return filaPedido;
+    });
+
+    const header = [
+      "Categoria",
+      "ID",
+      "URL Imagen",
+      "Marca",
+      "Medida",
+      "Nombre",
+      "Nuevo",
+      "Oferta",
+      "Peso",
+      "precioBulto",
+      "Stock",
+      "Unidades",
+      "Precio",
+    ];
+    // const productHeaders = pedidoLista.reduce((headers, pedido) => {
+    //   const numProductos = pedido.productos.length;
+    //   for (let i = 0; i < numProductos; i++) {
+    //     if (header.length < numProductos) {
+    //       headers.push(...[`Producto ${i + 1}`]);
+    //       // Agrega otras propiedades del producto si es necesario
+    //     }
+    //   }
+    //   return headers;
+    // }, []);
+
+    const wsData = [header, ...data];
+    // wsData[0].push(...productHeaders); // Agrega los encabezados de productos al encabezado principal
+
+    const ws = XLSX.utils.aoa_to_sheet(wsData);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "MiHojaDeCalculo");
+    XLSX.writeFile(wb, "mi_archivo_excel.xlsx");
   };
 
   const style = {
@@ -87,7 +148,7 @@ const ProductList = ({ products, setIsChange }) => {
           onClick={() => handleOpen(null)}
           variant="contained"
         >
-          Agregar Nuevo Producto
+          Nuevo Producto
         </Button>
         <Button
           style={{ margin: "1rem" }}
@@ -95,6 +156,13 @@ const ProductList = ({ products, setIsChange }) => {
           variant="contained"
         >
           Importar Productos
+        </Button>
+        <Button
+          style={{ margin: "1rem" }}
+          onClick={() => exportToExcel()}
+          variant="contained"
+        >
+          Exportar Productos
         </Button>
       </div>
       <TableContainer component={Paper}>
