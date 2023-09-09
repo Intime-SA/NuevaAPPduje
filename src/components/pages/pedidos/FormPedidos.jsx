@@ -295,7 +295,7 @@ const FormPedidos = ({ setOpen, edit, setOpenForm }) => {
             <div
               sx={{
                 width: "100%",
-                minHeight: "100vh",
+                minHeight: "90vh",
                 display: "flex",
                 justifyContent: "center",
                 alignItems: "center",
