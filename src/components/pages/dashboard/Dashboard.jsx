@@ -225,7 +225,6 @@ const Dashboard = (props) => {
             width: "100vw",
             display: "flex",
             alignItems: "center",
-            justifyContent: "flex-start",
             flexDirection: "column",
           }}
         >
@@ -244,7 +243,6 @@ const Dashboard = (props) => {
             <Button
               style={{
                 backgroundColor: "#89ca8f",
-                margin: "1rem",
                 width: "300px",
               }}
               variant="contained"
@@ -288,7 +286,6 @@ const Dashboard = (props) => {
             <Button
               style={{
                 backgroundColor: "#89ca8f",
-                margin: "1rem",
                 width: "300px",
               }}
               variant="contained"

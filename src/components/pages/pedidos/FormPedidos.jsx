@@ -292,6 +292,7 @@ const FormPedidos = ({ setOpen, edit, setOpenForm }) => {
             justifyContent={"center"}
             alignItems={"center"}
           >
+            <CssBaseline />
             <div
               sx={{
                 width: "100%",
@@ -304,10 +305,10 @@ const FormPedidos = ({ setOpen, edit, setOpenForm }) => {
                 // backgroundColor: theme.palette.secondary.main,
               }}
             >
-              <CssBaseline />
               <div
                 style={{
                   width: "90%",
+                  height: "90%",
                   marginLeft: "10%",
                   marginRight: "10%",
                   display: "flex",
@@ -317,35 +318,31 @@ const FormPedidos = ({ setOpen, edit, setOpenForm }) => {
               >
                 <DemoContainer
                   size="small"
-                  sx={{ display: "flex", alignItems: "center", margin: "1rem" }}
+                  sx={{ display: "flex", alignItems: "center" }}
                   components={["DatePicker"]}
                 >
                   <LocalizationProvider dateAdapter={AdapterDayjs}>
                     <DemoContainer components={["DatePicker"]}>
                       <DatePicker
-                        label="Selecciona la fecha"
+                        label="Fecha Entrega"
                         value={selectedOption2}
                         onChange={handleChange2}
                       />
                     </DemoContainer>
                   </LocalizationProvider>
-                  ;
-                  {/* <DateField
-                    sx={{
-                      display: "flex",
-                      flexDirection: "column",
-                      margin: "0.5rem",
-                      width: "100%",
-                    }}
-                    id="fecha"
-                    name="fecha"
-                    value={selectedOption2}
-                    onChange={handleChange2}
-                  /> */}
                 </DemoContainer>
                 <ThemeProvider theme={theme}>
-                  <div style={{ width: "80%", margin: "1rem" }}>
-                    Seleccionar Comercio:
+                  <div
+                    style={{
+                      width: "80%",
+                      margin: "1rem",
+                      display: "flex",
+                      justifyContent: "center",
+                    }}
+                  >
+                    <p style={{ marginRight: "1rem", marginTop: "0.5rem" }}>
+                      Comercio:
+                    </p>
                     <Autocomplete
                       disablePortal
                       size="small"
@@ -355,14 +352,23 @@ const FormPedidos = ({ setOpen, edit, setOpenForm }) => {
                       name="cliente"
                       value={selectedOption}
                       onChange={handleChange}
-                      sx={{ width: "100%" }}
+                      sx={{ width: "90%" }}
                       renderInput={(params) => (
                         <TextField {...params} label="Escribe el Comercio" />
                       )}
                     />
                   </div>
-                  <div style={{ width: "80%", margin: "1rem" }}>
-                    Seleccionar Producto
+                  <div
+                    style={{
+                      width: "80%",
+                      margin: "1rem",
+                      display: "flex",
+                      justifyContent: "center",
+                    }}
+                  >
+                    <p style={{ marginRight: "1rem", marginTop: "0.5rem" }}>
+                      Producto
+                    </p>
                     <Autocomplete
                       size="small"
                       disablePortal
@@ -383,10 +389,10 @@ const FormPedidos = ({ setOpen, edit, setOpenForm }) => {
                       }}
                     />
                   </div>
-                  <div style={{ width: "80%", margin: "1rem" }}>
+                  <div style={{ width: "80%", margin: "0.5rem" }}>
                     <TextField
                       size="small"
-                      sx={{ width: "20%", margin: "2rem" }}
+                      sx={{ width: "20%", margin: "0.2rem" }}
                       disablePortal
                       id="cantidad"
                       name="cantidad"
@@ -397,7 +403,11 @@ const FormPedidos = ({ setOpen, edit, setOpenForm }) => {
 
                     <TextField
                       size="small"
-                      sx={{ width: "20%", margin: "2rem", marginLeft: "1rem" }}
+                      sx={{
+                        width: "20%",
+                        margin: "0.2rem",
+                        marginLeft: "1rem",
+                      }}
                       disablePortal
                       id="cantidad"
                       name="descuento"
@@ -411,7 +421,6 @@ const FormPedidos = ({ setOpen, edit, setOpenForm }) => {
                           fontSize: "2.5rem",
                           display: "flex",
                           alignItems: "center",
-                          marginTop: "1rem",
                         }}
                         class="material-symbols-outlined"
                       >

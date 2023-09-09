@@ -52,14 +52,14 @@ const ClientList = ({ clientes }) => {
   return (
     <div>
       <div style={{ display: "flex", justifyContent: "space-between" }}>
-        <Button
-          style={{ margin: "1rem" }}
-          onClick={() => importarClientes()}
-          variant="contained"
-        >
-          Importar Clientes
+        <Button variant="outlined" onClick={() => importarClientes()}>
+          <p style={{ fontSize: "70%" }}> Importar</p>
+          <span class="material-symbols-outlined">publish</span>
         </Button>
-        <Button onClick={exportToExcel}>Exportar excel</Button>
+        <Button variant="outlined" onClick={exportToExcel}>
+          <p style={{ fontSize: "70%" }}> Exportar</p>
+          <span class="material-symbols-outlined">download</span>
+        </Button>
       </div>
       <TableContainer component={Paper}>
         <Table sx={{ minWidth: 650 }} aria-label="simple table">

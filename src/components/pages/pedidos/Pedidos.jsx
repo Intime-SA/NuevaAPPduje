@@ -108,13 +108,16 @@ const Pedidos = () => {
         >
           <Button onClick={() => handleOpen()}>
             {" "}
-            <p> Crear Pedido</p>
+            <p style={{ fontSize: "70%" }}> Crear Pedido</p>
           </Button>
-          <Button onClick={() => handleOpen2(!open2)}>Ver Pedidos</Button>
+          <Button onClick={() => handleOpen2(!open2)}>
+            {" "}
+            <p style={{ fontSize: "70%" }}> Ver Pedidos</p>
+          </Button>
         </div>
         <div>
-          <Button variant="contained" onClick={exportToExcel}>
-            Exportar excel
+          <Button size="small" variant="contained" onClick={exportToExcel}>
+            <p style={{ fontSize: "70%" }}>Exportar excel</p>
             <span class="material-symbols-outlined">download</span>
           </Button>
         </div>
