@@ -70,7 +70,7 @@ const ItemDetail = () => {
         <Card
           sx={{
             flexWrap: "nowrap",
-            width: 250,
+            width: 350,
             margin: 5,
             display: "flex",
             justifyContent: "center",
