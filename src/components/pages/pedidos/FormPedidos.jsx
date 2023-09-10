@@ -383,7 +383,7 @@ const FormPedidos = ({ setOpen, edit, setOpenForm }) => {
                     <Autocomplete
                       size="small"
                       disablePortal
-                      sx={{ width: "100%" }}
+                      sx={{ width: "90%" }}
                       id="productos"
                       options={options2}
                       getOptionLabel={(options) => options.label}
