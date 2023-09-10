@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { collection, getDoc, getDocs } from "firebase/firestore";
+import { collection, getDoc, getDocs, updateDoc } from "firebase/firestore";
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 
 import { Autocomplete, Button, CssBaseline, TextField } from "@mui/material";
@@ -118,9 +118,17 @@ const FormPedidos = ({ setOpen, edit, setOpenForm }) => {
     setOptions(dataClientes.map((cliente) => [cliente.name]));
   }, [dataClientes]);
 
-  const eliminarProducto = (index) => {
+  const eliminarProducto = async (id, cantidad) => {
+    cantidad = parseFloat(cantidad);
+    const productoDocRef = doc(db, "productos", id);
+    const productoDocSnapshot = await getDoc(productoDocRef);
+    const restartStock = productoDocSnapshot.data().stock + cantidad;
+
+    await updateDoc(productoDocRef, { stock: restartStock });
+
+    console.log(cantidad);
     const updatedArray = [...selectedOptionsArray];
-    updatedArray.splice(index, 1);
+    updatedArray.splice(id, 1);
     setSelectedOptionsArray(updatedArray);
   };
 
@@ -150,16 +158,24 @@ const FormPedidos = ({ setOpen, edit, setOpenForm }) => {
         // El documento del producto existe en la base de datos
         const productoData = productoDocSnapshot.data();
         const precio = productoData.unit_price;
+        const stock = productoData.stock;
 
-        const newItem = {
-          Producto: selectedOption3.label,
-          Cantidad: cantidad,
-          Precio: precio, // Usar el precio obtenido de la base de datos
-          Descuento: descuento,
-          ID: selectedOption3.value, // Guardar el ID del producto seleccionado
-        };
-        console.log(newItem);
-        setSelectedOptionsArray([...selectedOptionsArray, newItem]);
+        if (stock > 0) {
+          const newItem = {
+            Producto: selectedOption3.label,
+            Cantidad: cantidad,
+            Precio: precio, // Usar el precio obtenido de la base de datos
+            Descuento: descuento,
+            ID: selectedOption3.value, // Guardar el ID del producto seleccionado
+          };
+          const nuevoStock = productoData.stock - cantidad;
+
+          await updateDoc(productoDocRef, { stock: nuevoStock });
+          console.log(newItem);
+          setSelectedOptionsArray([...selectedOptionsArray, newItem]);
+        } else {
+          alert("no se puede cargar el Producto porque agoto el stock");
+        }
         useNavigate("/pedidos");
       } catch (error) {
         console.log(error);
@@ -235,6 +251,7 @@ const FormPedidos = ({ setOpen, edit, setOpenForm }) => {
   };
 
   const correctColumns = [
+    { field: "ID", width: 1 },
     { field: "Producto", width: 180 },
     { field: "Cantidad", width: 10 },
     { field: "Precio", width: 80 },
@@ -245,7 +262,7 @@ const FormPedidos = ({ setOpen, edit, setOpenForm }) => {
       renderCell: (params) => (
         <Button
           onClick={() => {
-            eliminarProducto(params.id); // Aquí usamos params.id para obtener el id de la fila
+            eliminarProducto(params.id, params.row.Cantidad); // Aquí usamos params.id para obtener el id de la fila
           }}
         >
           <span className="material-symbols-outlined">delete</span>
@@ -256,8 +273,8 @@ const FormPedidos = ({ setOpen, edit, setOpenForm }) => {
 
   const navigate = useNavigate();
 
-  const objeto = selectedOptionsArray.map((elemento, index) => ({
-    id: index,
+  const objeto = selectedOptionsArray.map((elemento) => ({
+    id: elemento.ID,
     Producto: elemento.Producto,
     Cantidad: elemento.Cantidad,
     Precio: `$ ${elemento.Precio}`,
@@ -340,9 +357,6 @@ const FormPedidos = ({ setOpen, edit, setOpenForm }) => {
                       justifyContent: "center",
                     }}
                   >
-                    <p style={{ marginRight: "1rem", marginTop: "0.5rem" }}>
-                      Comercio:
-                    </p>
                     <Autocomplete
                       disablePortal
                       size="small"
@@ -366,9 +380,6 @@ const FormPedidos = ({ setOpen, edit, setOpenForm }) => {
                       justifyContent: "center",
                     }}
                   >
-                    <p style={{ marginRight: "1rem", marginTop: "0.5rem" }}>
-                      Producto
-                    </p>
                     <Autocomplete
                       size="small"
                       disablePortal

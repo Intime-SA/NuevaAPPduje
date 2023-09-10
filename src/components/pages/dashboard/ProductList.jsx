@@ -150,13 +150,13 @@ const ProductList = ({ products, setIsChange }) => {
         >
           <p style={{ fontSize: "60%" }}>Nuevo Producto</p>
         </Button>
-        <Button
+        {/* <Button
           style={{ margin: "1rem" }}
           onClick={() => importarDatos()}
           variant="outlined"
         >
           <p style={{ fontSize: "60%" }}>Importar Productos</p>
-        </Button>
+        </Button> */}
         <Button
           style={{ margin: "1rem" }}
           onClick={() => exportToExcel()}

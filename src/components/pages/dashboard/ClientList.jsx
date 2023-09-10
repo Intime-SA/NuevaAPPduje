@@ -51,71 +51,87 @@ const ClientList = ({ clientes }) => {
 
   return (
     <div>
-      <div style={{ display: "flex", justifyContent: "space-between" }}>
-        <Button variant="outlined" onClick={() => importarClientes()}>
-          <p style={{ fontSize: "70%" }}> Importar</p>
-          <span class="material-symbols-outlined">publish</span>
-        </Button>
-        <Button variant="outlined" onClick={exportToExcel}>
-          <p style={{ fontSize: "70%" }}> Exportar</p>
-          <span class="material-symbols-outlined">download</span>
-        </Button>
-      </div>
-      <TableContainer component={Paper}>
-        <Table sx={{ minWidth: 650 }} aria-label="simple table">
-          <TableHead>
-            <TableRow>
-              {/* <TableCell>Id</TableCell> */}
-              <TableCell align="left">Nombre</TableCell>
-              <TableCell align="left">Direccion</TableCell>
-              <TableCell align="left">Telefono</TableCell>
-              <TableCell align="left">Categoria</TableCell>
-              <TableCell align="left">Acciones</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {clientes.map((cliente) => (
-              <TableRow
-                key={cliente.id}
-                sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-              >
-                {/* <TableCell component="th" scope="row">
+      <div style={{ display: "flex", flexDirection: "column" }}>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            width: "100%",
+          }}
+        >
+          <Button
+            style={{ margin: "1rem" }}
+            variant="outlined"
+            onClick={() => importarClientes()}
+          >
+            <p style={{ fontSize: "70%" }}> Importar</p>
+            <span class="material-symbols-outlined">publish</span>
+          </Button>
+          <Button
+            style={{ margin: "1rem" }}
+            variant="outlined"
+            onClick={exportToExcel}
+          >
+            <p style={{ fontSize: "70%" }}> Exportar</p>
+            <span class="material-symbols-outlined">download</span>
+          </Button>
+        </div>
+        <TableContainer component={Paper}>
+          <Table sx={{ minWidth: 650 }} aria-label="simple table">
+            <TableHead>
+              <TableRow>
+                {/* <TableCell>Id</TableCell> */}
+                <TableCell align="left">Nombre</TableCell>
+                <TableCell align="left">Direccion</TableCell>
+                <TableCell align="left">Telefono</TableCell>
+                <TableCell align="left">Categoria</TableCell>
+                <TableCell align="left">Acciones</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {clientes.map((cliente) => (
+                <TableRow
+                  key={cliente.id}
+                  sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                >
+                  {/* <TableCell component="th" scope="row">
                   {cliente.id}
                 </TableCell> */}
-                <TableCell component="th" scope="row">
-                  {cliente.name}
-                </TableCell>
-                <TableCell component="th" scope="row">
-                  {cliente.direccion}
-                </TableCell>
-                <TableCell component="th" scope="row">
-                  {cliente.telefono}
-                </TableCell>
+                  <TableCell component="th" scope="row">
+                    {cliente.name}
+                  </TableCell>
+                  <TableCell component="th" scope="row">
+                    {cliente.direccion}
+                  </TableCell>
+                  <TableCell component="th" scope="row">
+                    {cliente.telefono}
+                  </TableCell>
 
-                <TableCell component="th" scope="row">
-                  {cliente.zona}
-                </TableCell>
-                <TableCell component="th" scope="row">
-                  <IconButton
-                    onClick={() => {
-                      handleOpen(cliente);
-                    }}
-                  >
-                    <EditIcon color="primary" />
-                  </IconButton>
-                  <IconButton
-                    onClick={() => {
-                      deleteProduct(cliente.id);
-                    }}
-                  >
-                    <DeleteForeverIcon color="primary" />
-                  </IconButton>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
+                  <TableCell component="th" scope="row">
+                    {cliente.zona}
+                  </TableCell>
+                  <TableCell component="th" scope="row">
+                    <IconButton
+                      onClick={() => {
+                        handleOpen(cliente);
+                      }}
+                    >
+                      <EditIcon color="primary" />
+                    </IconButton>
+                    <IconButton
+                      onClick={() => {
+                        deleteProduct(cliente.id);
+                      }}
+                    >
+                      <DeleteForeverIcon color="primary" />
+                    </IconButton>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </div>
     </div>
   );
 };

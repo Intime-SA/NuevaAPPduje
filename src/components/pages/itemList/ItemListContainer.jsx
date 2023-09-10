@@ -130,6 +130,11 @@ function ItemListContainer() {
     p: 4,
   };
 
+  const unitarioFormateado = (precio) => {
+    let precioForm = precio.toFixed(2);
+    return precioForm;
+  };
+
   return (
     <div
       style={{
@@ -179,47 +184,59 @@ function ItemListContainer() {
           {products.map((product) => {
             return (
               <div>
-                <Button></Button>
-                <Card sx={{ flexWrap: "nowrap", width: 250, margin: 5 }}>
-                  <CardActionArea>
-                    <CardMedia
-                      component="img"
-                      height="250"
-                      image={product.img}
-                      alt="green iguana"
-                    />
-                    <CardContent>
-                      <Typography gutterBottom variant="h6" component="div">
-                        {product.name}
-                      </Typography>
-                      <Typography variant="body2" color="text.secondary">
-                        Precio Unitario: <h4>${product.unit_price}</h4>
-                      </Typography>
-                      <br />
-                      <Typography variant="body2" color="text.secondary">
-                        Unidades en Stock: <br />
-                        <h4>{product.stock}</h4>
-                      </Typography>
-                    </CardContent>
-                    <div
-                      style={{
-                        padding: "20px",
-                        display: "flex",
-                        justifyContent: "space-around",
-                      }}
-                    >
-                      {/* <Button variant="contained" onClick={addOne}>
+                <Link to={`/itemDetail/${product.id}`}>
+                  <Card sx={{ flexWrap: "nowrap", width: 320, margin: 2 }}>
+                    <CardActionArea>
+                      <CardMedia
+                        component="img"
+                        height="300px"
+                        image={product.img}
+                        alt="green iguana"
+                        style={{ maxWidth: "100%" }} // Limita el tamaño de la imagen
+                      />
+                      <CardContent>
+                        <Typography
+                          fontSize={"100%"}
+                          gutterBottom
+                          variant="h6"
+                          component="div"
+                        >
+                          {product.name}
+                        </Typography>
+                        <Typography variant="body2" color="text.secondary">
+                          Precio Unitario:
+                          <h4>
+                            ARS{" "}
+                            {product.unit_price.toLocaleString("es-AR", {
+                              style: "currency",
+                              currency: "ARS",
+                            })}
+                          </h4>
+                        </Typography>
+                        <br />
+                        <Typography variant="body2" color="text.secondary">
+                          Unidades en Stock: <br />
+                          <h4>{product.stock}</h4>
+                        </Typography>
+                      </CardContent>
+                      <div
+                        style={{
+                          display: "flex",
+                          justifyContent: "space-around",
+                        }}
+                      >
+                        {/* <Button variant="contained" onClick={addOne}>
                 +
               </Button>
               <Button>{counter}</Button>
               <Button variant="contained" onClick={subOne}>
                 -
               </Button> */}
-                    </div>
-                    {/* <Button onClick={add}>Agregar al carrito</Button> */}
-                    <Link to={`/itemDetail/${product.id}`}>Ver Detalle</Link>
-                  </CardActionArea>
-                </Card>
+                      </div>
+                      {/* <Button onClick={add}>Agregar al carrito</Button> */}
+                    </CardActionArea>
+                  </Card>
+                </Link>
               </div>
             );
           })}

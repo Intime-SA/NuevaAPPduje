@@ -232,7 +232,7 @@ const Dashboard = (props) => {
             <Button
               style={{
                 margin: "1rem",
-                width: "300px",
+                width: "70%",
               }}
               variant="contained"
               onClick={() => setVerProductos(!verProductos)}
@@ -243,7 +243,7 @@ const Dashboard = (props) => {
             <Button
               style={{
                 backgroundColor: "#89ca8f",
-                width: "300px",
+                width: "70%",
               }}
               variant="contained"
               onClick={() => setVerProductos(!verProductos)}
@@ -257,7 +257,7 @@ const Dashboard = (props) => {
               style={{
                 backgroundColor: "#89ca8f",
                 margin: "1rem",
-                width: "300px",
+                width: "70%",
               }}
               variant="contained"
               onClick={() => setVerClientes(!verClientes)}
@@ -286,7 +286,7 @@ const Dashboard = (props) => {
             <Button
               style={{
                 backgroundColor: "#89ca8f",
-                width: "300px",
+                width: "70%",
               }}
               variant="contained"
               onClick={() => setVerVendedores(true)}

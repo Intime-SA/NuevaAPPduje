@@ -21,7 +21,7 @@ const ItemDetail = () => {
   const { user, addToCart, getQuantityById } = useContext(CartContext);
   let quantity = getQuantityById(id);
   const [product, setProduct] = useState(null);
-  const [counter, setCounter] = useState(quantity || 1);
+  const [counter, setCounter] = useState(quantity || 0);
 
   useEffect(() => {
     let usuario = JSON.parse(localStorage.getItem("userInfo"));
