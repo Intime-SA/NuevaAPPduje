@@ -261,6 +261,7 @@ const FormPedidos = ({ setOpen, edit, setOpenForm }) => {
       width: 10,
       renderCell: (params) => (
         <Button
+          style={{ textAlign: "left" }}
           onClick={() => {
             eliminarProducto(params.id, params.row.Cantidad); // Aquí usamos params.id para obtener el id de la fila
           }}
@@ -366,7 +367,7 @@ const FormPedidos = ({ setOpen, edit, setOpenForm }) => {
                       name="cliente"
                       value={selectedOption}
                       onChange={handleChange}
-                      sx={{ width: "90%" }}
+                      sx={{ width: "100%" }}
                       renderInput={(params) => (
                         <TextField {...params} label="Escribe el Comercio" />
                       )}
@@ -383,7 +384,7 @@ const FormPedidos = ({ setOpen, edit, setOpenForm }) => {
                     <Autocomplete
                       size="small"
                       disablePortal
-                      sx={{ width: "90%" }}
+                      sx={{ width: "100%" }}
                       id="productos"
                       options={options2}
                       getOptionLabel={(options) => options.label}
@@ -459,8 +460,8 @@ const FormPedidos = ({ setOpen, edit, setOpenForm }) => {
                   }}
                 >
                   <Grid container spacing={1}>
-                    <Grid item xs={10} md={10}>
-                      <Box sx={{ height: 250 }}>
+                    <Grid item xs={11} md={10}>
+                      <Box sx={{ height: 300 }}>
                         <DataGrid rows={rows} columns={correctColumns} />
                       </Box>
                       <div
