@@ -131,6 +131,8 @@ const Pedidos = () => {
             setOpenForm={setOpen}
             enviarCambioAlPadre={recibirCambioDesdeHijo}
             pedidoLista={pedidoLista}
+            setOpen2={setOpen2}
+            open2={open2}
           />
         )}
         <Modal

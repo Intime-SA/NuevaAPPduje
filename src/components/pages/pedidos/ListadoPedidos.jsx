@@ -15,6 +15,7 @@ import {
   Alert,
   AlertTitle,
   ToggleButton,
+  Modal,
 } from "@mui/material";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import EditIcon from "@mui/icons-material/Edit";
@@ -30,6 +31,7 @@ import {
   updateDoc,
 } from "firebase/firestore";
 import FormPedidos from "./FormPedidos";
+import PedidoDetalle from "./PedidoDetalle";
 
 const ListadoPedidos = ({
   pedidoLista,
@@ -46,6 +48,8 @@ const ListadoPedidos = ({
   const [edit, setEdit] = useState([]);
   const [open2, setOpen2] = useState(false);
   const [atras, setAtras] = useState(false);
+  const [openModal, setOpenModal] = useState(false);
+  const [dataPedido, setDataPedido] = useState([]);
 
   useEffect(() => {
     const fetchData = async (id, render) => {
@@ -93,6 +97,14 @@ const ListadoPedidos = ({
   const botonNoActivo = (id) => {
     setAtras(true);
     setEstadoId2(id);
+  };
+
+  const obtenerDetalle = async (id) => {
+    const pedidosDocumentRef = doc(db, "pedidos", id);
+    const docSnapshot = await getDoc(pedidosDocumentRef);
+    setDataPedido(docSnapshot.data());
+    setOpenModal(true);
+    console.log(docSnapshot.data());
   };
 
   const borrarPedido = async (id) => {
@@ -152,6 +164,12 @@ const ListadoPedidos = ({
           {/* <strong>El pedido fue entregado con exito</strong> */}
         </Alert>
       );
+    } else if (estado === "completado") {
+      return (
+        <Alert variant="filled" severity="success">
+          Completado
+        </Alert>
+      );
     }
   };
 
@@ -204,10 +222,56 @@ const ListadoPedidos = ({
     }
   };
 
+  const botonCompletado = async (id) => {
+    try {
+      const pedidosDocumentRef = doc(db, "pedidos", id);
+      const docSnapshot = await getDoc(pedidosDocumentRef);
+
+      if (docSnapshot.exists()) {
+        await updateDoc(pedidosDocumentRef, { estado: "completado" });
+        console.log("completado");
+        enviarCambioAlPadre(true);
+        // No es necesario recargar la página aquí si no es requerido
+      } else {
+        console.log("El documento no existe.");
+      }
+    } catch (error) {
+      console.error("Error al eliminar el documento:", error);
+    }
+  };
+  const handleCloseModal = () => {
+    setOpenModal(false);
+  };
+
+  const style = {
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+    width: "100vw",
+    height: "100vh",
+    bgcolor: "background.paper",
+    boxShadow: 24,
+    p: 4,
+  };
+
   return (
     <div>
       {" "}
       {open2 && <FormPedidos edit={edit} />}
+      <Modal
+        open={openModal}
+        onClose={handleCloseModal}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box sx={style}>
+          <PedidoDetalle
+            handleCloseModal={handleCloseModal}
+            dataPedido={dataPedido}
+          />
+        </Box>
+      </Modal>
       <TableContainer component={Paper}>
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
           <TableHead>
@@ -255,7 +319,7 @@ const ListadoPedidos = ({
                                   <IconButton
                                     color="primary"
                                     onClick={() => {
-                                      borrarPedido(pedido.id);
+                                      obtenerDetalle(pedido.id);
                                     }}
                                   >
                                     <span class="material-symbols-outlined">
@@ -293,6 +357,15 @@ const ListadoPedidos = ({
                                 >
                                   <DeleteForeverIcon color="primary" />
                                 </IconButton>
+                                <Button
+                                  onClick={() => obtenerDetalle(pedido.id)}
+                                >
+                                  <img
+                                    src="src\components\pages\pedidos\wts.png"
+                                    alt="asd"
+                                    width={"30px"}
+                                  />
+                                </Button>
                               </div>
                               <div
                                 style={{
@@ -311,13 +384,13 @@ const ListadoPedidos = ({
                                 </ToggleButton>
                                 <ToggleButton
                                   value="check"
-                                  onClick={() => botonActivo(pedido.id)}
+                                  onClick={() => botonCompletado(pedido.id)}
                                 >
                                   <CheckIcon />
                                 </ToggleButton>
                                 <ToggleButton
                                   value="check"
-                                  onClick={() => botonActivo(pedido.id)}
+                                  onClick={() => botonCompletado(pedido.id)}
                                 >
                                   <span class="material-symbols-outlined">
                                     close
