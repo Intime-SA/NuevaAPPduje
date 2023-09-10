@@ -400,10 +400,20 @@ const FormPedidos = ({ setOpen, edit, setOpenForm }) => {
                       }}
                     />
                   </div>
-                  <div style={{ width: "80%", margin: "0.5rem" }}>
+                  <div
+                    style={{
+                      width: "80%",
+                      margin: "0.5rem",
+                      marginLeft: "2rem",
+                    }}
+                  >
                     <TextField
                       size="small"
-                      sx={{ width: "20%", margin: "0.2rem" }}
+                      sx={{
+                        width: "20%",
+                        margin: "0.2rem",
+                        marginLeft: "1rem",
+                      }}
                       disablePortal
                       id="cantidad"
                       name="cantidad"
@@ -449,7 +459,7 @@ const FormPedidos = ({ setOpen, edit, setOpenForm }) => {
                   }}
                 >
                   <Grid container spacing={1}>
-                    <Grid item xs={12} md={10}>
+                    <Grid item xs={10} md={10}>
                       <Box sx={{ height: 250 }}>
                         <DataGrid rows={rows} columns={correctColumns} />
                       </Box>
