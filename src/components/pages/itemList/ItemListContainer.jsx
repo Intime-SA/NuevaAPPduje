@@ -20,6 +20,9 @@ import * as XLSX from "xlsx";
 function ItemListContainer() {
   const [products, setProducts] = useState([]);
   const [open, setOpen] = useState(false);
+  const [scroll, setScroll] = useState(
+    JSON.parse(localStorage.getItem("scrollPosition") || 0)
+  );
 
   const handleOpen = () => {
     setOpen(true);
@@ -40,8 +43,6 @@ function ItemListContainer() {
       })
       .catch((err) => console.log(err));
   }, []);
-
-  console.log(products);
 
   const handleFileUpload = async (e) => {
     const file = e.target.files[0];
@@ -135,6 +136,28 @@ function ItemListContainer() {
     return precioForm;
   };
 
+  const obtenerPosicion = () => {
+    let scrollPosition = window.scrollY;
+    console.log(scrollPosition);
+    localStorage.setItem("scrollPosition", scrollPosition);
+    setScroll(localStorage.getItem("scrollPosition")); // Actualizar el estado después de guardar en localStorage
+  };
+
+  const redirigir = async (scrollDelay) => {
+    // Espera el tiempo de demora antes de realizar el desplazamiento
+    await new Promise((resolve) => setTimeout(resolve, scrollDelay));
+
+    // Realiza el desplazamiento suave
+    window.scrollBy({
+      top: scroll,
+      left: 0,
+      behavior: "smooth",
+    });
+  };
+
+  // Llama a la función redirigir con el tiempo de demora deseado (por ejemplo, 2000ms o 2 segundos)
+  redirigir(2000);
+
   return (
     <div
       style={{
@@ -184,7 +207,10 @@ function ItemListContainer() {
           {products.map((product) => {
             return (
               <div>
-                <Link to={`/itemDetail/${product.id}`}>
+                <Link
+                  onClick={obtenerPosicion}
+                  to={`/itemDetail/${product.id}`}
+                >
                   <Card sx={{ flexWrap: "nowrap", width: 320, margin: 2 }}>
                     <CardActionArea>
                       <CardMedia
@@ -247,65 +273,3 @@ function ItemListContainer() {
 }
 
 export default ItemListContainer;
-
-// import React, { useEffect, useState } from "react";
-// import { db } from "../../../firebaseConfig";
-// import { getDocs, collection } from "firebase/firestore";
-// import { Link } from "react-router-dom";
-// import axios from "axios";
-
-// function ItemListContainer() {
-//   const [products, setProducts] = useState([]);
-
-//   useEffect(() => {
-//     axios
-//       .get("http://localhost:5000/productos")
-//       .then((res) => {
-//         let newArray = res.data.map((product) => {
-//           return { ...product, id: product.id };
-//         });
-//         setProducts(newArray);
-//       })
-//       .catch((err) => console.log(err));
-//   }, []);
-
-//   console.log(products);
-
-//   return (
-//     <div>
-//       {products.map((product) => {
-//         return (
-//           <div
-//             key={product.id}
-//             style={{
-//               display: "flex",
-//               margin: "1rem",
-//               width: "90%",
-//               border: "1px grey solid",
-//               borderRadius: "5px",
-//             }}
-//           >
-//             <div style={{ display: "flex", flexDirection: "column" }}>
-//               <div>
-//                 <img src={product.img} alt="asd" style={{ width: "200px" }} />
-//                 <h2 style={{ margin: "1rem" }}>{product.name}</h2>
-//               </div>
-//               <div>
-//                 <Link to={`/itemDetail/${product.id}`}>
-//                   <span
-//                     style={{ margin: "1rem" }}
-//                     class="material-symbols-outlined"
-//                   >
-//                     search
-//                   </span>
-//                 </Link>
-//               </div>
-//             </div>
-//           </div>
-//         );
-//       })}
-//     </div>
-//   );
-// }
-
-// export default ItemListContainer;

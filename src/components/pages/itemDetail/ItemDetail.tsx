@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { db } from "../../../firebaseConfig";
 import { getDoc, collection, doc } from "firebase/firestore";
 import {
@@ -53,6 +53,8 @@ const ItemDetail = () => {
   //RESTAR
   //AGREGAR
 
+  const navigate = useNavigate();
+
   const add = () => {
     let objeto = {
       ...product,
@@ -60,6 +62,7 @@ const ItemDetail = () => {
     };
     console.log(objeto);
     addToCart(objeto);
+    navigate("/shop");
   };
 
   console.log(product);
@@ -120,7 +123,7 @@ const ItemDetail = () => {
                   variant="body2"
                   color="text.secondary"
                 >
-                  <h6>Precio Bulto ${product.precioBulto}</h6>
+                  <h6>Precio Bulto $</h6> <h6>{product.precioBulto}</h6>
                 </Typography>
               </div>
             </CardContent>
