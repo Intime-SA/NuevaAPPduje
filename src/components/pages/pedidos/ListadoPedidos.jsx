@@ -329,6 +329,13 @@ const ListadoPedidos = ({
                                       search
                                     </span>
                                   </IconButton>
+                                  <IconButton
+                                    onClick={() => {
+                                      borrarPedido(pedido.id);
+                                    }}
+                                  >
+                                    <DeleteForeverIcon color="primary" />
+                                  </IconButton>
                                 </div>
                                 <div>
                                   <h4>{pedido.cliente}</h4>
@@ -353,13 +360,6 @@ const ListadoPedidos = ({
                               }}
                             >
                               <div>
-                                <IconButton
-                                  onClick={() => {
-                                    borrarPedido(pedido.id);
-                                  }}
-                                >
-                                  <DeleteForeverIcon color="primary" />
-                                </IconButton>
                                 <Button
                                   onClick={() => obtenerDetalle(pedido.id)}
                                 >
