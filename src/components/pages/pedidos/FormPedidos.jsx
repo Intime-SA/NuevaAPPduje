@@ -452,10 +452,10 @@ const FormPedidos = ({ setOpen, edit, setOpenForm }) => {
                 </ThemeProvider>
                 <div
                   style={{
-                    width: "80%",
-                    margin: "1rem",
+                    width: "100vw", // O ajusta el ancho según tus necesidades
                     display: "flex",
                     justifyContent: "center",
+                    alignItems: "center", // Esto centra verticalmente
                   }}
                 >
                   <Grid container spacing={1}>
@@ -463,47 +463,6 @@ const FormPedidos = ({ setOpen, edit, setOpenForm }) => {
                       <Box sx={{ height: 250 }}>
                         <DataGrid rows={rows} columns={correctColumns} />
                       </Box>
-                      {/* <table style={{ width: "90%" }} className="table">
-              <thead>
-                <tr>
-                  <th>Producto</th>
-                  <th>Precio</th>
-                  <th>Unidades</th>
-                  <th>Acciones</th>
-                </tr>
-              </thead>
-              <tbody>
-                {selectedOptionsArray.map((item, index) => (
-                  <tr key={index}>
-                    <td style={{ width: "60%" }}>
-                      <h4 style={{ color: "black", fontSize: "2rem" }}>
-                        {item[0].Producto[0] +
-                          item[0].Producto[1] +
-                          item[0].Producto[2] +
-                          item[0].Producto[3] +
-                          item[0].Producto[4] +
-                          item[0].Producto[5]}
-                      </h4>{" "}
-                    </td>
-                    <td style={{ width: "10%" }}>
-                      <h4 style={{ color: "black", fontSize: "2rem" }}>
-                        {parseFloat(item[0].Producto[7]).toFixed(2)}
-                      </h4>{" "}
-                    </td>
-                    <td style={{ width: "10%" }}>
-                      <h4 style={{ color: "black", fontSize: "2rem" }}>
-                        {item[1].Cantidad}
-                      </h4>{" "}
-                    </td>
-                    <td style={{ width: "10%" }}>
-                      <Button onClick={() => eliminarProducto(index)}>
-                        <span class="material-symbols-outlined">delete</span>
-                      </Button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table> */}
                       <div
                         style={{
                           display: "flex",
