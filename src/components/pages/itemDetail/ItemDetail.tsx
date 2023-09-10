@@ -71,7 +71,7 @@ const ItemDetail = () => {
           sx={{
             flexWrap: "nowrap",
             width: 350,
-            margin: 5,
+            margin: 1,
             display: "flex",
             justifyContent: "center",
           }}
