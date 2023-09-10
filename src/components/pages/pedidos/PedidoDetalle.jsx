@@ -10,7 +10,7 @@ import {
   Paper,
 } from "@mui/material";
 
-const PedidoDetalle = ({ dataPedido, handleCloseModal }) => {
+const PedidoDetalle = ({ dataPedido, handleCloseModal, dataId }) => {
   const [totalPrice, setTotalPrice] = useState(0);
 
   useEffect(() => {
@@ -46,7 +46,13 @@ const PedidoDetalle = ({ dataPedido, handleCloseModal }) => {
   //   }
 
   return (
-    <div>
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "center",
+        flexDirection: "column",
+      }}
+    >
       <div style={{ display: "flex", justifyContent: "center" }}>
         <div style={{ width: "80vw" }}>
           {/* <PDFViewer>{abrir && <ModalPDF data={data} />}</PDFViewer> */}
@@ -62,7 +68,6 @@ const PedidoDetalle = ({ dataPedido, handleCloseModal }) => {
               alt="logiyo"
               style={{ width: "100px" }}
             />
-
             <div
               style={{
                 display: "flex",
@@ -87,22 +92,6 @@ const PedidoDetalle = ({ dataPedido, handleCloseModal }) => {
               </Button>
             )}
           </PDFDownloadLink> */}
-              <button
-                style={{
-                  background: "none",
-                  border: "0px",
-                  marginTop: "6px",
-                  cursor: "pointer",
-                }}
-                // onClick={() => envioMensaje(idCliente)}
-              >
-                <img
-                  style={{ width: "70px" }}
-                  src="https://live.mrf.io/statics/i/ps/www.muycomputer.com/wp-content/uploads/2012/10/whatsapp.jpg?width=1200&enable=upscale"
-                  alt="wsp"
-                  id="wsp"
-                />
-              </button>
             </div>
           </div>
           <div
@@ -112,7 +101,7 @@ const PedidoDetalle = ({ dataPedido, handleCloseModal }) => {
               flexDirection: "column",
             }}
           >
-            Pedido ID:{" "}
+            Pedido ID:{dataId}
             <h3>{dataPedido ? dataPedido.id : "no cargo la info"}</h3>
           </div>
           <div style={{ display: "flex", justifyContent: "space-between" }}>
@@ -157,14 +146,39 @@ const PedidoDetalle = ({ dataPedido, handleCloseModal }) => {
               </TableBody>
             </Table>
           </TableContainer>
-          <div style={{ display: "flex", justifyContent: "end" }}>
-            <h6 style={{ color: "#89ca8f" }}>
-              Total Orden: $ {parseFloat(totalPrice).toFixed(2)}
-            </h6>
+          <div style={{ display: "flex", justifyContent: "space-between" }}>
+            <h3 style={{ color: "black" }}>Total Orden: </h3>
+            <h3 style={{ color: "black" }}>
+              {totalPrice.toLocaleString("es-AR", {
+                style: "currency",
+                currency: "ARS",
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2,
+                useGrouping: true, // Esto agrega separadores de miles (ejemplo: 1.234.567,89)
+              })}
+            </h3>
           </div>
         </div>
       </div>
-      <Button onClick={handleCloseModal}>Cerrar</Button>
+      <div style={{ display: "flex", justifyContent: "space-around" }}>
+        <Button onClick={handleCloseModal}>Cerrar</Button>
+        <Button
+          style={{
+            background: "none",
+            border: "0px",
+            marginTop: "6px",
+            cursor: "pointer",
+          }}
+          // onClick={() => envioMensaje(idCliente)}
+        >
+          <img
+            style={{ width: "70px" }}
+            src="https://live.mrf.io/statics/i/ps/www.muycomputer.com/wp-content/uploads/2012/10/whatsapp.jpg?width=1200&enable=upscale"
+            alt="wsp"
+            id="wsp"
+          />
+        </Button>
+      </div>
     </div>
   );
 };

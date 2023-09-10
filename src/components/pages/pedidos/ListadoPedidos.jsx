@@ -50,6 +50,7 @@ const ListadoPedidos = ({
   const [atras, setAtras] = useState(false);
   const [openModal, setOpenModal] = useState(false);
   const [dataPedido, setDataPedido] = useState([]);
+  const [dataId, setDataId] = useState(null);
 
   useEffect(() => {
     const fetchData = async (id, render) => {
@@ -102,6 +103,7 @@ const ListadoPedidos = ({
   const obtenerDetalle = async (id) => {
     const pedidosDocumentRef = doc(db, "pedidos", id);
     const docSnapshot = await getDoc(pedidosDocumentRef);
+    setDataId(id);
     setDataPedido(docSnapshot.data());
     setOpenModal(true);
     console.log(docSnapshot.data());
@@ -269,6 +271,7 @@ const ListadoPedidos = ({
           <PedidoDetalle
             handleCloseModal={handleCloseModal}
             dataPedido={dataPedido}
+            dataId={dataId}
           />
         </Box>
       </Modal>
