@@ -298,7 +298,7 @@ const FormPedidos = ({ setOpen, edit, setOpenForm }) => {
             justifyContent: "space-evenly",
             flexDirection: "column",
             alignItems: "center",
-            marginTop: "1rem",
+            margin: "2rem",
           }}
           onSubmit={handleSubmit}
         >
