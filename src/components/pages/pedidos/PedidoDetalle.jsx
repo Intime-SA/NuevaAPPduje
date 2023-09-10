@@ -9,6 +9,7 @@ import {
   TableCell,
   Paper,
 } from "@mui/material";
+import { Link } from "react-router-dom";
 
 const PedidoDetalle = ({ dataPedido, handleCloseModal, dataId }) => {
   const [totalPrice, setTotalPrice] = useState(0);
@@ -60,14 +61,17 @@ const PedidoDetalle = ({ dataPedido, handleCloseModal, dataId }) => {
             style={{
               display: "flex",
               justifyContent: "space-between",
-              alignItems: "start",
+              alignItems: "end",
             }}
           >
-            <img
-              src="https://media.licdn.com/dms/image/D4D0BAQEvYBgs5V2lhQ/company-logo_200_200/0/1682360728459?e=1697673600&v=beta&t=Im6s7_Cy12RU4pKxagWyRxKi8NEG9AELc4eBDNBWCQY"
-              alt="logiyo"
-              style={{ width: "100px" }}
-            />
+            <Link to="/shop">
+              <img
+                src="https://media.licdn.com/dms/image/D4D0BAQEvYBgs5V2lhQ/company-logo_200_200/0/1682360728459?e=1697673600&v=beta&t=Im6s7_Cy12RU4pKxagWyRxKi8NEG9AELc4eBDNBWCQY"
+                alt="logiyo"
+                style={{ width: "100px" }}
+              />
+            </Link>
+
             <div
               style={{
                 display: "flex",
@@ -160,8 +164,19 @@ const PedidoDetalle = ({ dataPedido, handleCloseModal, dataId }) => {
           </div>
         </div>
       </div>
-      <div style={{ display: "flex", justifyContent: "space-around" }}>
-        <Button onClick={handleCloseModal}>Cerrar</Button>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-around",
+          alignItems: "center",
+        }}
+      >
+        <div>
+          <Button size="small" variant="contained" onClick={handleCloseModal}>
+            Cerrar
+          </Button>
+        </div>
+
         <Button
           style={{
             background: "none",

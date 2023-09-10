@@ -366,7 +366,7 @@ const ListadoPedidos = ({
                                   <img
                                     src="https://firebasestorage.googleapis.com/v0/b/workshop-duje.appspot.com/o/whatsapp.png?alt=media&token=424dba56-2436-4cf3-a244-5a48c2510b57"
                                     alt="asd"
-                                    width={"30px"}
+                                    width={"20px"}
                                   />
                                 </Button>
                               </div>
