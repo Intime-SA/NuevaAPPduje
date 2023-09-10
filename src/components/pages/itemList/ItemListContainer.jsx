@@ -21,7 +21,7 @@ function ItemListContainer() {
   const [products, setProducts] = useState([]);
   const [open, setOpen] = useState(false);
   const [scroll, setScroll] = useState(
-    JSON.parse(localStorage.getItem("scrollPosition") || 0)
+    JSON.parse(localStorage.getItem("scrollPosition"))
   );
 
   const handleOpen = () => {
@@ -154,9 +154,7 @@ function ItemListContainer() {
       behavior: "smooth",
     });
   };
-
-  // Llama a la función redirigir con el tiempo de demora deseado (por ejemplo, 2000ms o 2 segundos)
-  redirigir(2000);
+  redirigir();
 
   return (
     <div

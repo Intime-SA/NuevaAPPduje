@@ -96,7 +96,8 @@ const ItemDetail = () => {
                   variant="body3"
                   color="text.secondary"
                 >
-                  <p>Precio Unitario </p> <p>{product.unit_price}</p>
+                  <p>Precio Unitario </p>{" "}
+                  <p>$ {product.unit_price.toFixed(2)}</p>
                 </Typography>
                 <Typography
                   style={{ display: "flex", justifyContent: "space-between" }}
@@ -123,7 +124,8 @@ const ItemDetail = () => {
                   variant="body2"
                   color="text.secondary"
                 >
-                  <h6>Precio Bulto $</h6> <h6>{product.precioBulto}</h6>
+                  <h6>Precio Bulto </h6>{" "}
+                  <h6> $ {product.precioBulto.toFixed(2)}</h6>
                 </Typography>
               </div>
             </CardContent>
