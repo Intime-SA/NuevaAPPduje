@@ -287,8 +287,8 @@ const ListadoPedidos = ({
             </TableRow>
           </TableHead>
           <TableBody>
-            {listaInversa.map((pedido, index) => (
-              <TableRow key={pedido.id}>
+            {pedidoLista.reverse().map((pedido, index) => (
+              <TableRow key={index}>
                 <TableCell component="th" scope="row">
                   {datosClientes.map((cliente) => {
                     if (cliente.name === pedido.cliente[0]) {
@@ -337,6 +337,7 @@ const ListadoPedidos = ({
                                   </IconButton>
                                 </div>
                                 <div>
+                                  <h6 style={{ fontWeight: "700" }}>{index}</h6>
                                   <h4>{pedido.cliente}</h4>
                                   <p>{cliente.direccion}</p>
                                   <p>{cliente.telefono}</p>
