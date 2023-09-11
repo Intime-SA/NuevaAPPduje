@@ -453,14 +453,14 @@ const FormPedidos = ({ setOpen, edit, setOpenForm }) => {
                 </ThemeProvider>
                 <div
                   style={{
-                    width: "100vw", // O ajusta el ancho según tus necesidades
+                    width: "90vw", // O ajusta el ancho según tus necesidades
                     display: "flex",
                     justifyContent: "center",
                     alignItems: "center", // Esto centra verticalmente
                   }}
                 >
                   <Grid container spacing={1}>
-                    <Grid item xs={11} md={10}>
+                    <Grid item xs={10} md={10}>
                       <Box sx={{ height: 300 }}>
                         <DataGrid rows={rows} columns={correctColumns} />
                       </Box>
