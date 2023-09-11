@@ -257,6 +257,8 @@ const ListadoPedidos = ({
     p: 4,
   };
 
+  const listaInversa = [...pedidoLista].reverse();
+
   return (
     <div>
       {" "}
@@ -285,11 +287,8 @@ const ListadoPedidos = ({
             </TableRow>
           </TableHead>
           <TableBody>
-            {pedidoLista.map((pedido) => (
-              <TableRow
-                key={pedido.id}
-                sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-              >
+            {listaInversa.map((pedido, index) => (
+              <TableRow key={pedido.id}>
                 <TableCell component="th" scope="row">
                   {datosClientes.map((cliente) => {
                     if (cliente.name === pedido.cliente[0]) {
