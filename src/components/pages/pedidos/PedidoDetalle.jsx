@@ -10,6 +10,8 @@ import {
   Paper,
 } from "@mui/material";
 import { Link } from "react-router-dom";
+import { PDFDownloadLink, PDFViewer } from "@react-pdf/renderer";
+import ModalPDF from "./ModalPDF";
 
 const PedidoDetalle = ({ dataPedido, handleCloseModal, dataId }) => {
   const [totalPrice, setTotalPrice] = useState(0);
@@ -45,6 +47,8 @@ const PedidoDetalle = ({ dataPedido, handleCloseModal, dataId }) => {
 
   //     return (window.location.href = linkWsp);
   //   }
+
+  console.log(dataPedido.cliente);
 
   return (
     <div
@@ -85,17 +89,17 @@ const PedidoDetalle = ({ dataPedido, handleCloseModal, dataId }) => {
                 Provincia de Buenos Aires
               </p>
               <p style={{ fontSize: "50%" }}>Teléfono: 0223 680-0402</p>
-              {/* <PDFDownloadLink
-            style={{ marginTop: "10px" }}
-            document={<ModalPDF data={data} />}
-            fileName={idPedido}
-          >
-            {({ blob, url, loading, error }) => (
-              <Button variant="contained">
-                {loading ? "Generando PDF..." : "Descargar PDF"}
-              </Button>
-            )}
-          </PDFDownloadLink> */}
+              <PDFDownloadLink
+                style={{ marginTop: "10px" }}
+                document={<ModalPDF data={dataPedido} />}
+                fileName={dataPedido.id}
+              >
+                {({ blob, url, loading, error }) => (
+                  <Button variant="contained">
+                    {loading ? "Generando PDF..." : "Descargar PDF"}
+                  </Button>
+                )}
+              </PDFDownloadLink>
             </div>
           </div>
           <div
