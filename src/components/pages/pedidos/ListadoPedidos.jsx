@@ -43,7 +43,7 @@ const ListadoPedidos = ({
   const [estadoId, setEstadoId] = useState();
   const [estadoId2, setEstadoId2] = useState();
   const [datosClientes, setDatosClientes] = useState([]);
-  const [client, setClient] = useState();
+  const [telefonoCliente, setTelefonoCliente] = useState();
   const [loading, setLoading] = useState(true); // Estado para manejar la carga de datos
   const [edit, setEdit] = useState([]);
   const [open2, setOpen2] = useState(false);
@@ -298,6 +298,37 @@ const ListadoPedidos = ({
 
   const listaInversa = [...pedidoLista].reverse();
 
+  async function envioMensaje(id, cliente) {
+    const pedidosDocumentRef = doc(db, "pedidos", id);
+    const docSnapshot = await getDoc(pedidosDocumentRef);
+    const nombre = docSnapshot.data().cliente;
+    console.log(nombre);
+
+    const clientes = collection(db, "clientes");
+    const listadoClientes = await getDocs(clientes).then((res) => {
+      const clientes = []; // Inicializa un arreglo para los nuevos vendedores
+      res.docs.forEach((elemento) => {
+        if (elemento.data().name === cliente) {
+          setTelefonoCliente(elemento.data().telefono);
+
+          try {
+            const phoneNumber = telefonoCliente;
+            const message = `Te paso el detalle del pedido ID: ${id}`;
+
+            const encodedMessage = encodeURIComponent(message);
+            const linkWsp = `https://api.whatsapp.com/send?phone=${phoneNumber}&text=${encodedMessage}`;
+
+            console.log(linkWsp);
+
+            window.location.href = linkWsp;
+          } catch (error) {
+            console.error("Error:", error);
+          }
+        }
+      });
+    });
+  }
+
   return (
     <div>
       {" "}
@@ -406,7 +437,9 @@ const ListadoPedidos = ({
                             >
                               <div>
                                 <Button
-                                  onClick={() => obtenerDetalle(pedido.id)}
+                                  onClick={() =>
+                                    envioMensaje(pedido.id, pedido.cliente[0])
+                                  }
                                 >
                                   <img
                                     src="https://firebasestorage.googleapis.com/v0/b/workshop-duje.appspot.com/o/whatsapp.png?alt=media&token=424dba56-2436-4cf3-a244-5a48c2510b57"
