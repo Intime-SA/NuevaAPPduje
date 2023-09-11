@@ -81,7 +81,7 @@ const Pedidos = () => {
       .catch((error) => {
         console.error("Error al obtener vendedores:", error);
       });
-    setRender(null);
+    setRender(false);
   }, [render]);
 
   console.log(pedidoLista);

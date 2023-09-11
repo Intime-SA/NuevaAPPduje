@@ -100,6 +100,25 @@ const ListadoPedidos = ({
     setEstadoId2(id);
   };
 
+  const botonCancelado = async (id) => {
+    try {
+      const pedidosDocumentRef = doc(db, "pedidos", id);
+      const docSnapshot = await getDoc(pedidosDocumentRef);
+
+      if (docSnapshot.exists()) {
+        await updateDoc(pedidosDocumentRef, { estado: "cancelado" });
+        enviarCambioAlPadre(true);
+        // No es necesario recargar la página aquí si no es requerido
+      } else {
+        console.log("El documento no existe.");
+      }
+    } catch (error) {
+      console.error("Error al eliminar el documento:", error);
+    }
+
+    enviarCambioAlPadre(false);
+  };
+
   const obtenerDetalle = async (id) => {
     const pedidosDocumentRef = doc(db, "pedidos", id);
     const docSnapshot = await getDoc(pedidosDocumentRef);
@@ -115,9 +134,16 @@ const ListadoPedidos = ({
       const docSnapshot = await getDoc(pedidosDocumentRef);
 
       if (docSnapshot.exists()) {
-        await deleteDoc(pedidosDocumentRef);
-        console.log("Documento eliminado correctamente.");
-        enviarCambioAlPadre(true);
+        if (
+          docSnapshot.data().estado === "nuevo" ||
+          docSnapshot.data().estado === "pendiente"
+        ) {
+          await deleteDoc(pedidosDocumentRef);
+          console.log("Documento eliminado correctamente.");
+          enviarCambioAlPadre(true);
+        } else {
+          alert("Lo siento. Solamente se pueden borrar los pedidos nuevos");
+        }
         // No es necesario recargar la página aquí si no es requerido
       } else {
         console.log("El documento no existe.");
@@ -125,6 +151,7 @@ const ListadoPedidos = ({
     } catch (error) {
       console.error("Error al eliminar el documento:", error);
     }
+    enviarCambioAlPadre(false);
   };
 
   const estadoRender = (estado) => {
@@ -170,6 +197,12 @@ const ListadoPedidos = ({
       return (
         <Alert variant="filled" severity="success">
           Completado
+        </Alert>
+      );
+    } else if (estado === "cancelado") {
+      return (
+        <Alert variant="filled" severity="error">
+          Cancelado
         </Alert>
       );
     }
@@ -230,16 +263,22 @@ const ListadoPedidos = ({
       const docSnapshot = await getDoc(pedidosDocumentRef);
 
       if (docSnapshot.exists()) {
-        await updateDoc(pedidosDocumentRef, { estado: "completado" });
-        console.log("completado");
-        enviarCambioAlPadre(true);
-        // No es necesario recargar la página aquí si no es requerido
+        if (docSnapshot.data().estado === "cancelado") {
+          alert("No se puede Completar un pedido Cancelado");
+
+          // No es necesario recargar la página aquí si no es requerido
+        } else {
+          await updateDoc(pedidosDocumentRef, { estado: "completado" });
+          console.log("completado");
+          enviarCambioAlPadre(true);
+        }
       } else {
         console.log("El documento no existe.");
       }
     } catch (error) {
       console.error("Error al eliminar el documento:", error);
     }
+    enviarCambioAlPadre(false);
   };
   const handleCloseModal = () => {
     setOpenModal(false);
@@ -262,7 +301,13 @@ const ListadoPedidos = ({
   return (
     <div>
       {" "}
-      {open2 && <FormPedidos edit={edit} />}
+      {open2 && (
+        <FormPedidos
+          enviarCambioAlPadre={enviarCambioAlPadre}
+          render={render}
+          edit={edit}
+        />
+      )}
       <Modal
         open={openModal}
         onClose={handleCloseModal}
@@ -393,7 +438,7 @@ const ListadoPedidos = ({
                                 </ToggleButton>
                                 <ToggleButton
                                   value="check"
-                                  onClick={() => botonCompletado(pedido.id)}
+                                  onClick={() => botonCancelado(pedido.id)}
                                 >
                                   <span class="material-symbols-outlined">
                                     close

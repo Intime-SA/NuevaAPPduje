@@ -16,7 +16,13 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import dayjs from "dayjs";
 import { Today } from "@mui/icons-material";
 
-const FormPedidos = ({ setOpen, edit, setOpenForm }) => {
+const FormPedidos = ({
+  setOpen,
+  edit,
+  setOpenForm,
+  setCambioDesdeForm,
+  render,
+}) => {
   const [selectedOption, setSelectedOption] = useState();
   const [selectedOption2, setSelectedOption2] = useState(null);
   const [dataClientes, setDataClientes] = useState([]);
@@ -93,6 +99,7 @@ const FormPedidos = ({ setOpen, edit, setOpenForm }) => {
       // })
       .then((res) => {
         console.log(res.data);
+        window.location.reload();
         // botonCerrarPedido();
         // setAbrirPedidos(true);
       });
