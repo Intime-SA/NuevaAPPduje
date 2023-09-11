@@ -120,16 +120,33 @@ const FormPedidos = ({ setOpen, edit, setOpenForm }) => {
 
   const eliminarProducto = async (id, cantidad) => {
     cantidad = parseFloat(cantidad);
+
+    // Actualizar el stock del producto en la base de datos
     const productoDocRef = doc(db, "productos", id);
     const productoDocSnapshot = await getDoc(productoDocRef);
     const restartStock = productoDocSnapshot.data().stock + cantidad;
-
     await updateDoc(productoDocRef, { stock: restartStock });
 
     console.log(cantidad);
-    const updatedArray = [...selectedOptionsArray];
-    updatedArray.splice(id, 1);
-    setSelectedOptionsArray(updatedArray);
+    console.log(selectedOptionsArray);
+
+    // Buscar el índice del producto con el ID proporcionado
+    let indexToDelete = -1;
+    for (let i = 0; i < selectedOptionsArray.length; i++) {
+      if (selectedOptionsArray[i].ID === id) {
+        indexToDelete = i;
+        break; // Termina el bucle una vez que se encuentra la coincidencia
+      }
+    }
+
+    if (indexToDelete !== -1) {
+      // Si se encontró una coincidencia, eliminar el elemento del array
+      const updatedArray = [...selectedOptionsArray];
+      updatedArray.splice(indexToDelete, 1);
+      setSelectedOptionsArray(updatedArray);
+    } else {
+      console.log(`No se encontró ningún elemento con el ID ${id}`);
+    }
   };
 
   useEffect(() => {
@@ -251,19 +268,18 @@ const FormPedidos = ({ setOpen, edit, setOpenForm }) => {
   };
 
   const correctColumns = [
-    { field: "ID", width: 1 },
     { field: "Producto", width: 180 },
-    { field: "Cantidad", width: 10 },
+    { field: "Cantidad", width: 5 },
     { field: "Precio", width: 80 },
-    { field: "Descuento", width: 10 },
+    { field: "Descuento", width: 5 },
     {
       field: "Acciones",
-      width: 10,
+      width: 20,
       renderCell: (params) => (
         <Button
           style={{ textAlign: "left" }}
           onClick={() => {
-            eliminarProducto(params.id, params.row.Cantidad); // Aquí usamos params.id para obtener el id de la fila
+            eliminarProducto(params.row.id, params.row.Cantidad, params.id); // Aquí usamos params.id para obtener el id de la fila
           }}
         >
           <span className="material-symbols-outlined">delete</span>
