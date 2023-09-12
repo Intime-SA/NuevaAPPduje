@@ -1,13 +1,15 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { db } from "../../../firebaseConfig";
 import { getDocs, collection, doc, updateDoc } from "firebase/firestore";
 import { Link } from "react-router-dom";
 import {
+  Backdrop,
   Button,
   Card,
   CardActionArea,
   CardContent,
   CardMedia,
+  CircularProgress,
   FormControlLabel,
   FormGroup,
   Switch,
@@ -20,6 +22,7 @@ import * as XLSX from "xlsx";
 function ItemListContainer() {
   const [products, setProducts] = useState([]);
   const [open, setOpen] = useState(false);
+  const [estado, setEstado] = useState(false);
   const [scroll, setScroll] = useState(
     JSON.parse(localStorage.getItem("scrollPosition"))
   );
@@ -46,6 +49,10 @@ function ItemListContainer() {
 
   const handleFileUpload = async (e) => {
     const file = e.target.files[0];
+
+    if (file) {
+      setEstado(true);
+    }
 
     if (!file) {
       return; // Salir si no se seleccionó un archivo
@@ -156,6 +163,27 @@ function ItemListContainer() {
   };
   redirigir();
 
+  const fileInputRef = useRef(null);
+
+  const handleClick = () => {
+    // Simula un clic en el input de archivo cuando se hace clic en el botón
+    fileInputRef.current.click();
+  };
+
+  const handleClose2 = () => {
+    setEstado(false);
+  };
+
+  useEffect(() => {
+    // Configura un temporizador para cerrar el Backdrop después de 20 segundos
+    const timer = setTimeout(() => {
+      handleClose2();
+    }, 20000);
+
+    // Limpia el temporizador cuando el componente se desmonta
+    return () => clearTimeout(timer);
+  }, []);
+
   return (
     <div
       style={{
@@ -175,8 +203,35 @@ function ItemListContainer() {
         aria-describedby="modal-modal-description"
       >
         <Box sx={style}>
-          <h2 style={{ margin: "1rem" }}>CARGAR ARCHIVO FORMATO CONTAGRAM</h2>
-          <input type="file" accept=".xlsx" onChange={handleFileUpload} />
+          <img
+            src="https://firebasestorage.googleapis.com/v0/b/workshop-duje.appspot.com/o/contagram.png?alt=media&token=b9cd4443-1886-4cf1-81d1-c0cf8c76c4e1"
+            alt="Contagram"
+          />
+          <h3 style={{ margin: "1rem" }}>
+            Seleccione el archivo exportado desde Contagram
+          </h3>
+
+          <Button
+            style={{ margin: "1rem", backgroundColor: "blue", color: "white" }}
+            variant="contained"
+            onClick={handleClick}
+          >
+            Subir archivo
+          </Button>
+          <Backdrop
+            sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+            open={estado}
+            onClose={handleClose2}
+          >
+            <CircularProgress color="inherit" />
+          </Backdrop>
+          <input
+            type="file"
+            accept=".xlsx"
+            ref={fileInputRef}
+            style={{ display: "none" }}
+            onChange={handleFileUpload}
+          />
           <Button
             style={{ margin: "1rem" }}
             variant="contained"

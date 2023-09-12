@@ -81,7 +81,7 @@ const ListadoPedidos = ({
             await updateDoc(pedidosDocumentRef, { estado: "entregado" });
           }
         }
-        enviarCambioAlPadre(render);
+        enviarCambioAlPadre(true);
       }
     };
     fetchData(estadoId2);

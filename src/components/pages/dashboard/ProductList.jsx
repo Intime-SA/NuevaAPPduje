@@ -47,10 +47,17 @@ const ProductList = ({ products, setIsChange }) => {
   const exportToExcel = () => {
     console.log(products);
     const data = products.map((producto) => {
-      const unitPrice =
-        typeof producto.unit_price === "number"
-          ? producto.unit_price.toFixed(2)
-          : producto.unit_price;
+      const unitPrice = parseFloat(producto.unit_price.toFixed(2));
+
+      // Realiza la validación para asegurarte de que unitPrice sea un número
+      if (isNaN(unitPrice)) {
+        // Muestra una alerta en caso de que unitPrice no sea un número
+        alert(
+          `Error: El precio del producto ${producto.name} no es un número válido.`
+        );
+        return null; // O puedes manejarlo de otra manera, como omitir esta fila de datos
+      }
+
       const filaPedido = [
         producto.categoria,
         producto.id,
