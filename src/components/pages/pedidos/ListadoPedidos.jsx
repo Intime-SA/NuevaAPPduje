@@ -299,35 +299,44 @@ const ListadoPedidos = ({
   const listaInversa = [...pedidoLista].reverse();
 
   async function envioMensaje(id, cliente) {
-    const pedidosDocumentRef = doc(db, "pedidos", id);
-    const docSnapshot = await getDoc(pedidosDocumentRef);
-    const nombre = docSnapshot.data().cliente;
-    console.log(nombre);
+    try {
+      const pedidosDocumentRef = doc(db, "pedidos", id);
+      const docSnapshot = await getDoc(pedidosDocumentRef);
+      const nombre = docSnapshot.data().cliente;
+      console.log(nombre);
 
-    const clientes = collection(db, "clientes");
-    const listadoClientes = await getDocs(clientes).then((res) => {
-      const clientes = []; // Inicializa un arreglo para los nuevos vendedores
+      const clientes = collection(db, "clientes");
+      const res = await getDocs(clientes);
+
+      let telefonoCliente = ""; // Declarar la variable antes de usarla
+
       res.docs.forEach((elemento) => {
         if (elemento.data().name === cliente) {
-          setTelefonoCliente(elemento.data().telefono);
-
-          try {
-            const phoneNumber = telefonoCliente;
-            const message = `Te paso el detalle del pedido ID: ${id}`;
-
-            const encodedMessage = encodeURIComponent(message);
-            const linkWsp = `https://api.whatsapp.com/send?phone=${phoneNumber}&text=${encodedMessage}`;
-
-            console.log(linkWsp);
-
-            window.location.href = linkWsp;
-          } catch (error) {
-            console.error("Error:", error);
-          }
-        }
+          telefonoCliente = elemento.data().telefono; // Asignar el valor a la variable
+          console.log(telefonoCliente);
+          return;
+        } else console.log("error");
       });
-    });
+
+      envioMensajeFinal(id, telefonoCliente);
+    } catch (error) {
+      console.error("Error:", error);
+    }
   }
+
+  const envioMensajeFinal = (id, telefonoCliente) => {
+    try {
+      const phoneNumber = telefonoCliente;
+      const message = `Te paso el detalle del pedido ID: ${id}`;
+
+      const encodedMessage = encodeURIComponent(message);
+      const linkWsp = `https://api.whatsapp.com/send?phone=${phoneNumber}&text=${encodedMessage}`;
+      console.log(linkWsp);
+      window.location.href = linkWsp;
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
 
   return (
     <div>
