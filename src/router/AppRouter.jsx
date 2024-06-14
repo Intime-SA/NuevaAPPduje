@@ -22,9 +22,9 @@ const AppRouter = () => {
       </Route>
 
       {/* PARA LOS USUARIOS ADMIN  */}
-      <Route element={<ProtectedAdmin />}>
+      {/*       <Route element={<ProtectedAdmin />}>
         <Route path="/dashboard" element={<Dashboard />} />
-      </Route>
+      </Route> */}
 
       {/* Login */}
       <Route path="/login" element={<Login />} />

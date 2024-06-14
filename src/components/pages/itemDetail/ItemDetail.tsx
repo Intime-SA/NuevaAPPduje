@@ -68,39 +68,95 @@ const ItemDetail = () => {
   console.log(product);
 
   return (
-    <div style={{ display: "flex", justifyContent: "center" }}>
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        marginTop: "5rem",
+      }}
+    >
       {product && (
         <Card
           sx={{
             flexWrap: "nowrap",
-            width: 350,
+            width: "300px", // Ajusta el ancho según tus necesidades
             margin: 1,
             display: "flex",
-            justifyContent: "center",
+            flexDirection: "column",
+            justifyContent: "space-between",
           }}
         >
           <CardActionArea>
             <CardMedia
               component="img"
-              height="250"
+              height="150px"
               image={product.img}
               alt="green iguana"
+              sx={{ objectFit: "contain" }}
             />
-            <CardContent>
-              <Typography gutterBottom variant="h6" component="div">
-                {product.name}
-              </Typography>
-              <div>
-                <Typography
-                  style={{ display: "flex", justifyContent: "space-between" }}
-                  variant="body3"
-                  color="text.secondary"
+            <CardContent
+              sx={{
+                backgroundColor: "#f7f7f7",
+                padding: "0.5rem",
+                borderRadius: "0 0 20px 20px",
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
+                alignItems: "center",
+                fontFamily: '"Poppins", sans-serif',
+              }}
+            >
+              <Typography
+                variant="body1"
+                color="textSecondary"
+                sx={{
+                  marginBottom: "0.5rem",
+                  fontFamily: '"Poppins", sans-serif',
+                }}
+              >
+                <strong
+                  style={{
+                    fontFamily: '"Poppins", sans-serif',
+                    fontSize: "70%",
+                  }}
                 >
-                  <p>Precio Unitario </p>{" "}
-                  <p>$ {product.unit_price.toFixed(2)}</p>
-                </Typography>
-                <Typography
-                  style={{ display: "flex", justifyContent: "space-between" }}
+                  Art {product.name}
+                </strong>
+              </Typography>
+              <Typography
+                gutterBottom
+                variant="h6"
+                component="div"
+                color="red"
+                sx={{
+                  fontWeight: "900",
+                  fontFamily: '"Poppins", sans-serif',
+                }}
+              >
+                $
+                {product.unit_price.toLocaleString("es-AR", {
+                  minimumFractionDigits: 2,
+                })}
+              </Typography>
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  width: "100%",
+                }}
+              >
+                <p style={{ fontFamily: '"Poppins", sans-serif' }}>
+                  Precio Unitario{" "}
+                </p>{" "}
+                <p>
+                  ${" "}
+                  {product.unit_price.toLocaleString("es-AR", {
+                    minimumFractionDigits: 2,
+                  })}
+                </p>
+                {/* <Typography
+                  sx={{ display: "flex", justifyContent: "space-between" }}
                   variant="body3"
                   color="text.secondary"
                 >
@@ -109,23 +165,47 @@ const ItemDetail = () => {
                     {product.peso}
                     {product.medida}
                   </p>
-                </Typography>
+                </Typography> */}
               </div>
-              <div style={{ marginTop: "1rem" }}>
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  width: "100%",
+                  margin: "1rem",
+                }}
+              >
                 <Typography
-                  style={{ display: "flex", justifyContent: "space-between" }}
+                  sx={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    fontFamily: '"Poppins", sans-serif',
+                  }}
                   variant="body2"
                   color="text.secondary"
                 >
-                  <h6>Unidades Bulto</h6> <h6>{product.unidades}</h6>
+                  <h6 style={{ fontFamily: '"Poppins", sans-serif' }}>
+                    Unidades Bulto
+                  </h6>{" "}
+                  <h6>{product.unidades}</h6>
                 </Typography>
                 <Typography
-                  style={{ display: "flex", justifyContent: "space-between" }}
+                  sx={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    fontFamily: '"Poppins", sans-serif',
+                  }}
                   variant="body2"
                   color="text.secondary"
                 >
                   <h6>Precio Bulto </h6>{" "}
-                  <h6> $ {product.precioBulto.toFixed(2)}</h6>
+                  <h6>
+                    {" "}
+                    ${" "}
+                    {product.precioBulto.toLocaleString("es-AR", {
+                      minimumFractionDigits: 2,
+                    })}
+                  </h6>
                 </Typography>
               </div>
             </CardContent>
@@ -136,15 +216,53 @@ const ItemDetail = () => {
                 justifyContent: "space-around",
               }}
             >
-              <Button variant="contained" onClick={addOne}>
+              <Button
+                style={{
+                  fontWeight: "900",
+                  fontFamily: '"Poppins", sans-serif',
+                  color: "",
+                }}
+                variant="contained"
+                onClick={addOne}
+              >
                 +
               </Button>
-              <Button>{counter}</Button>
-              <Button variant="contained" onClick={subOne}>
+              <Button
+                style={{
+                  fontWeight: "900",
+                  fontFamily: '"Poppins", sans-serif',
+                }}
+              >
+                {counter}
+              </Button>
+              <Button
+                style={{
+                  fontWeight: "900",
+                  fontFamily: '"Poppins", sans-serif',
+                }}
+                variant="contained"
+                onClick={subOne}
+              >
                 -
               </Button>
             </div>
-            <Button onClick={add}>Agregar al carrito</Button>
+            <div
+              style={{
+                width: "100%",
+                display: "flex",
+                justifyContent: "center",
+              }}
+            >
+              <Button
+                style={{
+                  fontWeight: "900",
+                  fontFamily: '"Poppins", sans-serif',
+                }}
+                onClick={add}
+              >
+                Agregar al carrito
+              </Button>
+            </div>
           </CardActionArea>
         </Card>
       )}

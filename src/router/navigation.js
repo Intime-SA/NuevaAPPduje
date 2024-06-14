@@ -3,14 +3,15 @@ import StoreIcon from "@mui/icons-material/Store";
 import ShoppingCartCheckoutIcon from "@mui/icons-material/ShoppingCartCheckout";
 import ShopIcon from "@mui/icons-material/Shop";
 import ListAltIcon from "@mui/icons-material/ListAlt";
+import OndemandVideoIcon from "@mui/icons-material/OndemandVideo";
 
 export const menuItems = [
-  {
+  /*   {
     id: "home",
     path: "/",
     title: "Inicio",
     Icon: HomeIcon,
-  },
+  }, */
   {
     id: "products",
     path: "/shop",
@@ -30,9 +31,15 @@ export const menuItems = [
     Icon: ShopIcon,
   },
   {
+    id: "demoHome",
+    path: "/demoHome",
+    title: "Demo",
+    Icon: OndemandVideoIcon,
+  },
+  /*   {
     id: "pedidos",
     path: "/pedidos",
     title: "Pedidos",
     Icon: ListAltIcon,
-  },
+  }, */
 ];

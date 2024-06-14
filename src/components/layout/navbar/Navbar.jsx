@@ -18,6 +18,7 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import { menuItems } from "../../../router/navigation";
 import { logout } from "../../../firebaseConfig";
 import { AuthContext } from "../../../context/AuthContext";
+import DrawerMenu from "../drawer/Drawer";
 const drawerWidth = 200;
 
 function Navbar(props) {
@@ -143,6 +144,7 @@ function Navbar(props) {
         >
           {drawer}
         </Drawer>
+        <DrawerMenu />
       </Box>
       <Box
         component="main"

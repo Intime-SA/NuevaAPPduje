@@ -6,13 +6,14 @@ import CheckOut from "../components/pages/checkout/CheckOut";
 import Dashboard from "../components/pages/dashboard/Dashboard";
 import UserOrders from "../components/pages/userOrders/UserOrders";
 import Pedidos from "../components/pages/pedidos/Pedidos";
+import DemoHome from "../components/pages/demo/DemoHome";
 
 export const routes = [
-  {
+  /*   {
     id: "home",
     path: "/",
     Element: Home,
-  },
+  }, */
   {
     id: "shop",
     path: "/shop",
@@ -42,5 +43,10 @@ export const routes = [
     id: "pedidos",
     path: "/pedidos",
     Element: Pedidos,
+  },
+  {
+    id: "demoHome",
+    path: "/",
+    Element: DemoHome,
   },
 ];

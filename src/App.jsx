@@ -3,6 +3,7 @@ import AppRouter from "./router/AppRouter";
 import CartContextComponente from "./context/CartContext";
 import AuthContextComponent from "./context/AuthContext";
 import { GlobalStateProvider } from "./context/Context";
+import { DrawerContextComponent } from "./context/DrawerContext";
 
 function App() {
   return (
@@ -10,7 +11,9 @@ function App() {
       <BrowserRouter>
         <AuthContextComponent>
           <CartContextComponente>
-            <AppRouter />
+            <DrawerContextComponent>
+              <AppRouter />
+            </DrawerContextComponent>
           </CartContextComponente>
         </AuthContextComponent>
       </BrowserRouter>

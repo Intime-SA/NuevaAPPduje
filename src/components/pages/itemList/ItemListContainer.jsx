@@ -36,15 +36,25 @@ function ItemListContainer() {
   };
 
   useEffect(() => {
-    let refCollection = collection(db, "productos");
-    getDocs(refCollection)
-      .then((res) => {
+    const fetchProducts = async () => {
+      let refCollection = collection(db, "productos");
+      try {
+        const res = await getDocs(refCollection);
         let newArray = res.docs.map((product) => {
           return { ...product.data(), id: product.id };
         });
-        setProducts(newArray);
-      })
-      .catch((err) => console.log(err));
+
+        // Filtrar productos con stock > 0 y limitar a 3 resultados
+        const filteredProducts = newArray
+          .filter((product) => product.stock > 0)
+          .slice(0, 3);
+        setProducts(filteredProducts);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+
+    fetchProducts();
   }, []);
 
   const handleFileUpload = async (e) => {
@@ -192,10 +202,12 @@ function ItemListContainer() {
         alignItems: "center",
         flexDirection: "column",
         fontSize: "2rem",
+        marginTop: "10rem",
+        marginLeft: "-5rem",
       }}
     >
       {" "}
-      <Button onClick={handleOpen}>Actualizar Productos</Button>
+      {/*       <Button onClick={handleOpen}>Actualizar Productos</Button> */}
       <Modal
         open={open}
         onClose={handleClose}
@@ -246,15 +258,17 @@ function ItemListContainer() {
           display: "flex",
           justifyContent: "center",
           flexDirection: "column",
+          width: "100%",
         }}
       >
         <div
           style={{
-            width: "100vw",
+            width: "100%",
             display: "flex",
             flexDirection: "row",
-            justifyContent: "center",
+            justifyContent: "center ",
             flexWrap: "wrap",
+            gap: "20px",
           }}
         >
           {products.map((product) => {
@@ -264,39 +278,76 @@ function ItemListContainer() {
                   onClick={obtenerPosicion}
                   to={`/itemDetail/${product.id}`}
                 >
-                  <Card sx={{ flexWrap: "nowrap", width: 320, margin: 2 }}>
-                    <CardActionArea>
+                  <Card
+                    style={{
+                      width: "300px", // Ajusta el ancho según tus necesidades
+                      height: "auto",
+                      display: "flex",
+                      flexDirection: "column",
+                      justifyContent: "space-between",
+                    }}
+                  >
+                    <CardActionArea style={{}}>
                       <CardMedia
                         component="img"
-                        height="300px"
+                        height="150px"
                         image={product.img}
                         alt="green iguana"
-                        style={{ maxWidth: "100%" }} // Limita el tamaño de la imagen
+                        style={{ objectFit: "contain" }}
                       />
-                      <CardContent>
+                      <CardContent
+                        style={{
+                          backgroundColor: "#f7f7f7",
+                          padding: "0.5rem",
+                          borderRadius: "0 0 20px 20px",
+                          display: "flex",
+                          flexDirection: "column",
+                          justifyContent: "center",
+                          alignItems: "center",
+                          fontFamily: '"Poppins", sans-serif',
+                        }}
+                      >
                         <Typography
-                          fontSize={"100%"}
+                          variant="body1"
+                          color="textSecondary"
+                          style={{
+                            marginBottom: "0.5rem",
+                            fontFamily: '"Poppins", sans-serif',
+                          }}
+                        >
+                          <strong
+                            style={{
+                              fontFamily: '"Poppins", sans-serif',
+                              fontSize: "70%",
+                            }}
+                          >
+                            Art {product.name}
+                          </strong>
+                        </Typography>
+
+                        <Typography
                           gutterBottom
                           variant="h6"
                           component="div"
+                          color="red"
+                          style={{
+                            fontWeight: "900",
+                            fontFamily: '"Poppins", sans-serif',
+                          }}
                         >
-                          {product.name}
+                          $
+                          {product.unit_price.toLocaleString("es-AR", {
+                            minimumFractionDigits: 2,
+                          })}
                         </Typography>
-                        <Typography variant="body2" color="text.secondary">
-                          Precio Unitario:
-                          <h4>
-                            ARS{" "}
-                            {product.unit_price.toLocaleString("es-AR", {
-                              style: "currency",
-                              currency: "ARS",
-                            })}
-                          </h4>
-                        </Typography>
-                        <br />
-                        <Typography variant="body2" color="text.secondary">
-                          Unidades en Stock: <br />
-                          <h4>{product.stock}</h4>
-                        </Typography>
+
+                        <div
+                          style={{
+                            display: "flex",
+                            justifyContent: "space-around",
+                            width: "60vw",
+                          }}
+                        ></div>
                       </CardContent>
                       <div
                         style={{
