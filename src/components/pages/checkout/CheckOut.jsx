@@ -19,7 +19,7 @@ import { Link } from "react-router-dom";
 function CheckOut() {
   const { cart, getTotalPrice, clearCart } = useContext(CartContext);
   const { user } = useContext(AuthContext);
-  initMercadoPago("APP_USR-46e7a261-c953-4d8f-a8df-76016a3ce1cd", {
+  initMercadoPago(VITE_PUBLICMP, {
     locale: "es-AR",
   });
   const [preferenceId, setPreferenceId] = useState(null);
@@ -63,7 +63,7 @@ function CheckOut() {
     });
     try {
       let res = await axios.post(
-        "https://backend-fercho.vercel.app/create_preference",
+        "https://mp-pied.vercel.app/create_preference",
         {
           items: newArray,
           shipment_cost: 10,
