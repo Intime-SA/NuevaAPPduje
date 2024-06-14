@@ -19,7 +19,7 @@ import { Link } from "react-router-dom";
 function CheckOut() {
   const { cart, getTotalPrice, clearCart } = useContext(CartContext);
   const { user } = useContext(AuthContext);
-  initMercadoPago(VITE_PUBLICMP, {
+  initMercadoPago(import.meta.env.VITE_PUBLICMP, {
     locale: "es-AR",
   });
   const [preferenceId, setPreferenceId] = useState(null);
