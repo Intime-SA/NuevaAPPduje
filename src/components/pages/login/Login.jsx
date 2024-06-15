@@ -17,11 +17,11 @@ import { Link, useNavigate } from "react-router-dom";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { useContext, useState } from "react";
 import { db, loginGoogle, onSingIn } from "../../../firebaseConfig";
-import { collection, doc, getDoc } from "firebase/firestore";
+import { collection, doc, getDoc, setDoc } from "firebase/firestore";
 import { AuthContext } from "../../../context/AuthContext";
 
 const Login = () => {
-  const { handleLogin } = useContext(AuthContext);
+  const { handleLogin, user } = useContext(AuthContext);
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
 
@@ -58,13 +58,41 @@ const Login = () => {
   };
 
   const googleSingIn = async () => {
-    let res = await loginGoogle();
-    let finalyUser = {
-      email: res.user.email,
-      rol: "user",
-    };
-    handleLogin(finalyUser);
-    navigate("/");
+    try {
+      const res = await loginGoogle();
+
+      if (res.user) {
+        const userCollection = collection(db, "users");
+        const userRef = doc(userCollection, res.user.uid);
+
+        const userDoc = await getDoc(userRef);
+        console.log(userDoc);
+
+        if (!userDoc.exists()) {
+          const fullName = res.user.displayName;
+          const [firstName, lastName] = fullName.split(" ");
+          const userData = {
+            name: firstName,
+            apellido: lastName,
+            email: res.user.email,
+            roll: "customer",
+            fechaInicio: serverTimestamp(),
+          };
+          console.log(userData);
+
+          await setDoc(userRef, userData);
+        }
+
+        const finalyUser = {
+          email: res.user.email,
+          rol: "customer",
+        };
+        handleLogin(finalyUser);
+      }
+    } catch (error) {
+      console.error("Error al iniciar sesión con Google:", error);
+      // Manejo de errores, por ejemplo, mostrar un mensaje de error al usuario
+    }
   };
 
   return (
