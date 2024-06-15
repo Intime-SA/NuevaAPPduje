@@ -99,6 +99,12 @@ function CheckOut() {
     }
   };
 
+  const [orderCompleta, setOrderCompleta] = useState(false);
+
+  useEffect(() => {
+    setOrderCompleta(true);
+  }, [preferenceId]);
+
   const handleChange = (e) => {
     setUserData({ ...userData, [e.target.name]: e.target.value });
   };
@@ -191,14 +197,14 @@ function CheckOut() {
           />
           <Button
             variant="contained"
-            onClick={handleBuy}
+            onClick={() => handleBuy()}
             sx={{
               marginBottom: "1rem",
               width: "100%",
               fontFamily: '"Poppins", sans-serif',
             }}
           >
-            Metodo Pago
+            Confirmar Datos
           </Button>
         </div>
       ) : (
@@ -230,8 +236,7 @@ function CheckOut() {
           </Link>
         </div>
       )}
-
-      {preferenceId && order && (
+      {orderCompleta && preferenceId && (
         <Box
           sx={{
             marginTop: "5rem",
