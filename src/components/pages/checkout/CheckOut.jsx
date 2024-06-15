@@ -220,7 +220,11 @@ function CheckOut() {
             Orden de compra: {orderId}
           </Typography>
           <Link to="/shop">
-            <Button variant="contained" sx={{ width: "100%" }}>
+            <Button
+              style={{ fontFamily: '"Poppins", sans-serif' }}
+              variant="contained"
+              sx={{ width: "100%" }}
+            >
               Volver a la tienda
             </Button>
           </Link>

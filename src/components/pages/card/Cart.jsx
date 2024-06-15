@@ -104,7 +104,7 @@ const Cart = () => {
       style={{ display: "flex", justifyContent: "center", marginTop: "6rem" }}
     >
       {cart.length > 0 ? (
-        <Card sx={{ maxWidth: 345, fontFamily: '"Poppins", sans-serif' }}>
+        <Card sx={{ width: 645, fontFamily: '"Poppins", sans-serif' }}>
           {/*   <CardHeader
             avatar={
               <Avatar sx={{ bgcolor: red[500] }} aria-label="recipe">

@@ -35,7 +35,12 @@ const UserOrders = () => {
 
   return (
     <div
-      style={{ display: "flex", flexDirection: "column", alignItems: "center" }}
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        marginLeft: "-5rem",
+      }}
     >
       <Typography
         variant="h4"
@@ -49,7 +54,6 @@ const UserOrders = () => {
             <Box
               sx={{
                 display: "flex",
-                flexDirection: "column",
                 alignItems: "center",
               }}
             >
@@ -61,7 +65,11 @@ const UserOrders = () => {
                   <img
                     src={product.img}
                     alt={product.name}
-                    style={{ maxWidth: "100px", marginBottom: "0.5rem" }}
+                    style={{
+                      maxWidth: "100px",
+                      marginBottom: "0.5rem",
+                      maxHeight: "120px",
+                    }}
                   />
                   <Typography
                     variant="h6"
@@ -70,7 +78,7 @@ const UserOrders = () => {
                       fontWeight: 600,
                     }}
                   >
-                    Producto: {product.name}
+                    {product.name}
                   </Typography>
                   <Typography
                     variant="body1"
@@ -93,42 +101,77 @@ const UserOrders = () => {
                   </Typography>
                 </Box>
               ))}
-              <Typography
-                variant="h6"
-                sx={{ fontFamily: "'Poppins', sans-serif", fontWeight: 600 }}
+              <Box
+                sx={{
+                  width: "100%",
+                  height: "100%",
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "space-between",
+                }}
               >
-                Total de la Orden: ${order.total.toFixed(2)}
-              </Typography>
-              <Typography
-                variant="body1"
-                sx={{ fontFamily: "'Poppins', sans-serif" }}
-              >
-                Código Postal: {order.cp}
-              </Typography>
-              <Typography
-                variant="body1"
-                sx={{ fontFamily: "'Poppins', sans-serif" }}
-              >
-                Teléfono: {order.phone}
-              </Typography>
-              <Typography
-                variant="body1"
-                sx={{ fontFamily: "'Poppins', sans-serif" }}
-              >
-                Dirección: {order.address}
-              </Typography>
-              <Typography
-                variant="body1"
-                sx={{ fontFamily: "'Poppins', sans-serif" }}
-              >
-                Ciudad: {order.city}
-              </Typography>
-              <Typography
-                variant="body1"
-                sx={{ fontFamily: "'Poppins', sans-serif" }}
-              >
-                Provincia: {order.province}
-              </Typography>
+                <div>
+                  <Typography
+                    variant="h6"
+                    sx={{
+                      fontFamily: "'Poppins', sans-serif",
+                      textAlign: "right",
+                      fontWeight: 600,
+                      marginBottom: "20%",
+                    }}
+                  >
+                    Total de la Orden: ${order.total.toFixed(2)}
+                  </Typography>
+                </div>
+
+                <div>
+                  <Typography
+                    variant="body1"
+                    sx={{
+                      fontFamily: "'Poppins', sans-serif",
+                      textAlign: "right",
+                    }}
+                  >
+                    Código Postal: {order.cp}
+                  </Typography>
+                  <Typography
+                    variant="body1"
+                    sx={{
+                      fontFamily: "'Poppins', sans-serif",
+                      textAlign: "right",
+                    }}
+                  >
+                    Teléfono: {order.phone}
+                  </Typography>
+                  <Typography
+                    variant="body1"
+                    sx={{
+                      fontFamily: "'Poppins', sans-serif",
+                      textAlign: "right",
+                    }}
+                  >
+                    Dirección: {order.address}
+                  </Typography>
+                  <Typography
+                    variant="body1"
+                    sx={{
+                      fontFamily: "'Poppins', sans-serif",
+                      textAlign: "right",
+                    }}
+                  >
+                    Ciudad: {order.city}
+                  </Typography>
+                  <Typography
+                    variant="body1"
+                    sx={{
+                      fontFamily: "'Poppins', sans-serif",
+                      textAlign: "right",
+                    }}
+                  >
+                    Provincia: {order.province}
+                  </Typography>
+                </div>
+              </Box>
             </Box>
           </CardContent>
         </Card>
