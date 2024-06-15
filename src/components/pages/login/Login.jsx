@@ -94,6 +94,7 @@ const Login = () => {
           rol: "customer",
         };
         handleLogin(finalyUser);
+        navigate("/");
       }
     } catch (error) {
       console.error("Error al iniciar sesión con Google:", error);
