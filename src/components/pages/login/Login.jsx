@@ -36,27 +36,21 @@ const Login = () => {
     setUserCredentials({ ...userCredentials, [e.target.name]: e.target.value });
   };
 
-  console.log(userCredentials);
-
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
-      const res = await onSingIn(userCredentials); // Asumo que tienes una función onSignIn para el inicio de sesión
+      const res = await onSingIn(userCredentials);
       if (res.user) {
         const userCollection = collection(db, "users");
         const userRef = doc(userCollection, res.user.uid);
-        console.log(res.user);
         const userDoc = await getDoc(userRef);
         let finalyUser = {
           email: res.user.email,
           rol: userDoc.data().rol,
-        }; // Obtén los datos del documento
-        console.log(finalyUser);
+        };
         handleLogin(finalyUser);
-        navigate("/"); // Asumo que tienes una función navigate para redirigir al usuario
-
-        // No necesitas el 'return getDoc(userDoc);' ya que no parece necesario aquí
+        navigate("/");
       }
     } catch (error) {
       console.error("Error during sign-in:", error);
@@ -68,153 +62,208 @@ const Login = () => {
     let finalyUser = {
       email: res.user.email,
       rol: "user",
-    }; // Obtén los datos del documento
+    };
     handleLogin(finalyUser);
     navigate("/");
-    console.log(res);
   };
-
-  const theme = createTheme({
-    palette: {
-      primary: {
-        main: "#89ca8f", // Color principal
-      },
-      secondary: {
-        main: "#89ca8f", // Color secundario
-      },
-    },
-  });
 
   return (
     <Box
       sx={{
-        width: "100%",
+        width: "100vw",
         minHeight: "100vh",
         display: "flex",
-        justifyContent: "center",
         alignItems: "center",
         flexDirection: "column",
-        // backgroundColor: theme.palette.secondary.main,
+        backgroundColor: "#222427",
       }}
     >
-      <img
-        src="https://scontent.fmdq6-1.fna.fbcdn.net/v/t39.30808-6/277579593_660204662063497_2104655870613909459_n.jpg?_nc_cat=108&ccb=1-7&_nc_sid=a2f6c7&_nc_ohc=FtqfRTcNKlUAX9VeOD0&_nc_ht=scontent.fmdq6-1.fna&oh=00_AfCtz7_HA7k0836LmZNatCc9FKk88cU6ZjraC5y-QyFwEw&oe=64FC6112"
-        alt=""
-        style={{ width: "30%", margin: "5rem" }}
-      />
-      <form onSubmit={handleSubmit}>
-        <Grid
-          container
-          rowSpacing={2}
-          // alignItems="center"
-          justifyContent={"center"}
+      <div
+        style={{
+          maxWidth: "500px",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+          zoom: 0.8,
+        }}
+      >
+        <div
+          style={{
+            width: "100%",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
         >
-          <Grid item xs={10} md={12}>
-            <TextField
-              name="email"
-              label="Email"
-              fullWidth
-              onChange={handleChange}
-            />
-          </Grid>
-          <Grid item xs={10} md={12}>
-            <FormControl variant="outlined" fullWidth>
-              <InputLabel htmlFor="outlined-adornment-password">
-                Contraseña
-              </InputLabel>
-              <OutlinedInput
-                name="password"
-                id="outlined-adornment-password"
-                type={showPassword ? "text" : "password"}
-                onChange={handleChange}
-                endAdornment={
-                  <InputAdornment position="end">
-                    <IconButton
-                      aria-label="toggle password visibility"
-                      onClick={handleClickShowPassword}
-                      edge="end"
-                    >
-                      {showPassword ? (
-                        <VisibilityOff color="primary" />
-                      ) : (
-                        <Visibility color="primary" />
-                      )}
-                    </IconButton>
-                  </InputAdornment>
-                }
-                label="Contraseña"
-              />
-            </FormControl>
-          </Grid>
           <Link
-            to="/forgot-password"
-            style={{ color: "steelblue", marginTop: "10px" }}
+            to="/login"
+            style={{ textDecoration: "none", color: "inherit" }}
           >
-            ¿Olvidaste tu contraseña?
+            <img
+              src="https://firebasestorage.googleapis.com/v0/b/mayoristakaurymdp.appspot.com/o/ATLANTICS.DEV.png?alt=media&token=756b01e2-fd6c-479f-bff3-d27e1c19e503"
+              alt="Atlantic Devs Logo"
+              style={{ maxWidth: "300px" }}
+            />
           </Link>
-          <Grid container justifyContent="center" spacing={3} mt={2}>
-            <Grid item xs={10} md={5}>
-              <Button
-                variant="contained"
+        </div>
+        <div>
+          <Typography
+            style={{
+              fontFamily: '"Poppins", sans-serif',
+              margin: "1rem",
+              color: "white",
+            }}
+            variant="h6"
+            noWrap
+            component="div"
+          >
+            Payment Service Provider
+          </Typography>
+        </div>
+        <form onSubmit={handleSubmit}>
+          <Grid container rowSpacing={2} justifyContent={"center"}>
+            <Grid item xs={10} md={12}>
+              <TextField
+                name="email"
+                label="Email"
                 fullWidth
-                type="submit"
-                sx={{
-                  color: "white",
-                  textTransform: "none",
-                  textShadow: "2px 2px 2px grey",
+                onChange={handleChange}
+                InputProps={{
+                  style: {
+                    fontFamily: "Poppins",
+                    color: "white",
+                    backgroundColor: "#333",
+                  },
                 }}
-              >
-                Ingresar
-              </Button>
+                InputLabelProps={{
+                  style: { fontFamily: "Poppins", color: "white" },
+                }}
+              />
             </Grid>
-            <Grid item xs={10} md={5}>
-              <Tooltip title="ingresa con google">
+            <Grid item xs={10} md={12}>
+              <FormControl variant="outlined" fullWidth>
+                <InputLabel
+                  htmlFor="outlined-adornment-password"
+                  style={{ fontFamily: "Poppins", color: "white" }}
+                >
+                  Contraseña
+                </InputLabel>
+                <OutlinedInput
+                  name="password"
+                  id="outlined-adornment-password"
+                  type={showPassword ? "text" : "password"}
+                  onChange={handleChange}
+                  endAdornment={
+                    <InputAdornment
+                      position="end"
+                      style={{ backgroundColor: "#333" }}
+                    >
+                      <IconButton
+                        aria-label="toggle password visibility"
+                        onClick={handleClickShowPassword}
+                        edge="end"
+                      >
+                        {showPassword ? (
+                          <VisibilityOff style={{ color: "white" }} />
+                        ) : (
+                          <Visibility style={{ color: "white" }} />
+                        )}
+                      </IconButton>
+                    </InputAdornment>
+                  }
+                  label="Contraseña"
+                  inputProps={{
+                    style: {
+                      fontFamily: "Poppins",
+                      color: "white",
+                      backgroundColor: "#333",
+                    },
+                  }}
+                />
+              </FormControl>
+            </Grid>
+            <Link
+              to="/forgot-password"
+              style={{
+                color: "steelblue",
+                marginTop: "10px",
+                fontFamily: "Poppins",
+              }}
+            >
+              ¿Olvidaste tu contraseña?
+            </Link>
+            <Grid container justifyContent="center" spacing={3} mt={2}>
+              <Grid item xs={10} md={5}>
                 <Button
-                  onClick={googleSingIn}
                   variant="contained"
-                  startIcon={<GoogleIcon />}
-                  type="button"
                   fullWidth
+                  type="submit"
                   sx={{
                     color: "white",
                     textTransform: "none",
                     textShadow: "2px 2px 2px grey",
+                    fontFamily: "Poppins",
                   }}
                 >
-                  Ingresa con google
+                  <span class="material-symbols-outlined">passkey</span>
                 </Button>
-              </Tooltip>
-            </Grid>
-            <Grid item xs={10} md={8}>
-              <Typography
-                color={"secondary.primary"}
-                variant={"h6"}
-                mt={1}
-                align="center"
-              >
-                ¿Aun no tienes cuenta?
-              </Typography>
-            </Grid>
-            <Grid item xs={10} md={5}>
-              <Tooltip title="ingresa con google">
-                <Button
-                  variant="contained"
-                  fullWidth
-                  onClick={() => navigate("/register")}
-                  type="button"
-                  sx={{
+              </Grid>
+              <Grid item xs={10} md={5}>
+                <Tooltip title="ingresa con google">
+                  <Button
+                    onClick={googleSingIn}
+                    variant="contained"
+                    type="button"
+                    fullWidth
+                    sx={{
+                      color: "white",
+                      textTransform: "none",
+                      textShadow: "2px 2px 2px grey",
+                      fontFamily: "Poppins",
+                    }}
+                  >
+                    <GoogleIcon />
+                  </Button>
+                </Tooltip>
+              </Grid>
+              <Grid item xs={10} md={8}>
+                <Typography
+                  color={"secondary.primary"}
+                  variant={"h6"}
+                  mt={1}
+                  align="center"
+                  style={{
+                    fontFamily: "Poppins",
                     color: "white",
-                    textTransform: "none",
-                    textShadow: "2px 2px 2px grey",
+                    fontWeight: 100,
                   }}
                 >
-                  Registrate
-                </Button>
-              </Tooltip>
+                  ¿Aún no tienes cuenta?
+                </Typography>
+              </Grid>
+              <Grid item xs={10} md={5}>
+                <Tooltip title="Registrate">
+                  <Button
+                    variant="contained"
+                    fullWidth
+                    onClick={() => navigate("/register")}
+                    type="button"
+                    sx={{
+                      color: "white",
+                      textTransform: "none",
+                      textShadow: "2px 2px 2px grey",
+                      fontFamily: "Poppins",
+                    }}
+                  >
+                    Registrate
+                  </Button>
+                </Tooltip>
+              </Grid>
             </Grid>
           </Grid>
-        </Grid>
-      </form>
+        </form>
+      </div>
     </Box>
   );
 };
