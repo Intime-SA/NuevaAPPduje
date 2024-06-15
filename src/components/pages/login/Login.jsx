@@ -212,7 +212,7 @@ const Login = () => {
               <Grid item xs={10} md={5}>
                 <Tooltip title="ingresa con google">
                   <Button
-                    onClick={googleSingIn}
+                    onClick={() => googleSingIn()}
                     variant="contained"
                     type="button"
                     fullWidth
