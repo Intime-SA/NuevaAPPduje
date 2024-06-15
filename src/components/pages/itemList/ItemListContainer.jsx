@@ -18,11 +18,32 @@ import {
 import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
 import * as XLSX from "xlsx";
+import { useMediaQuery } from "@mui/material";
+import { createTheme, useTheme } from "@mui/material/styles";
+import { DrawerContext } from "../../../context/DrawerContext";
 
 function ItemListContainer() {
   const [products, setProducts] = useState([]);
   const [open, setOpen] = useState(false);
   const [estado, setEstado] = useState(false);
+  const { setOpenDrawer, openDrawer } = React.useContext(DrawerContext);
+  const theme = createTheme({
+    breakpoints: {
+      values: {
+        xs: 0,
+        sm: 600,
+        md: 800, // Define md como 800px
+        lg: 1200,
+        xl: 1536,
+      },
+    },
+  });
+  const isMiddleMobile = useMediaQuery(theme.breakpoints.down("lg"));
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const [drawerWidth, setDrawerWidth] = React.useState(
+    isMiddleMobile ? 75 : 240
+  );
+
   const [scroll, setScroll] = useState(
     JSON.parse(localStorage.getItem("scrollPosition"))
   );
@@ -194,6 +215,11 @@ function ItemListContainer() {
     return () => clearTimeout(timer);
   }, []);
 
+  useEffect(() => {
+    // Desplazarse a la parte superior de la página
+    window.scrollTo(0, 0);
+  }, []);
+
   return (
     <div
       style={{
@@ -202,8 +228,8 @@ function ItemListContainer() {
         alignItems: "center",
         flexDirection: "column",
         fontSize: "2rem",
-        marginTop: "10rem",
-        marginLeft: "-5rem",
+        marginTop: isMobile ? "1rem" : "10rem",
+        marginLeft: isMobile ? "0rem" : "-5rem",
       }}
     >
       {" "}
@@ -257,6 +283,7 @@ function ItemListContainer() {
         style={{
           display: "flex",
           justifyContent: "center",
+          alignItems: "center",
           flexDirection: "column",
           width: "100%",
         }}

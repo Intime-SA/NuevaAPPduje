@@ -14,7 +14,10 @@ import {
   Typography,
 } from "@mui/material";
 import { count } from "console";
+import { useMediaQuery } from "@mui/material";
 import { CartContext } from "../../../context/CartContext";
+import { createTheme, useTheme } from "@mui/material/styles";
+import { DrawerContext } from "../../../context/DrawerContext";
 
 const ItemDetail = () => {
   const { id } = useParams();
@@ -22,6 +25,24 @@ const ItemDetail = () => {
   let quantity = getQuantityById(id);
   const [product, setProduct] = useState(null);
   const [counter, setCounter] = useState(quantity || 0);
+
+  const { setOpenDrawer, openDrawer } = React.useContext(DrawerContext);
+  const theme = createTheme({
+    breakpoints: {
+      values: {
+        xs: 0,
+        sm: 600,
+        md: 800, // Define md como 800px
+        lg: 1200,
+        xl: 1536,
+      },
+    },
+  });
+  const isMiddleMobile = useMediaQuery(theme.breakpoints.down("lg"));
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const [drawerWidth, setDrawerWidth] = React.useState(
+    isMiddleMobile ? 75 : 240
+  );
 
   useEffect(() => {
     let usuario = JSON.parse(localStorage.getItem("userInfo"));
@@ -67,13 +88,18 @@ const ItemDetail = () => {
 
   console.log(product);
 
+  useEffect(() => {
+    // Desplazarse a la parte superior de la página
+    window.scrollTo(0, 0);
+  }, []);
+
   return (
     <div
       style={{
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        marginTop: "5rem",
+        marginTop: isMobile ? "1rem" : "5rem",
       }}
     >
       {product && (

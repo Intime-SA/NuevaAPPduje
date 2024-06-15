@@ -130,7 +130,7 @@ export default function DrawerMenu() {
         <Divider />
 
         <Divider />
-        <List>
+        <List style={{ marginLeft: "0.5rem" }}>
           {menuItems.map(({ id, path, title, Icon }) => (
             <ListItem style={{ color: "white" }} key={id} disablePadding>
               <ListItemButton component={Link} to={path}>

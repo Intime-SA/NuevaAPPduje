@@ -19,14 +19,33 @@ import { menuItems } from "../../../router/navigation";
 import { logout } from "../../../firebaseConfig";
 import { AuthContext } from "../../../context/AuthContext";
 import DrawerMenu from "../drawer/Drawer";
+import { Divider, Icon, Tooltip, useMediaQuery } from "@mui/material";
+import { createTheme } from "@mui/material/styles";
+import { DrawerContext } from "../../../context/DrawerContext";
 const drawerWidth = 200;
 
 function Navbar(props) {
   const { handleLogoutContext, user } = useContext(AuthContext);
+  const { openDrawer } = useContext(DrawerContext);
   const { window } = props;
   const [mobileOpen, setMobileOpen] = useState(false);
   const navigate = useNavigate();
   const rolAdmin = import.meta.env.VITE_ADMIN;
+
+  const theme = createTheme({
+    breakpoints: {
+      values: {
+        xs: 0,
+        sm: 600,
+        md: 800, // Define md como 800px
+        lg: 1200,
+        xl: 1536,
+      },
+    },
+  });
+  const isMiddleMobile = useMediaQuery(theme.breakpoints.down("lg"));
+
+  const isNarrowScreen = useMediaQuery(theme.breakpoints.down("sm"));
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
@@ -38,53 +57,57 @@ function Navbar(props) {
     navigate("/login");
   };
 
-  const drawer = (
-    <div style={{ color: "#89ca8f", backgroundColor: "#89ca8f" }}>
-      <Toolbar />
-
-      <List>
-        {menuItems.map(({ id, path, title, Icon }) => {
-          return (
-            <Link key={id} to={path}>
-              <ListItem disablePadding>
-                <ListItemButton>
-                  <ListItemIcon>
-                    <Icon sx={{ color: "whitesmoke" }} />
-                  </ListItemIcon>
-                  <ListItemText primary={title} sx={{ color: "whitesmoke" }} />
-                </ListItemButton>
-              </ListItem>
-            </Link>
-          );
-        })}
-
-        {user.rol === rolAdmin && (
-          <Link to={"/dashboard"}>
-            <ListItem disablePadding>
-              <ListItemButton>
-                <ListItemIcon>
-                  <DashboardIcon sx={{ color: "whitesmoke" }} />
-                </ListItemIcon>
-                <ListItemText
-                  primary={"Administracion"}
-                  sx={{ color: "whitesmoke" }}
-                />
-              </ListItemButton>
-            </ListItem>
-          </Link>
-        )}
-
-        <ListItem disablePadding>
-          <ListItemButton onClick={cerrarSesion}>
+  const MenuItem = ({ path, title, Icon, openDrawer }) => (
+    <ListItem style={{ color: "white" }} disablePadding>
+      <ListItemButton component={Link} to={path}>
+        {!openDrawer && (
+          <Tooltip title={title}>
             <ListItemIcon>
-              <LogoutIcon sx={{ color: "whitesmoke" }} />
+              <Icon sx={{ color: "white" }} />
             </ListItemIcon>
-            <ListItemText
-              primary={"Cerrar sesion"}
-              sx={{ color: "whitesmoke" }}
-            />
-          </ListItemButton>
-        </ListItem>
+          </Tooltip>
+        )}
+        <h4 style={{ fontFamily: '"Kanit", sans-serif' }}>{title}</h4>
+      </ListItemButton>
+    </ListItem>
+  );
+
+  const LogoutItem = ({ openDrawer }) => (
+    <ListItem style={{ color: "white" }} disablePadding>
+      <ListItemButton onClick={() => cerrarSesion()}>
+        {!openDrawer && (
+          <Tooltip title="Cerrar sesión">
+            <ListItemIcon>
+              <span
+                style={{ color: "white" }}
+                className="material-symbols-outlined"
+              >
+                logout
+              </span>
+            </ListItemIcon>
+          </Tooltip>
+        )}
+        <h4 style={{ fontFamily: '"Kanit", sans-serif' }}>Cerrar sesión</h4>
+      </ListItemButton>
+    </ListItem>
+  );
+
+  const drawer = (
+    <div style={{ color: "#89ca8f", backgroundColor: "#121620" }}>
+      <Toolbar />
+      <Divider />
+      <List>
+        {menuItems.map(({ id, path, title, Icon }) => (
+          <MenuItem
+            key={id}
+            path={path}
+            title={title}
+            Icon={Icon}
+            openDrawer={openDrawer}
+          />
+        ))}
+        <Divider />
+        <LogoutItem openDrawer={openDrawer} />
       </List>
     </div>
   );
@@ -99,27 +122,45 @@ function Navbar(props) {
         position="fixed"
         sx={{
           width: "100%",
-          backgroundColor: "#89ca8f",
+          backgroundColor: "#121620",
         }}
       >
         <Toolbar
           sx={{
             gap: "20px",
             display: "flex",
-            justifyContent: "space-between",
-            backgroundColor: "#89ca8f",
+            justifyContent: "center",
+            backgroundColor: "#121621",
           }}
         >
-          <Link to="/" style={{ color: "whitesmoke" }}>
-            Alimentos Naturales
+          <div>
+            <img
+              src="https://firebasestorage.googleapis.com/v0/b/mayoristakaurymdp.appspot.com/o/00000altanticdev-removebg-preview.png?alt=media&token=933ef3e7-fc96-48ac-bd20-8a43858dceabnpm"
+              alt=""
+              style={{ width: "40px", margin: "0.5rem" }}
+            />
+          </div>
+
+          <Link
+            style={{
+              fontFamily: '"Poppins", sans-serif',
+              color: "white",
+              marginRight: "1rem",
+            }}
+            to="/"
+          >
+            Payment Service
+            <p style={{ fontWeight: 100, fontSize: "50%" }}>
+              Ambiente de testing para clientes
+            </p>
           </Link>
           <IconButton
-            color="#89ca8f"
+            color="white"
             aria-label="open drawer"
             edge="start"
             onClick={handleDrawerToggle}
           >
-            <MenuIcon color="secondary.primary" />
+            <MenuIcon style={{ color: "white" }} />
           </IconButton>
         </Toolbar>
       </AppBar>
@@ -138,13 +179,13 @@ function Navbar(props) {
             "& .MuiDrawer-paper": {
               boxSizing: "border-box",
               width: drawerWidth,
-              backgroundColor: "#89ca8f",
+              backgroundColor: "#121620",
             },
           }}
         >
           {drawer}
         </Drawer>
-        <DrawerMenu />
+        {!isNarrowScreen && <DrawerMenu />}
       </Box>
       <Box
         component="main"

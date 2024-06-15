@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { CartContext } from "../../../context/CartContext";
 import {
   Button,
@@ -24,6 +24,9 @@ import FavoriteIcon from "@mui/icons-material/Favorite";
 import ShareIcon from "@mui/icons-material/Share";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
+import { useMediaQuery } from "@mui/material";
+import { createTheme, useTheme } from "@mui/material/styles";
+import { DrawerContext } from "../../../context/DrawerContext";
 
 const ExpandMore = styled(({ expand, ...other }) => <IconButton {...other} />)(
   ({ theme, expand }) => ({
@@ -36,6 +39,24 @@ const ExpandMore = styled(({ expand, ...other }) => <IconButton {...other} />)(
 );
 
 const Cart = () => {
+  const { setOpenDrawer, openDrawer } = React.useContext(DrawerContext);
+  const theme = createTheme({
+    breakpoints: {
+      values: {
+        xs: 0,
+        sm: 600,
+        md: 800, // Define md como 800px
+        lg: 1200,
+        xl: 1536,
+      },
+    },
+  });
+  const isMiddleMobile = useMediaQuery(theme.breakpoints.down("lg"));
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const [drawerWidth, setDrawerWidth] = React.useState(
+    isMiddleMobile ? 75 : 240
+  );
+
   const { cart, deleteById, getTotalPrice, clearCart } =
     useContext(CartContext);
   const [expanded, setExpanded] = useState(false);
@@ -100,13 +121,18 @@ const Cart = () => {
     fontFamily: '"Poppins", sans-serif',
   };
 
+  useEffect(() => {
+    // Desplazarse a la parte superior de la página
+    window.scrollTo(0, 0);
+  }, []);
+
   return (
     <div
       style={{
         display: "flex",
         justifyContent: "center",
-        marginTop: "6rem",
-        marginLeft: "-5rem",
+        marginTop: isMobile ? "0rem" : "6rem",
+        marginLeft: isMobile ? "0rem" : "-5rem",
       }}
     >
       {cart.length > 0 ? (

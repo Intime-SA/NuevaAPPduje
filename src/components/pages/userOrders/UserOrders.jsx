@@ -6,10 +6,14 @@ import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
+import useMediaQuery from "@mui/material/useMediaQuery";
+import { useTheme } from "@mui/material/styles";
 
 const UserOrders = () => {
   const [myOrders, setMyOrders] = useState([]);
   const { user } = useContext(AuthContext);
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   useEffect(() => {
     const fetchOrders = async () => {
@@ -39,23 +43,22 @@ const UserOrders = () => {
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
-        marginLeft: "-5rem",
+        marginTop: isMobile ? "0" : "5rem",
+        marginLeft: isMobile ? "0" : "-5rem",
+        padding: isMobile ? "0 1rem" : "0",
+        zoom: "0.8",
       }}
     >
-      <Typography
-        variant="h4"
-        sx={{ fontFamily: "'Poppins', sans-serif", marginBottom: "2rem" }}
-      >
-        Mis Compras
-      </Typography>
       {myOrders.map((order) => (
-        <Card key={order.id} sx={{ width: "80%", marginBottom: "1rem" }}>
+        <Card
+          key={order.id}
+          sx={{ width: isMobile ? "100%" : "80%", marginBottom: "1rem" }}
+        >
           <CardContent>
             <Box
               sx={{
-                height: "100%",
                 display: "flex",
-
+                flexDirection: isMobile ? "column" : "row",
                 alignItems: "center",
                 justifyContent: "space-between",
               }}
@@ -65,10 +68,10 @@ const UserOrders = () => {
                   key={product.id}
                   sx={{
                     marginBottom: "1rem",
-                    width: "100%",
+                    width: isMobile ? "100%" : "auto",
                     display: "flex",
+                    flexDirection: isMobile ? "row" : "column",
                     alignItems: "flex-start",
-                    flexDirection: "column",
                     justifyContent: "flex-start",
                   }}
                 >
@@ -76,11 +79,10 @@ const UserOrders = () => {
                     src={product.img}
                     alt={product.name}
                     style={{
-                      maxWidth: "100px",
-                      marginBottom: "0.5rem",
-                      maxHeight: "120px",
-                      marginRight: "1rem",
-                      marginBottom: "5rem",
+                      maxWidth: isMobile ? "50px" : "100px",
+                      marginBottom: isMobile ? "0" : "0.5rem",
+                      maxHeight: isMobile ? "60px" : "120px",
+                      marginRight: isMobile ? "1rem" : "0",
                     }}
                   />
                   <Box sx={{ display: "flex", flexDirection: "column" }}>
@@ -89,30 +91,44 @@ const UserOrders = () => {
                       sx={{
                         fontFamily: "'Poppins', sans-serif",
                         fontWeight: 600,
+                        fontSize: isMobile ? "1rem" : "1.25rem",
                       }}
                     >
-                      <strong>Producto:</strong> {product.name}
+                      {product.name}
                     </Typography>
                     <Typography
                       variant="body1"
-                      sx={{ fontFamily: "'Poppins', sans-serif" }}
+                      sx={{
+                        fontFamily: "'Poppins', sans-serif",
+                        fontSize: isMobile ? "0.875rem" : "1rem",
+                      }}
                     >
-                      <strong>Cantidad:</strong> {product.quantity}
+                      <strong> {product.quantity}</strong>
                     </Typography>
-                    <Typography
-                      variant="body1"
-                      sx={{ fontFamily: "'Poppins', sans-serif" }}
-                    >
-                      <strong>Precio Unitario:</strong> $
-                      {product.unit_price.toFixed(2)}
-                    </Typography>
-                    <Typography
-                      variant="body1"
-                      sx={{ fontFamily: "'Poppins', sans-serif" }}
-                    >
-                      <strong>Precio Total:</strong> $
-                      {(product.unit_price * product.quantity).toFixed(2)}
-                    </Typography>
+                    {!isMobile && (
+                      <>
+                        <Typography
+                          variant="body1"
+                          sx={{
+                            fontFamily: "'Poppins', sans-serif",
+                            fontSize: isMobile ? "0.875rem" : "1rem",
+                          }}
+                        >
+                          <strong>Precio Unitario:</strong> $
+                          {product.unit_price.toFixed(2)}
+                        </Typography>
+                        <Typography
+                          variant="body1"
+                          sx={{
+                            fontFamily: "'Poppins', sans-serif",
+                            fontSize: isMobile ? "0.875rem" : "1rem",
+                          }}
+                        >
+                          <strong>Precio Total:</strong> $
+                          {(product.unit_price * product.quantity).toFixed(2)}
+                        </Typography>
+                      </>
+                    )}
                   </Box>
                 </Box>
               ))}
@@ -129,25 +145,11 @@ const UserOrders = () => {
               >
                 <div>
                   <Typography
-                    variant="h6"
-                    sx={{
-                      fontFamily: "'Poppins', sans-serif",
-                      textAlign: "right",
-                      fontWeight: 200,
-                      marginBottom: "5rem",
-                      fontSize: "200%",
-                    }}
-                  >
-                    Total de la Orden:
-                    <strong style={{margin: "1rem"}}>${order.total.toFixed(2)}</strong>
-                  </Typography>
-                </div>
-                <div>
-                  <Typography
                     variant="body1"
                     sx={{
                       fontFamily: "'Poppins', sans-serif",
-                      textAlign: "right",
+                      textAlign: isMobile ? "left" : "right",
+                      fontSize: isMobile ? "0.875rem" : "1rem",
                     }}
                   >
                     <strong>Código Postal:</strong> {order.cp}
@@ -156,7 +158,8 @@ const UserOrders = () => {
                     variant="body1"
                     sx={{
                       fontFamily: "'Poppins', sans-serif",
-                      textAlign: "right",
+                      textAlign: isMobile ? "left" : "right",
+                      fontSize: isMobile ? "0.875rem" : "1rem",
                     }}
                   >
                     <strong>Teléfono:</strong> {order.phone}
@@ -165,7 +168,8 @@ const UserOrders = () => {
                     variant="body1"
                     sx={{
                       fontFamily: "'Poppins', sans-serif",
-                      textAlign: "right",
+                      textAlign: isMobile ? "left" : "right",
+                      fontSize: isMobile ? "0.875rem" : "1rem",
                     }}
                   >
                     <strong>Dirección:</strong> {order.address}
@@ -174,7 +178,8 @@ const UserOrders = () => {
                     variant="body1"
                     sx={{
                       fontFamily: "'Poppins', sans-serif",
-                      textAlign: "right",
+                      textAlign: isMobile ? "left" : "right",
+                      fontSize: isMobile ? "0.875rem" : "1rem",
                     }}
                   >
                     <strong>Ciudad:</strong> {order.city}
@@ -183,13 +188,32 @@ const UserOrders = () => {
                     variant="body1"
                     sx={{
                       fontFamily: "'Poppins', sans-serif",
-                      textAlign: "right",
+                      textAlign: isMobile ? "left" : "right",
+                      fontSize: isMobile ? "0.875rem" : "1rem",
                     }}
                   >
                     <strong>Provincia:</strong> {order.province}
                   </Typography>
                 </div>
               </Box>
+              <div>
+                <Typography
+                  variant="h6"
+                  sx={{
+                    fontFamily: "'Poppins', sans-serif",
+                    textAlign: isMobile ? "left" : "right",
+                    fontWeight: 200,
+                    marginBottom: isMobile ? "1rem" : "5rem",
+                    fontSize: isMobile ? "1rem" : "2rem",
+                    marginTop: "2rem",
+                  }}
+                >
+                  Total de la Orden:
+                  <strong style={{ margin: "1rem" }}>
+                    ${order.total.toFixed(2)}
+                  </strong>
+                </Typography>
+              </div>
             </Box>
           </CardContent>
         </Card>

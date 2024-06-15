@@ -15,6 +15,9 @@ import {
   serverTimestamp,
 } from "firebase/firestore";
 import { Link } from "react-router-dom";
+import { useMediaQuery } from "@mui/material";
+import { createTheme, useTheme } from "@mui/material/styles";
+import { DrawerContext } from "../../../context/DrawerContext";
 
 function CheckOut() {
   const { cart, getTotalPrice, clearCart } = useContext(CartContext);
@@ -30,6 +33,24 @@ function CheckOut() {
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const paramsValue = queryParams.get("status");
+
+  const { setOpenDrawer, openDrawer } = React.useContext(DrawerContext);
+  const theme = createTheme({
+    breakpoints: {
+      values: {
+        xs: 0,
+        sm: 600,
+        md: 800, // Define md como 800px
+        lg: 1200,
+        xl: 1536,
+      },
+    },
+  });
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const isMiddleMobile = useMediaQuery(theme.breakpoints.down("lg"));
+  const [drawerWidth, setDrawerWidth] = React.useState(
+    isMiddleMobile ? 75 : 240
+  );
 
   useEffect(() => {
     let orderFromStorage = JSON.parse(localStorage.getItem("order"));
@@ -109,6 +130,10 @@ function CheckOut() {
     setUserData({ ...userData, [e.target.name]: e.target.value });
   };
 
+  useEffect(() => {
+    // Desplazarse a la parte superior de la página
+    window.scrollTo(0, 0);
+  }, []);
   return (
     <div
       style={{
@@ -116,96 +141,107 @@ function CheckOut() {
         justifyContent: "center",
         fontFamily: '"Poppins", sans-serif',
         padding: "2rem",
-        marginTop: "5rem",
-        marginLeft: "-50px",
+        flexDirection: isMobile ? "column-reverse" : "row",
+        marginTop: isMobile ? "0rem" : "5rem",
+        marginLeft: isMobile ? "0rem" : "-50px",
         zoom: 0.9,
       }}
     >
-      {!orderId ? (
+      {!orderId && orderCompleta ? (
         <div>
-          <Typography
-            style={{ fontFamily: '"Poppins", sans-serif', fontWeight: "900" }}
-            variant="h4"
-            sx={{ marginBottom: "1rem" }}
-          >
-            Checkout
-          </Typography>
-          <TextField
-            onChange={handleChange}
-            name="cp"
-            variant="outlined"
-            label="Código Postal"
-            sx={{ marginBottom: "1rem", width: "100%" }}
-            InputLabelProps={{
-              sx: {
-                fontFamily: '"Poppins", sans-serif',
-                fontWeight: "400",
-              },
-            }}
-          />
-          <TextField
-            onChange={handleChange}
-            name="phone"
-            variant="outlined"
-            label="Teléfono"
-            sx={{ marginBottom: "1rem", width: "100%" }}
-            InputLabelProps={{
-              sx: {
-                fontFamily: '"Poppins", sans-serif',
-                fontWeight: "400",
-              },
-            }}
-          />
-          <TextField
-            onChange={handleChange}
-            name="address"
-            variant="outlined"
-            label="Dirección"
-            sx={{ marginBottom: "1rem", width: "100%" }}
-            InputLabelProps={{
-              sx: {
-                fontFamily: '"Poppins", sans-serif',
-                fontWeight: "400",
-              },
-            }}
-          />
-          <TextField
-            onChange={handleChange}
-            name="city"
-            variant="outlined"
-            label="Ciudad"
-            sx={{ marginBottom: "1rem", width: "100%" }}
-            InputLabelProps={{
-              sx: {
-                fontFamily: '"Poppins", sans-serif',
-                fontWeight: "400",
-              },
-            }}
-          />
-          <TextField
-            onChange={handleChange}
-            name="province"
-            variant="outlined"
-            label="Provincia"
-            sx={{ marginBottom: "1rem", width: "100%" }}
-            InputLabelProps={{
-              sx: {
-                fontFamily: '"Poppins", sans-serif',
-                fontWeight: "400",
-              },
-            }}
-          />
-          <Button
-            variant="contained"
-            onClick={() => handleBuy()}
-            sx={{
-              marginBottom: "1rem",
-              width: "100%",
-              fontFamily: '"Poppins", sans-serif',
+          <div
+            style={{
+              marginTop:
+                isMobile && orderCompleta && orderId ? "50rem" : "0rem",
             }}
           >
-            Confirmar Datos
-          </Button>
+            <Typography
+              style={{
+                fontFamily: '"Poppins", sans-serif',
+                fontWeight: "900",
+              }}
+              variant="h4"
+              sx={{ marginBottom: "1rem" }}
+            >
+              Checkout
+            </Typography>
+            <TextField
+              onChange={handleChange}
+              name="cp"
+              variant="outlined"
+              label="Código Postal"
+              sx={{ marginBottom: "1rem", width: "100%" }}
+              InputLabelProps={{
+                sx: {
+                  fontFamily: '"Poppins", sans-serif',
+                  fontWeight: "400",
+                },
+              }}
+            />
+            <TextField
+              onChange={handleChange}
+              name="phone"
+              variant="outlined"
+              label="Teléfono"
+              sx={{ marginBottom: "1rem", width: "100%" }}
+              InputLabelProps={{
+                sx: {
+                  fontFamily: '"Poppins", sans-serif',
+                  fontWeight: "400",
+                },
+              }}
+            />
+            <TextField
+              onChange={handleChange}
+              name="address"
+              variant="outlined"
+              label="Dirección"
+              sx={{ marginBottom: "1rem", width: "100%" }}
+              InputLabelProps={{
+                sx: {
+                  fontFamily: '"Poppins", sans-serif',
+                  fontWeight: "400",
+                },
+              }}
+            />
+            <TextField
+              onChange={handleChange}
+              name="city"
+              variant="outlined"
+              label="Ciudad"
+              sx={{ marginBottom: "1rem", width: "100%" }}
+              InputLabelProps={{
+                sx: {
+                  fontFamily: '"Poppins", sans-serif',
+                  fontWeight: "400",
+                },
+              }}
+            />
+            <TextField
+              onChange={handleChange}
+              name="province"
+              variant="outlined"
+              label="Provincia"
+              sx={{ marginBottom: "1rem", width: "100%" }}
+              InputLabelProps={{
+                sx: {
+                  fontFamily: '"Poppins", sans-serif',
+                  fontWeight: "400",
+                },
+              }}
+            />
+            <Button
+              variant="contained"
+              onClick={() => handleBuy()}
+              sx={{
+                marginBottom: "1rem",
+                width: "100%",
+                fontFamily: '"Poppins", sans-serif',
+              }}
+            >
+              Confirmar Datos
+            </Button>
+          </div>
         </div>
       ) : (
         <div>
@@ -239,13 +275,13 @@ function CheckOut() {
       {orderCompleta && preferenceId && (
         <Box
           sx={{
-            marginTop: "5rem",
+            marginTop: isMobile ? "1" : "5rem",
             width: "100%",
-            padding: "5rem",
+            padding: isMobile ? 0 : "5rem",
             paddingTop: "0rem",
             display: "flex",
             flexDirection: "column",
-            zoom: 0.8,
+            zoom: isMobile ? 1 : 0.8,
           }}
         >
           <Typography
