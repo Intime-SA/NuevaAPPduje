@@ -102,7 +102,12 @@ const Cart = () => {
 
   return (
     <div
-      style={{ display: "flex", justifyContent: "center", marginTop: "6rem" }}
+      style={{
+        display: "flex",
+        justifyContent: "center",
+        marginTop: "6rem",
+        marginLeft: "-5rem",
+      }}
     >
       {cart.length > 0 ? (
         <Card sx={{ width: 345, fontFamily: '"Poppins", sans-serif' }}>
@@ -262,7 +267,7 @@ const Cart = () => {
                   style={{
                     fontSize: "0.9rem",
                     fontFamily: '"Poppins", sans-serif',
-                    fontWeight: 900,
+                    fontWeight: 400,
                   }}
                 >
                   Total Compra:
