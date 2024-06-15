@@ -63,11 +63,13 @@ export default function DrawerMenu() {
           }}
         >
           <div>
-            <img
-              src="https://firebasestorage.googleapis.com/v0/b/mayoristakaurymdp.appspot.com/o/mercado-pago-logo-CC340D0497-seeklogo.com-removebg-preview.png?alt=media&token=ae12b632-7fb9-460d-8341-22e518f0ff38"
-              alt=""
-              style={{ width: "150px" }}
-            />
+            <Link to="/">
+              <img
+                src="https://firebasestorage.googleapis.com/v0/b/mayoristakaurymdp.appspot.com/o/mercado-pago-logo-CC340D0497-seeklogo.com-removebg-preview.png?alt=media&token=ae12b632-7fb9-460d-8341-22e518f0ff38"
+                alt=""
+                style={{ width: "150px" }}
+              />
+            </Link>
           </div>
           <div>
             <Typography
@@ -79,6 +81,15 @@ export default function DrawerMenu() {
               Payment Service Provider
             </Typography>
             <p style={{ fontWeight: 100 }}>Ambiente de testing para clientes</p>
+          </div>
+          <div style={{ display: "flex", alignItems: "center" }}>
+            <Link to="/">
+              <img
+                src="https://firebasestorage.googleapis.com/v0/b/mayoristakaurymdp.appspot.com/o/00000altanticdev-removebg-preview.png?alt=media&token=933ef3e7-fc96-48ac-bd20-8a43858dceabnpm"
+                alt=""
+                style={{ width: "100px", margin: "1rem" }}
+              />
+            </Link>
           </div>
         </Toolbar>
       </AppBar>

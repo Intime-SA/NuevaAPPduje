@@ -15,6 +15,7 @@ import {
   Typography,
   Menu,
   MenuItem,
+  Divider,
 } from "@mui/material";
 import { Link } from "react-router-dom";
 import { styled } from "@mui/material/styles";
@@ -210,26 +211,37 @@ const Cart = () => {
                 >
                   Carrito de Compras
                 </h1>
+                <Divider />
+                <br />
                 <ul>
                   {cart.map((producto, index) => (
-                    <li key={index}>
+                    <div key={index}>
+                      <div
+                        style={{
+                          width: "100%",
+                          display: "flex",
+                          justifyContent: "space-between",
+                        }}
+                      >
+                        <p
+                          style={{
+                            fontSize: "1rem",
+                            fontFamily: '"Poppins", sans-serif',
+                          }}
+                        >
+                          {producto.name}{" "}
+                        </p>
+                        <strong>
+                          {(producto.unit_price * producto.quantity).toFixed(2)}
+                        </strong>
+                      </div>
+
                       <p
                         style={{
                           fontSize: "1rem",
                           fontFamily: '"Poppins", sans-serif',
                         }}
-                      >
-                        {producto.name}
-                      </p>
-                      <p
-                        style={{
-                          fontSize: "1rem",
-                          fontFamily: '"Poppins", sans-serif',
-                        }}
-                      >
-                        Precio Total:{" "}
-                        {(producto.unit_price * producto.quantity).toFixed(2)}
-                      </p>
+                      ></p>
                       <p
                         style={{
                           fontSize: "0.75rem",
@@ -239,16 +251,18 @@ const Cart = () => {
                       >
                         Cantidad: {producto.quantity}
                       </p>
-                    </li>
+                    </div>
                   ))}
                 </ul>
               </div>
+              <Divider />
+              <br />
               <div style={{ display: "flex", justifyContent: "space-between" }}>
                 <h4
                   style={{
                     fontSize: "0.9rem",
                     fontFamily: '"Poppins", sans-serif',
-                    fontWeight: 400,
+                    fontWeight: 900,
                   }}
                 >
                   Total Compra:
