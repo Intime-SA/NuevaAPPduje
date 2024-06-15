@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 const DemoHome = () => {
   return (
     <div
@@ -11,17 +12,21 @@ const DemoHome = () => {
       }}
     >
       <div style={{ width: "20%" }}>
-        <img
-          src="https://firebasestorage.googleapis.com/v0/b/mayoristakaurymdp.appspot.com/o/Niche%20service%20marketplace-pana.svg?alt=media&token=b379c721-1ee4-49c4-b5da-3cdfa1fbe5e0"
-          alt=""
-          style={{
-            width: "100%",
-            transition: "transform 0.3s ease",
-            cursor: "pointer",
-          }}
-          onMouseOver={(e) => (e.currentTarget.style.transform = "scale(1.1)")}
-          onMouseOut={(e) => (e.currentTarget.style.transform = "scale(1)")}
-        />
+        <Link to="/shop">
+          <img
+            src="https://firebasestorage.googleapis.com/v0/b/mayoristakaurymdp.appspot.com/o/Niche%20service%20marketplace-pana.svg?alt=media&token=b379c721-1ee4-49c4-b5da-3cdfa1fbe5e0"
+            alt=""
+            style={{
+              width: "100%",
+              transition: "transform 0.3s ease",
+              cursor: "pointer",
+            }}
+            onMouseOver={(e) =>
+              (e.currentTarget.style.transform = "scale(1.1)")
+            }
+            onMouseOut={(e) => (e.currentTarget.style.transform = "scale(1)")}
+          />
+        </Link>
       </div>
       <div style={{ width: "20%" }}>
         <img

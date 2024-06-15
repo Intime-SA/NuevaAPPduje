@@ -30,12 +30,6 @@ export const menuItems = [
     title: "Mis compras",
     Icon: ShopIcon,
   },
-  {
-    id: "demoHome",
-    path: "/demoHome",
-    title: "Demo",
-    Icon: OndemandVideoIcon,
-  },
   /*   {
     id: "pedidos",
     path: "/pedidos",
