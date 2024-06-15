@@ -17,7 +17,13 @@ import { Link, useNavigate } from "react-router-dom";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { useContext, useState } from "react";
 import { db, loginGoogle, onSingIn } from "../../../firebaseConfig";
-import { collection, doc, getDoc, setDoc } from "firebase/firestore";
+import {
+  collection,
+  doc,
+  getDoc,
+  serverTimestamp,
+  setDoc,
+} from "firebase/firestore";
 import { AuthContext } from "../../../context/AuthContext";
 
 const Login = () => {
