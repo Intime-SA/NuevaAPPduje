@@ -92,6 +92,7 @@ const UserOrders = () => {
                         fontFamily: "'Poppins', sans-serif",
                         fontWeight: 600,
                         fontSize: isMobile ? "1rem" : "1.25rem",
+                        width: "250px",
                       }}
                     >
                       {product.name}
@@ -196,25 +197,28 @@ const UserOrders = () => {
                   </Typography>
                 </div>
               </Box>
-              <div>
-                <Typography
-                  variant="h6"
-                  sx={{
-                    fontFamily: "'Poppins', sans-serif",
-                    textAlign: isMobile ? "left" : "right",
-                    fontWeight: 200,
-                    marginBottom: isMobile ? "1rem" : "5rem",
-                    fontSize: isMobile ? "1rem" : "2rem",
-                    marginTop: "2rem",
-                  }}
-                >
-                  Total de la Orden:
-                  <strong style={{ margin: "1rem" }}>
-                    ${order.total.toFixed(2)}
-                  </strong>
-                </Typography>
-              </div>
             </Box>
+            <div>
+              <Typography
+                variant="h6"
+                sx={{
+                  fontFamily: "'Poppins', sans-serif",
+                  textAlign: isMobile ? "left" : "right",
+                  fontWeight: 200,
+                  marginBottom: isMobile ? "1rem" : "5rem",
+                  fontSize: isMobile ? "1rem" : "2rem",
+                  marginTop: "2rem",
+                  display: "flex",
+                  justifyContent: "center",
+                  flexDirection: "column",
+                  alignItems: "center",
+                }}
+              >
+                Total de la Orden:
+                <br />
+                <strong>${order.total.toFixed(2)}</strong>
+              </Typography>
+            </div>
           </CardContent>
         </Card>
       ))}

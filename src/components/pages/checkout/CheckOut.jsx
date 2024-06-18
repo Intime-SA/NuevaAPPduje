@@ -31,7 +31,9 @@ function CheckOut() {
   const [order, setOrder] = useState(null);
 
   const location = useLocation();
+
   const queryParams = new URLSearchParams(location.search);
+
   const paramsValue = queryParams.get("status");
 
   const { setOpenDrawer, openDrawer } = React.useContext(DrawerContext);
@@ -61,6 +63,7 @@ function CheckOut() {
       addDoc(ordersCollection, {
         ...orderFromStorage,
         date: serverTimestamp(),
+        status: "approved",
       }).then((res) => {
         setOrderId(res.id);
       });
@@ -89,6 +92,7 @@ function CheckOut() {
     try {
       let res = await axios.post(
         "https://mp-pied.vercel.app/create_preference",
+
         {
           items: newArray,
           shipment_cost: 10,
@@ -103,6 +107,8 @@ function CheckOut() {
   };
 
   const handleBuy = async () => {
+    const id = await createPreference();
+
     let order = {
       cp: userData.cp,
       phone: userData.phone,
@@ -112,9 +118,10 @@ function CheckOut() {
       items: cart,
       total: total,
       email: user.email,
+      id: id,
     };
+
     localStorage.setItem("order", JSON.stringify(order));
-    const id = await createPreference();
     if (id) {
       setPreferenceId(id);
     }
@@ -134,6 +141,7 @@ function CheckOut() {
     // Desplazarse a la parte superior de la página
     window.scrollTo(0, 0);
   }, []);
+
   return (
     <div
       style={{
