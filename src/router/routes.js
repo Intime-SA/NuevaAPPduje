@@ -58,7 +58,7 @@ export const routes = [
   },
   {
     id: "checkout-success",
-    path: "/checkout-success/:numberOrder",
+    path: "/checkout-success/:numberOrder/status=:status",
     Element: CheckOutSuccess,
   },
 ];
