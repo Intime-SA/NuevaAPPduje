@@ -10,13 +10,15 @@ import {
 } from "firebase/firestore";
 import { db } from "../../../firebaseConfig";
 import { CartContext } from "../../../context/CartContext";
+import { number } from "yup";
 
 const CheckOutSuccess = () => {
   const { clearCart } = useContext(CartContext);
 
   const [orderId, setOrderId] = useState(null);
   const [order, setOrder] = useState(null);
-  const { numberOrder } = useParams();
+  const { numberOrder, status } = useParams();
+  console.log(numberOrder, status);
 
   const location = useLocation();
   console.log("LOCATION :", location);
@@ -30,7 +32,7 @@ const CheckOutSuccess = () => {
     console.log("orderFromStorage:", orderFromStorage); // Log para verificar el contenido de orderFromStorage
     setOrder(orderFromStorage);
 
-    if (paramsValue === "approved") {
+    if (status === "approved") {
       let ordersCollection = collection(db, "orders");
       console.log("order data to be saved:", {
         ...orderFromStorage,
@@ -66,7 +68,7 @@ const CheckOutSuccess = () => {
       localStorage.removeItem("order");
       clearCart();
     }
-  }, []);
+  }, [status, numberOrder]);
 
   useEffect(() => {
     console.log("orderId:", orderId); // Log para verificar el orderId después de ser establecido
