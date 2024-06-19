@@ -32,18 +32,20 @@ const CheckOutSuccess = () => {
     console.log("orderFromStorage:", orderFromStorage); // Log para verificar el contenido de orderFromStorage
     setOrder(orderFromStorage);
 
-    if (status === "approved") {
+    console.log(order);
+
+    if (status === "approvedcuotas") {
       let ordersCollection = collection(db, "orders");
       console.log("order data to be saved:", {
         ...orderFromStorage,
         date: serverTimestamp(),
-        status: "approved",
+        status: "approvedcuotas",
       }); // Log para verificar los datos que se van a guardar
 
       addDoc(ordersCollection, {
         ...orderFromStorage,
         date: serverTimestamp(),
-        status: "approvedGOcuotas",
+        status: "approvedcuotas",
       })
         .then((res) => {
           console.log("Document added with ID:", res.id); // Log para verificar el ID del documento guardado
@@ -52,18 +54,6 @@ const CheckOutSuccess = () => {
         .catch((error) => {
           console.error("Error adding document:", error); // Log de error si ocurre un problema al guardar
         });
-
-      orderFromStorage.items.forEach((element) => {
-        updateDoc(doc(db, "products", element.id), {
-          stock: element.stock - element.quantity,
-        })
-          .then(() => {
-            console.log(`Product ${element.id} stock updated`); // Log para verificar la actualización del stock
-          })
-          .catch((error) => {
-            console.error("Error updating product stock:", error); // Log de error si ocurre un problema al actualizar el stock
-          });
-      });
 
       localStorage.removeItem("order");
       clearCart();
