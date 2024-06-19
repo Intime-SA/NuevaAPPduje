@@ -37,6 +37,8 @@ const UserOrders = () => {
     fetchOrders();
   }, [user.email]);
 
+  console.log(myOrders);
+
   return (
     <div
       style={{
@@ -59,10 +61,13 @@ const UserOrders = () => {
               sx={{
                 display: "flex",
                 flexDirection: isMobile ? "column" : "row",
-                alignItems: "center",
+                alignItems: isMobile ? "flex-end" : "center",
                 justifyContent: "space-between",
               }}
             >
+              <h6 style={{ display: isMobile ? "flex" : "none" }}>
+                Order ID: #{order.id}
+              </h6>
               {order.items?.map((product) => (
                 <Box
                   key={product.id}
@@ -97,6 +102,9 @@ const UserOrders = () => {
                     >
                       {product.name}
                     </Typography>
+                    <h6 style={{ display: isMobile ? "none" : "flex" }}>
+                      ORDER ID: #{order.id}
+                    </h6>
                     <Typography
                       variant="body1"
                       sx={{
@@ -219,6 +227,9 @@ const UserOrders = () => {
                 <strong>${order.total.toFixed(2)}</strong>
               </Typography>
             </div>
+            ESTADO :{order.status}
+            <br />
+            ID Mercado Pago: {order.idMercadoPago}
           </CardContent>
         </Card>
       ))}

@@ -7,6 +7,8 @@ import Dashboard from "../components/pages/dashboard/Dashboard";
 import UserOrders from "../components/pages/userOrders/UserOrders";
 import Pedidos from "../components/pages/pedidos/Pedidos";
 import DemoHome from "../components/pages/demo/DemoHome";
+import CheckOutFailure from "../components/pages/checkout/CheckOutFailure";
+import CheckOutSuccess from "../components/pages/checkout/CheckOutSuccess";
 
 export const routes = [
   /*   {
@@ -48,5 +50,15 @@ export const routes = [
     id: "demoHome",
     path: "/",
     Element: DemoHome,
+  },
+  {
+    id: "checkout-failure",
+    path: "/checkout-failure",
+    Element: CheckOutFailure,
+  },
+  {
+    id: "checkout-success",
+    path: "/checkout-success/:numberOrder",
+    Element: CheckOutSuccess,
   },
 ];

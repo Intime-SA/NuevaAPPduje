@@ -29,12 +29,35 @@ function CheckOut() {
   const [userData, setUserData] = useState({});
   const [orderId, setOrderId] = useState(null);
   const [order, setOrder] = useState(null);
+  const [numberOrder, setNumberOrder] = useState();
 
   const location = useLocation();
 
   const queryParams = new URLSearchParams(location.search);
 
   const paramsValue = queryParams.get("status");
+
+  useEffect(() => {
+    const traerId = async () => {
+      try {
+        const refContador = doc(db, "contador", "contador");
+
+        await runTransaction(db, async (transaction) => {
+          const docContador = await transaction.get(refContador);
+          const nuevoValor = docContador.data().autoincremental + 1;
+
+          transaction.update(refContador, { autoincremental: nuevoValor });
+          setNumberOrder(nuevoValor);
+        });
+      } catch (error) {
+        console.error("Error al obtener el nuevo ID:", error);
+      }
+    };
+
+    traerId();
+  }, []);
+
+  console.log(numberOrder);
 
   const { setOpenDrawer, openDrawer } = React.useContext(DrawerContext);
   const theme = createTheme({
@@ -106,7 +129,79 @@ function CheckOut() {
     }
   };
 
+  const createCheckoutGoCuotas = async (token) => {
+    try {
+      let res = await axios.post(
+        "https://mp-pied.vercel.app/create-checkout",
+        {
+          amount_in_cents: total, // Asegúrate de definir 'total'
+          email: user.email, // Asegúrate de definir 'user'
+          order_reference_id: numberOrder, // Asegúrate de definir 'numberOrder'
+          phone_number: "01168702318",
+          url_failure: "https://mp.atlantics.dev/checkout-failure",
+          url_success: `https://mp.atlantics.dev/checkout-success/${numberOrder}`,
+          webhook_url: `https://mp-pied.vercel.app/webhook`,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      console.log(res.data);
+      const { url } = res.data;
+      return url;
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  // Función para autenticar y obtener el token
+  const email = "arceramirom@gmail.com";
+  const password = "asd123";
+
+  const goCuotas = async () => {
+    try {
+      // Realizar la petición POST al endpoint de autenticación de GoCuotas
+      const response = await axios.post(
+        "https://mp-pied.vercel.app/authenticate", // Asegúrate de usar la URL correcta de autenticación
+        {
+          email,
+          password,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (response.data.token) {
+        // Llamar a createCheckoutGoCuotas pasando el token
+        const checkoutUrl = await createCheckoutGoCuotas(response.data.token);
+        console.log("Checkout URL:", checkoutUrl);
+      }
+
+      return response.data.token;
+    } catch (error) {
+      // Manejar errores de la petición
+      console.error(
+        "Error authenticating:",
+        error.response ? error.response.data : error.message
+      );
+      throw new Error(
+        error.response ? error.response.data.message : "Error authenticating"
+      );
+    }
+  };
+
+  const [linkGoCuotas, setLinkGoCuotas] = useState("");
+
   const handleBuy = async () => {
+    const link = await goCuotas();
+    console.log(link);
+    setLinkGoCuotas(link);
     const id = await createPreference();
 
     let order = {
@@ -118,7 +213,7 @@ function CheckOut() {
       items: cart,
       total: total,
       email: user.email,
-      id: id,
+      idMercadoPago: id,
     };
 
     localStorage.setItem("order", JSON.stringify(order));
@@ -396,7 +491,43 @@ function CheckOut() {
               </Typography>
             </Box>
           ))}
-          <Wallet initialization={{ preferenceId, redirectMode: "self" }} />
+
+          <div style={{ width: "200px" }}>
+            <Wallet initialization={{ preferenceId, redirectMode: "self" }} />
+          </div>
+          <div
+            style={{
+              width: "300px",
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "flex-start",
+              alignItems: "center",
+            }}
+          >
+            <Link
+              to={linkGoCuotas}
+              style={{
+                border: "1px solid grey",
+                borderRadius: "20px",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                marginTop: "1rem",
+                padding: "0.5rem",
+                width: "100%",
+              }}
+            >
+              <img
+                src="https://tuquejasuma.com/media/cache/12/da/12da800997e20a64eac1fd613e7342c9.png"
+                alt=""
+                srcset=""
+                style={{ width: "100px" }}
+              />
+            </Link>
+            <div>
+              <h6>Cuotas Sin Interes con DEBITO</h6>
+            </div>
+          </div>
         </Box>
       )}
     </div>
