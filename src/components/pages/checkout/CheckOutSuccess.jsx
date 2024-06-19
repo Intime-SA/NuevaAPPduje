@@ -19,8 +19,11 @@ const CheckOutSuccess = () => {
   const { numberOrder } = useParams();
 
   const location = useLocation();
+  console.log("LOCATION :", location);
   const queryParams = new URLSearchParams(location.search);
+  console.log("Query :", queryParams);
   const paramsValue = queryParams.get("status");
+  console.log("Params Value: ", paramsValue);
 
   useEffect(() => {
     let orderFromStorage = JSON.parse(localStorage.getItem("order"));
@@ -63,7 +66,7 @@ const CheckOutSuccess = () => {
       localStorage.removeItem("order");
       clearCart();
     }
-  }, [paramsValue, clearCart]);
+  }, []);
 
   useEffect(() => {
     console.log("orderId:", orderId); // Log para verificar el orderId después de ser establecido
