@@ -1,7 +1,7 @@
 // src/components/CheckoutSuccess.js
 import React from "react";
 import { useParams } from "react-router-dom";
-import "./CheckoutSuccess.css";
+import "./CheckOutSuccess.css";
 
 const CheckOutSuccess = () => {
   const { numberOrder } = useParams();
