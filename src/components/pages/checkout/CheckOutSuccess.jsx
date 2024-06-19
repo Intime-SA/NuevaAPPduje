@@ -1,5 +1,5 @@
 // src/components/CheckoutSuccess.js
-import React, { useEffect } from "react";
+import React, { useContext, useEffect } from "react";
 import { useLocation, useParams } from "react-router-dom";
 import "./CheckOutSuccess.css";
 import {
@@ -10,8 +10,11 @@ import {
   updateDoc,
 } from "firebase/firestore";
 import { db } from "../../../firebaseConfig";
+import { CartContext } from "../../../context/CartContext";
 
 const CheckOutSuccess = () => {
+  const { clearCart } = useContext(CartContext);
+
   const [orderId, setOrderId] = useState(null);
   const [order, setOrder] = useState(null);
   const { numberOrder } = useParams();
