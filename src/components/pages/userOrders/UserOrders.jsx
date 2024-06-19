@@ -40,55 +40,84 @@ const UserOrders = () => {
   console.log(myOrders);
 
   const renderEstado = (status) => {
+    const linkGoCuotas = "https://tuquejasuma.com"; // Reemplaza con tu URL real de GoCuotas
+
+    const commonStyles = {
+      width: "100%",
+      display: "flex",
+      flexDirection: "column",
+      justifyContent: "flex-start",
+      alignItems: "center",
+      padding: "1rem",
+      marginBottom: "1rem",
+      boxShadow: "0 0 10px rgba(0, 0, 0, 0.1)", // Sombra para un efecto de elevación
+      borderRadius: "12px", // Borde redondeado
+      backgroundColor: "#fff", // Fondo blanco
+    };
+
+    const optionStyles = {
+      border: "1px solid transparent",
+      borderRadius: "12px",
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      padding: "0.5rem",
+      width: "100%",
+      transition: "border-color 0.3s ease",
+    };
+
     if (status === "approvedGOcuotas") {
       return (
-        <div
-          style={{
-            width: "300px",
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "flex-start",
-            alignItems: "center",
-          }}
-        >
+        <div style={commonStyles}>
           <div
-            to={linkGoCuotas}
             style={{
-              border: "1px solid grey",
-              borderRadius: "20px",
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              marginTop: "1rem",
-              padding: "0.5rem",
-              width: "100%",
+              ...optionStyles,
+              borderColor: "#f0f0f0", // Color del borde para resaltar
+              marginBottom: "1rem",
             }}
           >
-            <img
-              src="https://tuquejasuma.com/media/cache/12/da/12da800997e20a64eac1fd613e7342c9.png"
-              alt=""
-              srcset=""
-              style={{ width: "100px" }}
-            />
-          </div>
-          <div>
-            <h6>Cuotas Sin Interes con DEBITO</h6>
+            <div>
+              <a
+                href={linkGoCuotas}
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{
+                  textDecoration: "none",
+                  display: "block",
+                  width: "100%",
+                }}
+              >
+                <img
+                  src="https://tuquejasuma.com/media/cache/12/da/12da800997e20a64eac1fd613e7342c9.png"
+                  alt="GoCuotas Logo"
+                  style={{ width: "150px" }}
+                />
+              </a>
+            </div>
           </div>
         </div>
       );
     } else if (status === "approved") {
       return (
-        <div>
-          <div to="/">
+        <div style={commonStyles}>
+          <div
+            style={{
+              ...optionStyles,
+              backgroundColor: "#121621", // Fondo gris claro
+              marginBottom: "1rem",
+            }}
+          >
             <img
               src="https://firebasestorage.googleapis.com/v0/b/mayoristakaurymdp.appspot.com/o/mercado-pago-logo-CC340D0497-seeklogo.com-removebg-preview.png?alt=media&token=ae12b632-7fb9-460d-8341-22e518f0ff38"
-              alt=""
+              alt="Mercado Pago Logo"
               style={{ width: "150px" }}
             />
           </div>
         </div>
       );
     }
+
+    return null; // Retorno por defecto si el estado no coincide con ninguno de los casos
   };
 
   return (
@@ -117,9 +146,16 @@ const UserOrders = () => {
                 justifyContent: "space-between",
               }}
             >
-              <h6 style={{ display: isMobile ? "flex" : "none" }}>
-                Order ID: #{order.id}
-              </h6>
+              <h5
+                style={{
+                  display: isMobile ? "flex" : "none",
+                  margin: "1rem",
+                  fontWeight: "100",
+                  fontFamily: "'Poppins', sans-serif",
+                }}
+              >
+                ORDEN ID: <strong>#{order.id}</strong>
+              </h5>
               {order.items?.map((product) => (
                 <Box
                   key={product.id}
@@ -143,6 +179,16 @@ const UserOrders = () => {
                     }}
                   />
                   <Box sx={{ display: "flex", flexDirection: "column" }}>
+                    <h5
+                      style={{
+                        display: isMobile ? "none" : "",
+                        margin: "1rem",
+                        fontWeight: "100",
+                        fontFamily: "'Poppins', sans-serif",
+                      }}
+                    >
+                      ORDEN ID: <strong>#{order.id}</strong>
+                    </h5>
                     <Typography
                       variant="h6"
                       sx={{
@@ -154,9 +200,7 @@ const UserOrders = () => {
                     >
                       {product.name}
                     </Typography>
-                    <h6 style={{ display: isMobile ? "none" : "flex" }}>
-                      ORDER ID: #{order.id}
-                    </h6>
+
                     <Typography
                       variant="body1"
                       sx={{
@@ -280,10 +324,10 @@ const UserOrders = () => {
               </Typography>
               <br />
             </div>
-            <h6 style={{ fontFamily: "'Poppins', sans-serif" }}>
+            <h5 style={{ fontFamily: "'Poppins', sans-serif", margin: "1rem" }}>
               Abonado con:
-            </h6>
-            {() => renderEstado(order.status)}
+            </h5>
+            {renderEstado(order.status)}
             <br />
           </CardContent>
         </Card>
