@@ -138,7 +138,7 @@ function CheckOut() {
           amount_in_cents: total, // Asegúrate de definir 'total'
           email: user.email, // Asegúrate de definir 'user'
           order_reference_id: numberOrder, // Asegúrate de definir 'numberOrder'
-          phone_number: userData.phone,
+          phone_number: "1168702318",
           url_failure: "https://mp.atlantics.dev/checkout-failure",
           url_success: `https://mp.atlantics.dev/checkout-success/${numberOrder}`,
           webhook_url: `https://mp-pied.vercel.app/webhook`,
