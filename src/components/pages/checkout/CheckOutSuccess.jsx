@@ -1,10 +1,51 @@
 // src/components/CheckoutSuccess.js
-import React from "react";
-import { useParams } from "react-router-dom";
+import React, { useEffect } from "react";
+import { useLocation, useParams } from "react-router-dom";
 import "./CheckOutSuccess.css";
+import {
+  addDoc,
+  collection,
+  doc,
+  serverTimestamp,
+  updateDoc,
+} from "firebase/firestore";
+import { db } from "../../../firebaseConfig";
 
 const CheckOutSuccess = () => {
+  const [orderId, setOrderId] = useState(null);
+  const [order, setOrder] = useState(null);
   const { numberOrder } = useParams();
+
+  const location = useLocation();
+
+  const queryParams = new URLSearchParams(location.search);
+
+  const paramsValue = queryParams.get("status");
+
+  useEffect(() => {
+    let orderFromStorage = JSON.parse(localStorage.getItem("order"));
+    setOrder(orderFromStorage);
+
+    if (paramsValue === "approved") {
+      let ordersCollection = collection(db, "orders");
+      addDoc(ordersCollection, {
+        ...orderFromStorage,
+        date: serverTimestamp(),
+        status: "approved",
+      }).then((res) => {
+        setOrderId(res.id);
+      });
+
+      orderFromStorage.items.forEach((element) => {
+        updateDoc(doc(db, "products", element.id), {
+          stock: element.stock - element.quantity,
+        });
+      });
+
+      localStorage.removeItem("order");
+      clearCart();
+    }
+  }, [paramsValue]);
 
   return (
     <div className="container">
