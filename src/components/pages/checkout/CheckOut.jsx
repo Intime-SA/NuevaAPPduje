@@ -131,13 +131,21 @@ function CheckOut() {
   };
 
   const createCheckoutGoCuotas = async (token) => {
+    // Convertir 'total' a centavos y asegurar que sea un entero
+    const amountInCents = Math.round(total * 100);
+
+    console.log("Total (en centavos):", amountInCents);
+    console.log("Email:", user.email);
+    console.log("Order Number:", numberOrder);
+    console.log("Token:", token);
+
     try {
       let res = await axios.post(
         "https://mp-pied.vercel.app/create-checkout",
         {
-          amount_in_cents: total, // Asegúrate de definir 'total'
-          email: user.email, // Asegúrate de definir 'user'
-          order_reference_id: numberOrder, // Asegúrate de definir 'numberOrder'
+          amount_in_cents: amountInCents, // Usa 'amountInCents' en lugar de 'total'
+          email: user.email,
+          order_reference_id: numberOrder,
           phone_number: "1168702318",
           url_failure: "https://mp.atlantics.dev/checkout-failure",
           url_success: `https://mp.atlantics.dev/checkout-success/${numberOrder}`,
@@ -151,13 +159,24 @@ function CheckOut() {
         }
       );
       console.log(res.data);
-      const { url } = res.data;
+      const url = res.data;
       return url;
     } catch (error) {
-      console.log(error);
+      if (error.response) {
+        // El servidor respondió con un estado que no está en el rango de 2xx
+        console.log("Error Response:", error.response.data);
+        console.log("Error Status:", error.response.status);
+        console.log("Error Headers:", error.response.headers);
+      } else if (error.request) {
+        // La solicitud se realizó pero no se recibió respuesta
+        console.log("Error Request:", error.request);
+      } else {
+        // Algo pasó al configurar la solicitud que lanzó un error
+        console.log("Error Message:", error.message);
+      }
+      console.log("Error Config:", error.config);
     }
   };
-
   // Función para autenticar y obtener el token
   const email = "arceramirom@gmail.com";
   const password = "asd123";
@@ -177,13 +196,6 @@ function CheckOut() {
           },
         }
       );
-
-      if (response.data.token) {
-        // Llamar a createCheckoutGoCuotas pasando el token
-        const checkoutUrl = await createCheckoutGoCuotas(response.data.token);
-        console.log("Checkout URL:", checkoutUrl);
-      }
-
       return response.data.token;
     } catch (error) {
       // Manejar errores de la petición
@@ -200,26 +212,53 @@ function CheckOut() {
   const [linkGoCuotas, setLinkGoCuotas] = useState("");
 
   const handleBuy = async () => {
-    const link = await goCuotas();
-    console.log(link);
-    setLinkGoCuotas(link);
-    const id = await createPreference();
+    try {
+      const token = await goCuotas();
+      if (!token) {
+        throw new Error("Authentication failed");
+      }
 
-    let order = {
-      cp: userData.cp,
-      phone: userData.phone,
-      address: userData.address,
-      city: userData.city,
-      province: userData.province,
-      items: cart,
-      total: total,
-      email: user.email,
-      idMercadoPago: id,
-    };
+      const checkoutUrl = await createCheckoutGoCuotas(token);
+      console.log(checkoutUrl);
+      if (!checkoutUrl) {
+        throw new Error("Checkout creation failed");
+      }
 
-    localStorage.setItem("order", JSON.stringify(order));
-    if (id) {
+      setLinkGoCuotas(checkoutUrl);
+
+      if (token && checkoutUrl) {
+        await handleCreatePreferenceAndOrder();
+      }
+
+      return checkoutUrl;
+    } catch (error) {
+      console.error("Error during handleBuy:", error);
+    }
+  };
+
+  const handleCreatePreferenceAndOrder = async () => {
+    try {
+      const id = await createPreference();
+      if (!id) {
+        throw new Error("Preference creation failed");
+      }
+
+      let order = {
+        cp: userData.cp,
+        phone: userData.phone,
+        address: userData.address,
+        city: userData.city,
+        province: userData.province,
+        items: cart,
+        total: total,
+        email: user.email,
+        idMercadoPago: id,
+      };
+
+      localStorage.setItem("order", JSON.stringify(order));
       setPreferenceId(id);
+    } catch (error) {
+      console.error("Error during handleCreatePreferenceAndOrder:", error);
     }
   };
 
