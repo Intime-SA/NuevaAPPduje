@@ -39,6 +39,58 @@ const UserOrders = () => {
 
   console.log(myOrders);
 
+  const renderEstado = (status) => {
+    if (status === "approvedGOcuotas") {
+      return (
+        <div
+          style={{
+            width: "300px",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "flex-start",
+            alignItems: "center",
+          }}
+        >
+          <div
+            to={linkGoCuotas}
+            style={{
+              border: "1px solid grey",
+              borderRadius: "20px",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              marginTop: "1rem",
+              padding: "0.5rem",
+              width: "100%",
+            }}
+          >
+            <img
+              src="https://tuquejasuma.com/media/cache/12/da/12da800997e20a64eac1fd613e7342c9.png"
+              alt=""
+              srcset=""
+              style={{ width: "100px" }}
+            />
+          </div>
+          <div>
+            <h6>Cuotas Sin Interes con DEBITO</h6>
+          </div>
+        </div>
+      );
+    } else if (status === "approved") {
+      return (
+        <div>
+          <div to="/">
+            <img
+              src="https://firebasestorage.googleapis.com/v0/b/mayoristakaurymdp.appspot.com/o/mercado-pago-logo-CC340D0497-seeklogo.com-removebg-preview.png?alt=media&token=ae12b632-7fb9-460d-8341-22e518f0ff38"
+              alt=""
+              style={{ width: "150px" }}
+            />
+          </div>
+        </div>
+      );
+    }
+  };
+
   return (
     <div
       style={{
@@ -226,10 +278,13 @@ const UserOrders = () => {
                 <br />
                 <strong>${order.total.toFixed(2)}</strong>
               </Typography>
+              <br />
             </div>
-            ESTADO :{order.status}
+            <h6 style={{ fontFamily: "'Poppins', sans-serif" }}>
+              Abonado con:
+            </h6>
+            {() => renderEstado(order.status)}
             <br />
-            ID Mercado Pago: {order.idMercadoPago}
           </CardContent>
         </Card>
       ))}

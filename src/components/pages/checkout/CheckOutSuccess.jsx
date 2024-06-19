@@ -43,7 +43,7 @@ const CheckOutSuccess = () => {
       addDoc(ordersCollection, {
         ...orderFromStorage,
         date: serverTimestamp(),
-        status: "approved",
+        status: "approvedGOcuotas",
       })
         .then((res) => {
           console.log("Document added with ID:", res.id); // Log para verificar el ID del documento guardado
