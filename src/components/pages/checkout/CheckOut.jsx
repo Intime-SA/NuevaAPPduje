@@ -178,7 +178,7 @@ function CheckOut() {
     }
   };
   // Función para autenticar y obtener el token
-  const email = "arceramirom@gmail.com";
+  const email = "ecomerce@altantics.dev";
   const password = "asd123";
 
   const goCuotas = async () => {
