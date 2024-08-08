@@ -126,6 +126,19 @@ const Cart = () => {
     window.scrollTo(0, 0);
   }, []);
 
+  function renderCartTitles(cart) {
+    return cart.map((item, index) => (
+      <Typography
+        key={index}
+        style={{ fontFamily: '"Poppins", sans-serif' }}
+        variant="p"
+        color="text.secondary"
+      >
+        {item.name}
+      </Typography>
+    ));
+  }
+
   return (
     <div
       style={{
@@ -176,11 +189,19 @@ const Cart = () => {
           </Menu>
           <CardMedia
             component="img"
-            height="194"
-            image={cart[0].img}
+            height="250"
+            image={cart[0].imageCard}
             alt="Paella dish"
+            style={{ objectFit: "cover" }}
           />
           <CardContent>
+            <Typography
+              style={{ fontFamily: '"Poppins", sans-serif' }}
+              variant="p"
+              color="text.secondary"
+            >
+              {cart[0].name}
+            </Typography>
             <Typography
               style={{ fontFamily: '"Poppins", sans-serif' }}
               variant="body2"

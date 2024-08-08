@@ -46,7 +46,7 @@ const ItemDetail = () => {
 
   useEffect(() => {
     let usuario = JSON.parse(localStorage.getItem("userInfo"));
-    let refCollection = collection(db, "productos");
+    let refCollection = collection(db, "products");
     let refDoc = doc(refCollection, id);
     getDoc(refDoc)
       .then((res) => setProduct({ ...res.data(), id: res.id }))
@@ -116,10 +116,10 @@ const ItemDetail = () => {
           <CardActionArea>
             <CardMedia
               component="img"
-              height="150px"
-              image={product.img}
+              height="250px"
+              image={product.imageCard}
               alt="green iguana"
-              sx={{ objectFit: "contain" }}
+              sx={{ objectFit: "cover" }}
             />
             <CardContent
               sx={{
@@ -165,6 +165,7 @@ const ItemDetail = () => {
                   minimumFractionDigits: 2,
                 })}
               </Typography>
+
               <div
                 style={{
                   display: "flex",
@@ -174,24 +175,13 @@ const ItemDetail = () => {
               >
                 <p style={{ fontFamily: '"Poppins", sans-serif' }}>
                   Precio Unitario{" "}
-                </p>{" "}
+                </p>
                 <p>
                   ${" "}
                   {product.unit_price.toLocaleString("es-AR", {
                     minimumFractionDigits: 2,
                   })}
                 </p>
-                {/* <Typography
-                  sx={{ display: "flex", justifyContent: "space-between" }}
-                  variant="body3"
-                  color="text.secondary"
-                >
-                  <p>Peso</p>
-                  <p>
-                    {product.peso}
-                    {product.medida}
-                  </p>
-                </Typography> */}
               </div>
               <div
                 style={{
@@ -225,13 +215,6 @@ const ItemDetail = () => {
                   color="text.secondary"
                 >
                   <h6>Precio Bulto </h6>{" "}
-                  <h6>
-                    {" "}
-                    ${" "}
-                    {product.precioBulto.toLocaleString("es-AR", {
-                      minimumFractionDigits: 2,
-                    })}
-                  </h6>
                 </Typography>
               </div>
             </CardContent>

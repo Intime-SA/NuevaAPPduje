@@ -14,6 +14,7 @@ import {
   updateDoc,
   serverTimestamp,
   runTransaction,
+  getDocs,
 } from "firebase/firestore";
 import { Link } from "react-router-dom";
 import { useMediaQuery } from "@mui/material";
@@ -236,6 +237,55 @@ function CheckOut() {
     }
   };
 
+  useEffect(() => {
+    const traerId = async () => {
+      try {
+        const refContador = doc(db, "contador", "contador");
+
+        await runTransaction(db, async (transaction) => {
+          const docContador = await transaction.get(refContador);
+          const nuevoValor = docContador.data().autoincremental + 1;
+
+          transaction.update(refContador, { autoincremental: nuevoValor });
+          setNumberOrder(nuevoValor);
+        });
+      } catch (error) {
+        console.error("Error al obtener el nuevo ID:", error);
+      }
+    };
+
+    traerId();
+  }, []);
+
+  const [clienteRef, setClienteRef] = useState();
+  const [clienteId, setClienteId] = useState();
+
+  useEffect(() => {
+    const getUser = async () => {
+      try {
+        const userOrdersCollection = collection(db, "users");
+        const snapShotOrders = await getDocs(userOrdersCollection);
+        snapShotOrders.forEach(async (userArray) => {
+          const userDataFromOrder = userArray.data(); // Cambio aquí
+
+          // Verificar si user existe antes de acceder a user.email
+          if (user && userDataFromOrder.email === user.email) {
+            const obtenerRutaCliente = (idCliente) => {
+              return `users/${idCliente}`;
+            };
+            const clienteRef = doc(db, obtenerRutaCliente(userArray.id));
+            setClienteId(userArray.id);
+            setClienteRef(clienteRef);
+          }
+        });
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      }
+    };
+
+    getUser();
+  }, [user]);
+
   const handleCreatePreferenceAndOrder = async () => {
     try {
       const id = await createPreference();
@@ -243,16 +293,28 @@ function CheckOut() {
         throw new Error("Preference creation failed");
       }
 
-      let order = {
-        cp: userData.cp,
-        phone: userData.phone,
-        address: userData.address,
-        city: userData.city,
-        province: userData.province,
-        items: cart,
+      const order = {
+        canalVenta: "WEB",
+        client: clienteRef,
+        clienteId: clienteId,
+        date: serverTimestamp(),
+        infoEntrega: {
+          calle: userData.address,
+          ciudad: userData.city,
+          codigoPostal: userData.cp.codigoPostal,
+          estado: "Buenos Aires",
+          numero: "",
+          pais: "Argentina",
+          pisoDpto: "",
+        },
+        note: "",
+        numberOrder: numberOrder,
+        orderItems: cart,
+        status: "nueva",
         total: total,
-        email: user.email,
-        idMercadoPago: id,
+        serviceShipping: [],
+        agencyShipping: [],
+        direccionSeleccionada: "Av Callao 852 1 A Lunes a Viernes de 11 a 18hs",
       };
 
       localStorage.setItem("order", JSON.stringify(order));

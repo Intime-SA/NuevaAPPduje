@@ -58,11 +58,15 @@ function ItemListContainer() {
 
   useEffect(() => {
     const fetchProducts = async () => {
-      let refCollection = collection(db, "productos");
+      let refCollection = collection(db, "products");
       try {
         const res = await getDocs(refCollection);
-        let newArray = res.docs.map((product) => {
-          return { ...product.data(), id: product.id };
+        let newArray = [];
+
+        res.docs.forEach((product) => {
+          if (product.data().article === "SI") {
+            newArray.push({ ...product.data(), id: product.id });
+          }
         });
 
         // Filtrar productos con stock > 0 y limitar a 3 resultados
@@ -317,10 +321,10 @@ function ItemListContainer() {
                     <CardActionArea style={{}}>
                       <CardMedia
                         component="img"
-                        height="150px"
-                        image={product.img}
+                        height="250px"
+                        image={product.imageCard}
                         alt="green iguana"
-                        style={{ objectFit: "contain" }}
+                        style={{ objectFit: "cover" }}
                       />
                       <CardContent
                         style={{
