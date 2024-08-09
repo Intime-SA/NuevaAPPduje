@@ -15,6 +15,7 @@ import {
   serverTimestamp,
   runTransaction,
   getDocs,
+  getDoc,
 } from "firebase/firestore";
 import { Link } from "react-router-dom";
 import { useMediaQuery } from "@mui/material";
@@ -79,21 +80,25 @@ function CheckOut() {
     isMiddleMobile ? 75 : 240
   );
 
+  const [clienteRef, setClienteRef] = useState();
+
   useEffect(() => {
     let orderFromStorage = JSON.parse(localStorage.getItem("order"));
     setOrder(orderFromStorage);
 
-    if (paramsValue === "approved") {
-      let ordersCollection = collection(db, "orders");
+    if (paramsValue === "approved" && clienteRef) {
+      let ordersCollection = collection(db, "userOrders");
       addDoc(ordersCollection, {
         ...orderFromStorage,
         date: serverTimestamp(),
-        status: "approved",
+        status: "pagoRecibido",
+        payStatus: "approvedMercadoPago",
+        client: clienteRef,
       }).then((res) => {
         setOrderId(res.id);
       });
 
-      orderFromStorage.items.forEach((element) => {
+      orderFromStorage.orderItems.forEach((element) => {
         updateDoc(doc(db, "products", element.id), {
           stock: element.stock - element.quantity,
         });
@@ -102,7 +107,7 @@ function CheckOut() {
       localStorage.removeItem("order");
       clearCart();
     }
-  }, [paramsValue]);
+  }, [clienteRef]);
 
   let total = getTotalPrice();
 
@@ -213,6 +218,9 @@ function CheckOut() {
   const [linkGoCuotas, setLinkGoCuotas] = useState("");
 
   const handleBuy = async () => {
+    let orderFromStorage = JSON.parse(localStorage.getItem("order"));
+    setOrder(orderFromStorage);
+
     try {
       const token = await goCuotas();
       if (!token) {
@@ -237,28 +245,8 @@ function CheckOut() {
     }
   };
 
-  useEffect(() => {
-    const traerId = async () => {
-      try {
-        const refContador = doc(db, "contador", "contador");
-
-        await runTransaction(db, async (transaction) => {
-          const docContador = await transaction.get(refContador);
-          const nuevoValor = docContador.data().autoincremental + 1;
-
-          transaction.update(refContador, { autoincremental: nuevoValor });
-          setNumberOrder(nuevoValor);
-        });
-      } catch (error) {
-        console.error("Error al obtener el nuevo ID:", error);
-      }
-    };
-
-    traerId();
-  }, []);
-
-  const [clienteRef, setClienteRef] = useState();
   const [clienteId, setClienteId] = useState();
+  const [dataCliente, setDataCliente] = useState(null);
 
   useEffect(() => {
     const getUser = async () => {
@@ -266,16 +254,33 @@ function CheckOut() {
         const userOrdersCollection = collection(db, "users");
         const snapShotOrders = await getDocs(userOrdersCollection);
         snapShotOrders.forEach(async (userArray) => {
-          const userDataFromOrder = userArray.data(); // Cambio aquí
+          const userDataFromOrder = userArray.data();
 
           // Verificar si user existe antes de acceder a user.email
           if (user && userDataFromOrder.email === user.email) {
+            console.log(userArray.id);
+            // Crear DocumentReference
+            const clienteRef = doc(db, "users", userArray.id);
+            const docSnapshot = await getDoc(clienteRef);
+            if (docSnapshot) {
+              const data = docSnapshot.data();
+              setDataCliente(data);
+            }
+
             const obtenerRutaCliente = (idCliente) => {
               return `users/${idCliente}`;
             };
-            const clienteRef = doc(db, obtenerRutaCliente(userArray.id));
+
+            const client = doc(db, obtenerRutaCliente(docSnapshot.id));
+            console.log(clienteRef);
+
+            // Obtener data del cliente
+
+            // Setear el clienteId y clienteRef
             setClienteId(userArray.id);
-            setClienteRef(clienteRef);
+            setClienteRef(client);
+            console.log(userArray.id);
+            console.log(client);
           }
         });
       } catch (error) {
@@ -284,7 +289,9 @@ function CheckOut() {
     };
 
     getUser();
-  }, [user]);
+  }, [paramsValue]);
+
+  console.log(dataCliente);
 
   const handleCreatePreferenceAndOrder = async () => {
     try {
@@ -332,12 +339,34 @@ function CheckOut() {
 
   const handleChange = (e) => {
     setUserData({ ...userData, [e.target.name]: e.target.value });
+    console.log(userData);
   };
 
   useEffect(() => {
     // Desplazarse a la parte superior de la página
     window.scrollTo(0, 0);
   }, []);
+
+  const styles = {
+    container: {
+      width: "100%",
+      display: "flex",
+      flexDirection: "column",
+      paddingTop: "0rem",
+    },
+    title: {
+      marginBottom: "1rem",
+      fontFamily: '"Poppins", sans-serif',
+      fontWeight: "700",
+    },
+    text: {
+      fontFamily: '"Poppins", sans-serif',
+      marginBottom: "0.5rem",
+    },
+    bold: {
+      fontWeight: "600",
+    },
+  };
 
   return (
     <div
@@ -385,7 +414,7 @@ function CheckOut() {
             />
             <TextField
               onChange={handleChange}
-              name="phone"
+              name="telefono"
               variant="outlined"
               label="Teléfono"
               sx={{ marginBottom: "1rem", width: "100%" }}
@@ -398,7 +427,7 @@ function CheckOut() {
             />
             <TextField
               onChange={handleChange}
-              name="address"
+              name="calle"
               variant="outlined"
               label="Dirección"
               sx={{ marginBottom: "1rem", width: "100%" }}
@@ -506,8 +535,8 @@ function CheckOut() {
               marginBottom: "0.5rem",
             }}
           >
-            <strong style={{ fontWeight: "600" }}>Código Postal:</strong>{" "}
-            {order?.cp}
+            <strong style={{ fontWeight: "600" }}>Cliente: </strong>{" "}
+            {dataCliente.name + " " + dataCliente.apellido}
           </Typography>
           <Typography
             variant="body1"
@@ -516,8 +545,8 @@ function CheckOut() {
               marginBottom: "0.5rem",
             }}
           >
-            <strong style={{ fontWeight: "600" }}>Teléfono:</strong>{" "}
-            {order?.phone}
+            <strong style={{ fontWeight: "600" }}>Direccion: </strong>{" "}
+            {userData.calle}
           </Typography>
           <Typography
             variant="body1"
@@ -526,8 +555,8 @@ function CheckOut() {
               marginBottom: "0.5rem",
             }}
           >
-            <strong style={{ fontWeight: "600" }}>Dirección:</strong>{" "}
-            {order?.address}
+            <strong style={{ fontWeight: "600" }}>Ciudad: </strong>{" "}
+            {userData.city}
           </Typography>
           <Typography
             variant="body1"
@@ -536,18 +565,10 @@ function CheckOut() {
               marginBottom: "0.5rem",
             }}
           >
-            <strong style={{ fontWeight: "600" }}>Ciudad:</strong> {order?.city}
+            <strong style={{ fontWeight: "600" }}>Provincia:</strong> Buenos
+            Aires
           </Typography>
-          <Typography
-            variant="body1"
-            sx={{
-              fontFamily: '"Poppins", sans-serif',
-              marginBottom: "0.5rem",
-            }}
-          >
-            <strong style={{ fontWeight: "600" }}>Provincia:</strong>{" "}
-            {order?.province}
-          </Typography>
+
           <Typography
             variant="h6"
             sx={{
@@ -559,7 +580,7 @@ function CheckOut() {
           >
             Detalles de los Productos
           </Typography>
-          {order?.items.map((item, index) => (
+          {order?.orderItems.map((item, index) => (
             <Box key={index} sx={{ marginBottom: "1rem" }}>
               <Typography
                 variant="body1"

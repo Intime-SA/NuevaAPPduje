@@ -77,21 +77,20 @@ const ItemDetail = () => {
   const navigate = useNavigate();
 
   const add = () => {
+    if (!product) return;
+
+    let subtotal = counter * product.unit_price;
+
     let objeto = {
       ...product,
       quantity: counter,
+      subtotal: subtotal,
     };
+
     console.log(objeto);
     addToCart(objeto);
     navigate("/shop");
   };
-
-  console.log(product);
-
-  useEffect(() => {
-    // Desplazarse a la parte superior de la página
-    window.scrollTo(0, 0);
-  }, []);
 
   return (
     <div

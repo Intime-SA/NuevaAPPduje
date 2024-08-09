@@ -5,67 +5,108 @@ import {
   addDoc,
   collection,
   doc,
+  getDoc,
+  getDocs,
   serverTimestamp,
-  updateDoc,
 } from "firebase/firestore";
 import { db } from "../../../firebaseConfig";
 import { CartContext } from "../../../context/CartContext";
-import { number } from "yup";
+import { AuthContext } from "../../../context/AuthContext";
 
 const CheckOutSuccess = () => {
   const { clearCart } = useContext(CartContext);
+  const { user } = useContext(AuthContext);
 
   const [orderId, setOrderId] = useState(null);
   const [order, setOrder] = useState(null);
   const { numberOrder, status } = useParams();
-  console.log(numberOrder, status);
 
   const location = useLocation();
-  console.log("LOCATION :", location);
   const queryParams = new URLSearchParams(location.search);
-  console.log("Query :", queryParams);
   const paramsValue = queryParams.get("status");
-  console.log("Params Value: ", paramsValue);
+
+  const [clienteRef, setClienteRef] = useState();
+  const [clienteId, setClienteId] = useState();
+  const [dataCliente, setDataCliente] = useState(null);
 
   useEffect(() => {
-    let orderFromStorage = JSON.parse(localStorage.getItem("order"));
-    console.log("orderFromStorage:", orderFromStorage); // Log para verificar el contenido de orderFromStorage
-    setOrder(orderFromStorage);
+    const getUser = async () => {
+      try {
+        const userOrdersCollection = collection(db, "users");
+        const snapShotOrders = await getDocs(userOrdersCollection);
+        snapShotOrders.forEach(async (userArray) => {
+          const userDataFromOrder = userArray.data();
 
-    console.log(order);
+          if (user && userDataFromOrder.email === user.email) {
+            const clienteRef = doc(db, "users", userArray.id);
+            const docSnapshot = await getDoc(clienteRef);
+
+            if (docSnapshot.exists()) {
+              setDataCliente(docSnapshot.data());
+
+              const client = doc(db, `users/${docSnapshot.id}`);
+              setClienteId(userArray.id);
+              setClienteRef(client);
+
+              console.log("Cliente ID:", userArray.id);
+              console.log("Cliente Ref:", client);
+            } else {
+              console.log("Document does not exist");
+            }
+          }
+        });
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      }
+    };
+
+    getUser();
+  }, [paramsValue, user]);
+
+  useEffect(() => {
+    const orderFromStorage = JSON.parse(localStorage.getItem("order"));
+    if (orderFromStorage) {
+      setOrder(orderFromStorage);
+    } else {
+      console.error("No order found in local storage");
+    }
+  }, []);
+
+  useEffect(() => {
+    const saveOrder = async () => {
+      if (clienteRef && order) {
+        try {
+          const ordersCollection = collection(db, "userOrders");
+          const docRef = await addDoc(ordersCollection, {
+            ...order,
+            date: serverTimestamp(),
+            status: "pagoRecibido",
+            payStatus: "approvedcuotas",
+            client: clienteRef,
+          });
+          console.log("Document added with ID:", docRef.id);
+          setOrderId(docRef.id);
+          localStorage.removeItem("order");
+          clearCart();
+        } catch (error) {
+          console.error("Error adding document:", error);
+        }
+      } else {
+        console.log("clienteRef is undefined or order is not set");
+      }
+    };
 
     if (status === "approvedcuotas") {
-      let ordersCollection = collection(db, "orders");
-      console.log("order data to be saved:", {
-        ...orderFromStorage,
-        date: serverTimestamp(),
-        status: "approvedcuotas",
-      }); // Log para verificar los datos que se van a guardar
-
-      addDoc(ordersCollection, {
-        ...orderFromStorage,
-        date: serverTimestamp(),
-        status: "approvedcuotas",
-      })
-        .then((res) => {
-          console.log("Document added with ID:", res.id); // Log para verificar el ID del documento guardado
-          setOrderId(res.id);
-        })
-        .catch((error) => {
-          console.error("Error adding document:", error); // Log de error si ocurre un problema al guardar
-        });
-
-      localStorage.removeItem("order");
-      clearCart();
+      saveOrder();
     }
-  }, [status, numberOrder]);
+  }, [clienteRef, order, status]);
 
   useEffect(() => {
-    console.log("orderId:", orderId); // Log para verificar el orderId después de ser establecido
+    console.log("orderId:", orderId);
   }, [orderId]);
 
   useEffect(() => {
-    console.log("numberOrder:", numberOrder); // Log para verificar el numberOrder capturado de la ruta
+    console.log("numberOrder:", numberOrder);
   }, [numberOrder]);
 
   return (

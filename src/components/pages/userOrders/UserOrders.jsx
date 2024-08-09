@@ -1,5 +1,12 @@
 import React, { useContext, useEffect, useState } from "react";
-import { getDocs, collection, query, where } from "firebase/firestore";
+import {
+  getDocs,
+  collection,
+  query,
+  where,
+  doc,
+  getDoc,
+} from "firebase/firestore";
 import { AuthContext } from "../../../context/AuthContext";
 import { db } from "../../../firebaseConfig";
 import Typography from "@mui/material/Typography";
@@ -15,27 +22,83 @@ const UserOrders = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
+  console.log(user);
+
+  const [clienteRef, setClienteRef] = useState();
+  const [clienteId, setClienteId] = useState();
+  const [clienteData, setClienteData] = useState([]);
+
+  useEffect(() => {
+    const getUser = async () => {
+      try {
+        if (clienteId) {
+          const userDocRef = doc(db, "users", clienteId);
+          const docCliente = await getDoc(userDocRef);
+
+          if (docCliente.exists()) {
+            setClienteData(docCliente.data());
+          } else {
+            console.error("No such document!");
+          }
+        }
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      }
+    };
+
+    getUser();
+  }, [clienteId]);
+  console.log(clienteData);
+
+  useEffect(() => {
+    const getUser = async () => {
+      try {
+        const userOrdersCollection = collection(db, "users");
+        const snapShotOrders = await getDocs(userOrdersCollection);
+        snapShotOrders.forEach(async (userArray) => {
+          const userDataFromOrder = userArray.data(); // Cambio aquí
+
+          // Verificar si user existe antes de acceder a user.email
+          if (user && userDataFromOrder.email === user.email) {
+            const obtenerRutaCliente = (idCliente) => {
+              return `users/${idCliente}`;
+            };
+            const clienteRef = doc(db, obtenerRutaCliente(userArray.id));
+            setClienteId(userArray.id);
+            setClienteRef(clienteRef);
+          }
+        });
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      }
+    };
+
+    getUser();
+  }, [user]);
+
   useEffect(() => {
     const fetchOrders = async () => {
-      try {
-        const ordersCollection = collection(db, "orders");
-        const ordersFiltered = query(
-          ordersCollection,
-          where("email", "==", user.email)
-        );
-        const querySnapshot = await getDocs(ordersFiltered);
-        const newArr = querySnapshot.docs.map((doc) => ({
-          ...doc.data(),
-          id: doc.id,
-        }));
-        setMyOrders(newArr);
-      } catch (error) {
-        console.error("Error fetching orders: ", error);
+      if (clienteId) {
+        try {
+          const ordersCollection = collection(db, "userOrders");
+          const ordersFiltered = query(
+            ordersCollection,
+            where("clienteId", "==", clienteId)
+          );
+          const querySnapshot = await getDocs(ordersFiltered);
+          const newArr = querySnapshot.docs.map((doc) => ({
+            ...doc.data(),
+            id: doc.id,
+          }));
+          setMyOrders(newArr);
+        } catch (error) {
+          console.error("Error fetching orders: ", error);
+        }
       }
     };
 
     fetchOrders();
-  }, [user.email]);
+  }, [clienteId]);
 
   console.log(myOrders);
 
@@ -97,7 +160,7 @@ const UserOrders = () => {
           </div>
         </div>
       );
-    } else if (status === "approved") {
+    } else if (status === "approvedMercadoPago") {
       return (
         <div style={commonStyles}>
           <div
@@ -146,6 +209,7 @@ const UserOrders = () => {
                 justifyContent: "space-between",
               }}
             >
+              <div></div>
               <h5
                 style={{
                   display: isMobile ? "flex" : "none",
@@ -156,7 +220,7 @@ const UserOrders = () => {
               >
                 ORDEN ID: <strong>#{order.id}</strong>
               </h5>
-              {order.items?.map((product) => (
+              {order.orderItems?.map((product) => (
                 <Box
                   key={product.id}
                   sx={{
@@ -169,15 +233,59 @@ const UserOrders = () => {
                   }}
                 >
                   <img
-                    src={product.img}
+                    src={product.imageCard}
                     alt={product.name}
                     style={{
-                      maxWidth: isMobile ? "50px" : "100px",
                       marginBottom: isMobile ? "0" : "0.5rem",
-                      maxHeight: isMobile ? "60px" : "120px",
+                      maxHeight: isMobile ? "150px" : "250px",
                       marginRight: isMobile ? "1rem" : "0",
                     }}
                   />
+                  <Typography
+                    variant="h6"
+                    sx={{
+                      fontFamily: "'Poppins', sans-serif",
+                      fontWeight: 600,
+                      fontSize: isMobile ? "1rem" : "1.25rem",
+                      width: "250px",
+                    }}
+                  >
+                    {product.name}
+                  </Typography>
+
+                  <Typography
+                    variant="body1"
+                    sx={{
+                      fontFamily: "'Poppins', sans-serif",
+                      fontSize: isMobile ? "0.875rem" : "1rem",
+                    }}
+                  >
+                    <strong> {product.quantity}</strong>
+                  </Typography>
+                  {!isMobile && (
+                    <>
+                      <Typography
+                        variant="body1"
+                        sx={{
+                          fontFamily: "'Poppins', sans-serif",
+                          fontSize: isMobile ? "0.875rem" : "1rem",
+                        }}
+                      >
+                        <strong>Precio Unitario:</strong> $
+                        {product.unit_price.toFixed(2)}
+                      </Typography>
+                      <Typography
+                        variant="body1"
+                        sx={{
+                          fontFamily: "'Poppins', sans-serif",
+                          fontSize: isMobile ? "0.875rem" : "1rem",
+                        }}
+                      >
+                        <strong>Precio Total:</strong> $
+                        {(product.unit_price * product.quantity).toFixed(2)}
+                      </Typography>
+                    </>
+                  )}
                   <Box sx={{ display: "flex", flexDirection: "column" }}>
                     <h5
                       style={{
@@ -189,51 +297,6 @@ const UserOrders = () => {
                     >
                       ORDEN ID: <strong>#{order.id}</strong>
                     </h5>
-                    <Typography
-                      variant="h6"
-                      sx={{
-                        fontFamily: "'Poppins', sans-serif",
-                        fontWeight: 600,
-                        fontSize: isMobile ? "1rem" : "1.25rem",
-                        width: "250px",
-                      }}
-                    >
-                      {product.name}
-                    </Typography>
-
-                    <Typography
-                      variant="body1"
-                      sx={{
-                        fontFamily: "'Poppins', sans-serif",
-                        fontSize: isMobile ? "0.875rem" : "1rem",
-                      }}
-                    >
-                      <strong> {product.quantity}</strong>
-                    </Typography>
-                    {!isMobile && (
-                      <>
-                        <Typography
-                          variant="body1"
-                          sx={{
-                            fontFamily: "'Poppins', sans-serif",
-                            fontSize: isMobile ? "0.875rem" : "1rem",
-                          }}
-                        >
-                          <strong>Precio Unitario:</strong> $
-                          {product.unit_price.toFixed(2)}
-                        </Typography>
-                        <Typography
-                          variant="body1"
-                          sx={{
-                            fontFamily: "'Poppins', sans-serif",
-                            fontSize: isMobile ? "0.875rem" : "1rem",
-                          }}
-                        >
-                          <strong>Precio Total:</strong> $
-                          {(product.unit_price * product.quantity).toFixed(2)}
-                        </Typography>
-                      </>
-                    )}
                   </Box>
                 </Box>
               ))}
@@ -257,7 +320,8 @@ const UserOrders = () => {
                       fontSize: isMobile ? "0.875rem" : "1rem",
                     }}
                   >
-                    <strong>Código Postal:</strong> {order.cp}
+                    <strong>Nombre Cliente:</strong>{" "}
+                    {clienteData.name + " " + clienteData.apellido}
                   </Typography>
                   <Typography
                     variant="body1"
@@ -267,7 +331,7 @@ const UserOrders = () => {
                       fontSize: isMobile ? "0.875rem" : "1rem",
                     }}
                   >
-                    <strong>Teléfono:</strong> {order.phone}
+                    <strong>Dirección:</strong> {order.infoEntrega.calle}
                   </Typography>
                   <Typography
                     variant="body1"
@@ -277,7 +341,7 @@ const UserOrders = () => {
                       fontSize: isMobile ? "0.875rem" : "1rem",
                     }}
                   >
-                    <strong>Dirección:</strong> {order.address}
+                    <strong>Dirección:</strong> {order.infoEntrega.calle}
                   </Typography>
                   <Typography
                     variant="body1"
@@ -287,7 +351,7 @@ const UserOrders = () => {
                       fontSize: isMobile ? "0.875rem" : "1rem",
                     }}
                   >
-                    <strong>Ciudad:</strong> {order.city}
+                    <strong>Ciudad:</strong> {order.infoEntrega.ciudad}
                   </Typography>
                   <Typography
                     variant="body1"
@@ -297,7 +361,7 @@ const UserOrders = () => {
                       fontSize: isMobile ? "0.875rem" : "1rem",
                     }}
                   >
-                    <strong>Provincia:</strong> {order.province}
+                    <strong>Provincia:</strong> {order.infoEntrega.estado}
                   </Typography>
                 </div>
               </Box>
@@ -327,7 +391,7 @@ const UserOrders = () => {
             <h5 style={{ fontFamily: "'Poppins', sans-serif", margin: "1rem" }}>
               Abonado con:
             </h5>
-            {renderEstado(order.status)}
+            {renderEstado(order.payStatus)}
             <br />
           </CardContent>
         </Card>
